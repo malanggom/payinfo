@@ -22,6 +22,7 @@
           <a class="nav-link" href="#">기기관리</a>
         <router-link class="nav-link" to="#">기기조회</router-link>
       </nav>
+      <router-view/>
     </aside>
     <section class="grid-item">
       <article>
@@ -102,7 +103,7 @@
       </article>
     </section>
   </main>
-<!--  <router-view/>-->
+
 </template>
 
 <style>
