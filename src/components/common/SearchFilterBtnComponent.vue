@@ -3,8 +3,9 @@
 </script>
 
 <template>
-<img src="">
+<img alt="" src="">
 </template>
+
 
 
 <style scoped>
