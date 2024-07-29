@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<button>검색</button>
+<button class="btn btn-outline-dark">검색</button>
 </template>
 
 <style scoped>

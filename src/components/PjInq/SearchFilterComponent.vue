@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<div></div>
+<div>필터링</div>
 </template>
 
 <style scoped>

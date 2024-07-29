@@ -1,8 +1,8 @@
 <template class="devinq">
-  <div class="flex-item"><MenuNameComponent/></div>
-  <div class="flex-item"><SearchFilterComponent/></div>
-  <div class="flex-item"><SearchBarComponent/></div>
-  <div class="flex-item"><SearchResultComponent/></div>
+  <div class="flexItem AlignCenter"><MenuNameComponent/></div>
+  <div class="flexItem AlignCenter"><SearchFilterComponent/></div>
+  <div class="flexItem AlignCenter"><SearchBarComponent/></div>
+  <div class="flexItem paddingT"><SearchResultComponent/></div>
 </template>
 <script setup lang="js">
   import MenuNameComponent from '@/components/DevInq/MenuNameComponent.vue'
@@ -11,9 +11,13 @@
   import SearchResultComponent from "@/components/DevInq/SearchResultComponent.vue";
 </script>
 <style>
-  .flex-item{
+  .flexItem{
     display: flex;
+  }
+  .AlignCenter{
     align-items: center;
-
+  }
+  .paddingT{
+    padding-top: 10px;
   }
 </style>
