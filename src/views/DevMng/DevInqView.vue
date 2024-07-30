@@ -2,7 +2,7 @@
   <div class="flexItem AlignCenter"><MenuNameComponent/></div>
   <div class="flexItem AlignCenter"><SearchFilterComponent/></div>
   <div class="flexItem AlignCenter"><SearchBarComponent/></div>
-  <div class="flexItem paddingT"><SearchResultComponent/></div>
+  <div class="flexItem paddingT justifyCenter"><SearchResultComponent/></div>
 </template>
 <script setup lang="js">
   import MenuNameComponent from '@/components/DevInq/MenuNameComponent.vue'
@@ -16,6 +16,9 @@
   }
   .AlignCenter{
     align-items: center;
+  }
+  .justifyCenter {
+    justify-content: center;
   }
   .paddingT{
     padding-top: 10px;

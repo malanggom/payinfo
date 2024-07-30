@@ -6,17 +6,17 @@ import SearchFilterDropdownComponent from "@/components/common/SearchFilterDropd
 </script>
 
 <template>
-  <SearchBarComponent class="paddingLR10"/>
-  <i class="bi bi-filter paddingLR10"/>
+  <SearchBarComponent class="mgLR10"/>
+  <i class="bi bi-filter mgLR10"/>
   <!--  <b-icon icon="filter"/>-->
-  <SearchBtnComponent class="paddingLR10"/>
-  <DevAddBtnComponent class="paddingLR10"/>
-  <SearchFilterDropdownComponent class="paddingLR10"/>
+  <SearchBtnComponent class="mgLR10"/>
+  <SearchFilterDropdownComponent class="mgLR10"/>
+  <DevAddBtnComponent class="mgLR10"/>
 </template>
 
-<style scoped>
-.paddingLR10{
-  padding-left: 10px;
-  padding-right: 10px;
+<style>
+.mgLR10{
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

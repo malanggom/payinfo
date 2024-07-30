@@ -8,7 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ag-grid-community/core": "^32.0.2",
+    "@ag-grid-community/styles": "^32.0.2",
+    "@ag-grid-community/vue3": "^32.0.2",
     "@vue/cli": "^5.0.8",
+    "ag-grid-community": "^32.0.2",
+    "ag-grid-vue3": "^32.0.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "bootstrap-vue": "^2.23.1",

@@ -3,7 +3,9 @@
 </script>
 
 <template>
-<input type="search" placeholder="search">
+  <form class="d-flex" role="search">
+    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+  </form>
 </template>
 
 <style scoped>
