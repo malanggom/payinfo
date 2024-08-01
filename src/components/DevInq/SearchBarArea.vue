@@ -7,8 +7,6 @@ import SearchFilterDropdownComponent from "@/components/common/SearchFilterDropd
 
 <template>
   <SearchBarComponent class="mgLR10"/>
-  <i class="bi bi-filter mgLR10"/>
-  <!--  <b-icon icon="filter"/>-->
   <SearchBtnComponent class="mgLR10"/>
   <SearchFilterDropdownComponent class="mgLR10"/>
   <DevAddBtnComponent class="mgLR10"/>

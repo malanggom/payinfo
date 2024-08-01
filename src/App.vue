@@ -1,44 +1,45 @@
-<!--
 ===========================================================================
-      SearchResultComponent.vue
+                                 App.vue
 ===========================================================================
--->
+===========================================================================
+                                템플릿 시작
+===========================================================================
 <template id="app">
 <main class="grid-container">
   <aside class="grid-item">
     <nav class="nav flex-column">
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="devmngNavToggle">개발자관리</span>
-      <div v-if="devmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/devinq">개발자조회</router-link>
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/empinq">직원조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('devmng')">개발자관리</span>
+      <div v-if="isActive('devmng')">
+        <router-link class="nav-link nav__menu" to="/devinq">개발자조회</router-link>
+        <router-link class="nav-link nav__menu" to="/empinq">직원조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="pjmngNavToggle">프로젝트관리</span>
-      <div v-if="pjmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/pjinq">프로젝트조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('pjmng')">프로젝트관리</span>
+      <div v-if="isActive('pjmng')">
+        <router-link class="nav-link nav__menu" to="/pjinq">프로젝트조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="ctrtcomngNavToggle">계약회사관리</span>
-      <div v-if="ctrtcomngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/ctrtcoinq">계약회사조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('ctrtcomng')">계약회사관리</span>
+      <div v-if="isActive('ctrtcomng')">
+        <router-link class="nav-link nav__menu" to="/ctrtcoinq">계약회사조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="ctrtcoctrtmngNavToggle">계약서관리</span>
-      <div v-if="ctrtcoctrtmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/ctrtcoctrtinq">계약회사계약서조회</router-link>
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/devctrtinq">개발자계약서조회</router-link>
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/etcctrtinq">기타계약서조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('ctrtcoctrtmng')">계약서관리</span>
+      <div v-if="isActive('ctrtcoctrtmng')">
+        <router-link class="nav-link nav__menu" to="/ctrtcoctrtinq">계약회사계약서조회</router-link>
+        <router-link class="nav-link nav__menu" to="/devctrtinq">개발자계약서조회</router-link>
+        <router-link class="nav-link nav__menu" to="/etcctrtinq">기타계약서조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="slsmngNavToggle">매출관리</span>
-      <div v-if="slsmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/taxbillinq">세금계산서조회</router-link>
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/whtaxinq">원천세조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('slsmng')">매출관리</span>
+      <div v-if="isActive('slsmng')">
+        <router-link class="nav-link nav__menu" to="/taxbillinq">세금계산서조회</router-link>
+        <router-link class="nav-link nav__menu" to="/whtaxinq">원천세조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="amtmngNavToggle">비용관리</span>
-      <div v-if="amtmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/dpstwdrlinq">입출금조회</router-link>
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/ofcexpnssinq">사무비용조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('amtmng')">비용관리</span>
+      <div v-if="isActive('amtmng')">
+        <router-link class="nav-link nav__menu" to="/dpstwdrlinq">입출금조회</router-link>
+        <router-link class="nav-link nav__menu" to="/ofcexpnssinq">사무비용조회</router-link>
       </div>
-      <span class="nav-link flexItem alignCenter justifyCenter height50" @click="dvcmngNavToggle">기기관리</span>
-      <div v-if="dvcmngShow">
-        <router-link class="nav-link flexItem alignCenter justifyCenter height50" to="/dvcinq">기기조회</router-link>
+      <span class="nav-link nav__menu" @click="toggleNav('dvcmng')">기기관리</span>
+      <div v-if="isActive('dvcmng')">
+        <router-link class="nav-link nav__menu" to="/dvcinq">기기조회</router-link>
       </div>
     </nav>
   </aside>
@@ -47,116 +48,67 @@
   </section>
 </main>
 </template>
-
+===========================================================================
+                                템플릿 종료
+===========================================================================
+                                스크립트 시작
+===========================================================================
 <script>
 export default {
-  data : function(){
+  data: function() {
     return {
-      devmngShow : false,
-      pjmngShow : false,
-      ctrtcomngShow : false,
-      ctrtcoctrtmngShow : false,
-      slsmngShow : false,
-      amtmngShow : false,
-      dvcmngShow : false
+      activeTab: null // 현재 활성화된 탭을 저장
     }
   },
-  methods : {
-    devmngNavToggle : function(){
-      if(this.devmngShow === false){
-        this.devmngShow = true
-        this.pjmngShow = false
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = false
-        this.amtmngShow = false
-        this.dvcmngShow = false
-      }else{
-        this.devmngShow = false
-      }
+  methods: {
+    toggleNav(tab) {
+      // 선택된 탭과 현재 활성 탭이 같으면 비활성화, 다르면 활성화
+      this.activeTab = this.activeTab === tab ? null : tab;
     },
-    pjmngNavToggle : function(){
-      if(this.pjmngShow === false){
-        this.devmngShow = false
-        this.pjmngShow = true
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = false
-        this.amtmngShow = false
-        this.dvcmngShow = false
-      }else{
-      this.pjmngShow = false
-      }
-    },
-    ctrtcomngNavToggle :  function(){
-      if(this.ctrtcomngShow === false){
-        this.pjmngShow = false
-        this.devmngShow = false
-        this.ctrtcomngShow = true
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = false
-        this.amtmngShow = false
-        this.dvcmngShow = false
-      }else{
-        this.ctrtcomngShow = false
-      }
-    },
-    ctrtcoctrtmngNavToggle :  function(){
-      if(this.ctrtcoctrtmngShow === false){
-        this.pjmngShow = false
-        this.devmngShow = false
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = true
-        this.slsmngShow = false
-        this.amtmngShow = false
-        this.dvcmngShow = false
-      }else{
-        this.ctrtcoctrtmngShow = false
-      }
-    },
-    slsmngNavToggle :  function(){
-      if(this.slsmngShow === false){
-        this.pjmngShow = false
-        this.devmngShow = false
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = true
-        this.amtmngShow = false
-        this.dvcmngShow = false
-      }else{
-        this.slsmngShow = false
-      }
-    },
-    amtmngNavToggle :  function(){
-      if(this.amtmngShow === false){
-        this.pjmngShow = false
-        this.devmngShow = false
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = false
-        this.amtmngShow = true
-        this.dvcmngShow = false
-      }else{
-        this.amtmngShow = false
-      }
-    },
-    dvcmngNavToggle :  function(){
-      if(this.dvcmngShow === false){
-        this.pjmngShow = false
-        this.devmngShow = false
-        this.ctrtcomngShow = false
-        this.ctrtcoctrtmngShow = false
-        this.slsmngShow = false
-        this.amtmngShow = false
-        this.dvcmngShow = true
-      }else{
-        this.dvcmngShow = false
-      }
+    isActive(tab) {
+      return this.activeTab === tab; // 현재 탭이 활성화되어 있는지 확인
     }
   }
-}
-</script>
+  /*
+  async clickButotn() {
+    const formData = new FormData()
+    const URL = "https://xxxxxxx"
+    const svo = {
+      dvo: {
+        devCode: '01001', // 개발자코드
+      }
+    }
+    const svoStr = JSON.stringify(svo)
+    formData.append("svo", [new Blob(svoStr, {type: 'application.json'})], "svo")
 
+    try {
+      /*
+        const response = await fetch(URL, {
+          method : 'POST',
+          body : formData,
+        })
+        if (!response.ok) {
+          return
+        }
+        const resultDaTa = await response.json()
+
+        const resultDaTa = [{
+          col1 : 'aaa',
+          col2 : 'bbb',
+          col3 : 'cccc',
+        }]
+        console.log(resultDaTa)
+      } catch (err){
+        console.log(err.message)
+      }
+  },*/
+} // export default
+</script>
+===========================================================================
+                                스크립트 종료
+===========================================================================
+                                스타일 시작
+===========================================================================
 <style>
 .grid-container{
   display: grid;
@@ -164,11 +116,12 @@ export default {
 }
 
 .grid-item{
-
+  display: grid;
 }
+
 .grid-item2{
   display: grid;
-  grid-template-rows: 50px 50px 50px 1fr;
+  grid-template-rows: 50px 50px 1fr;
   padding-top: 30px;
   padding-right: 10px;
 }
@@ -195,23 +148,17 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-.height50{
-  height: 50px;
-}
-
-.flexItem{
+.nav__menu{
   display: flex;
-}
-
-.alignCenter{
   align-items: center;
-}
-
-.justifyCenter {
   justify-content: center;
+  height: 50px;
 }
 
 html, head, body, main{
   height: 100%;
 }
 </style>
+===========================================================================
+                                스타일 종료
+===========================================================================

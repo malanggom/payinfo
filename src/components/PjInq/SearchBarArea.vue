@@ -1,15 +1,37 @@
+===========================================================================
+SearchBarArea.vue
+===========================================================================
+===========================================================================
+템플릿 시작
+===========================================================================
+<template>
+  <SearchBarComponent class="mgLR10"/>
+  <SearchBtnComponent class="mgLR10"/>
+  <SearchFilterDropdownComponent class="mgLR10"/>
+  <DevAddBtnComponent class="mgLR10"/>
+</template>
+===========================================================================
+템플릿 종료
+===========================================================================
+스크립트 시작
+===========================================================================
 <script setup>
 import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
+import DevAddBtnComponent from "@/components/DevInq/DevAddBtnComponent.vue";
+import SearchFilterDropdownComponent from "@/components/common/SearchFilterDropdownComponent.vue";
 </script>
-
-<template>
-  <SearchBarComponent/>
-  <i class="bi bi-filter"/>
-  <!--  <b-icon icon="filter"/>-->
-  <SearchBtnComponent/>
-</template>
-
-<style scoped>
-
+===========================================================================
+스크립트 종료
+===========================================================================
+스타일 시작
+===========================================================================
+<style>
+.mgLR10{
+  margin-left: 10px;
+  margin-right: 10px;
+}
 </style>
+===========================================================================
+스타일 종료
+===========================================================================

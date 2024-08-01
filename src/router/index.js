@@ -10,15 +10,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/devmng',
-    name: 'devmng',
-    component: () => import('../views/DevMng/DevMngView.vue')
   },
   {
     path: '/devinq',
@@ -36,24 +28,9 @@ const routes = [
     component: () => import('../views/PjMng/PjInqView.vue')
   },
   {
-    path: '/pjmng',
-    name: 'pjmng',
-    component: () => import('../views/PjMng/PjMngGridComponent.vue')
-  },
-  {
-    path: '/ctrtcomng',
-    name: 'ctrtcomng',
-    component: () => import('../views/CtrtcoMng/CtrtcoMngGridComponent.vue')
-  },
-  {
     path: '/ctrtcoinq',
     name: 'ctrtcoinq',
     component: () => import('../views/CtrtcoMng/CtrtcoInqView.vue')
-  },
-  {
-    path: '/ctrtmng',
-    name: 'ctrtmng',
-    component: () => import('../views/CtrtMng/CtrtMngGridComponent.vue')
   },
   {
     path: '/ctrtcoctrtinq',
@@ -100,8 +77,6 @@ const routes = [
     name: 'dvcinq',
     component: () => import('../views/DvcMng/DvcInqView.vue')
   }
-
-
 ]
 
 const router = createRouter({
