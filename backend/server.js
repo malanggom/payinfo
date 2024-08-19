@@ -5,15 +5,18 @@ const cors = require('cors');
 const app = express();
 const port = 8080;
 
-//Oracle Instant Client 경로 설정
-oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-windows.x64-23.4.0.24.05\\instantclient_23_4' });
+// JSON 요청 본문을 파싱하기 위한 미들웨어
+app.use(express.json());
 app.use(cors());
+
+// Oracle Instant Client 경로 설정
+oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-windows.x64-23.4.0.24.05\\instantclient_23_4' });
 
 // OracleDB 설정
 const dbConfig = {
-    user: 'system',
-    password: 'oracle',
-    connectString: '211.33.184.136:1521/xe', // SID는 동일
+    user: process.env.DB_USER || 'system', // 환경 변수 사용
+    password: process.env.DB_PASSWORD || 'oracle', // 환경 변수 사용
+    connectString: process.env.DB_CONNECT_STRING || '211.33.184.136:1521/xe', // 환경 변수 사용
 };
 
 // 루트 경로 추가
@@ -34,7 +37,7 @@ app.get('/api/data', async (req, res) => {
 
         const data = result.rows.map(row => {
             return {
-                DEV_NO: row[0],               // DEV_NO
+                DEV_NO: row[0],              // DEV_NO
                 NM: row[1],                   // NM
                 PJ_INP_STTS: row[2],          // PJ_INP_STTS
                 CTRT_NMTM: row[3],            // CTRT_NMTM
@@ -72,14 +75,95 @@ app.get('/api/data', async (req, res) => {
 
         res.json({ result: { row: data } });
     } catch (err) {
-        console.error("Database connection error: ", err); // 에러 전체 출력
-        res.status(500).json({ error: 'Database error', details: err.message }); // 에러 세부 정보 포함
+        console.error("Database connection error: ", err);
+        res.status(500).json({ error: 'Database error', details: err.message });
     } finally {
         if (connection) {
             try {
                 await connection.close();
             } catch (err) {
                 console.error(err);
+            }
+        }
+    }
+});
+
+// POST 요청을 처리할 엔드포인트 추가
+app.post('/api/addDeveloper', async (req, res) => {
+    let connection;
+
+    const developerData = req.body; // 요청 본문에서 데이터 받기
+
+    // INSERT 쿼리
+    const insertQuery = `
+        INSERT INTO C##SYSON.DEV (
+            DEV_NO, NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR,
+            JBPS, GRD, T_CR_PER, RGN, MBL_TELNO,
+            EML, CONTT_MTHD, NTRV_DMND_DT, INPUT_PSBLTY_DT,
+            OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
+            CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK,
+            ACTNO, DEPT, MM_DMND_UNTPRC, ADDR, JBTTL,
+            BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS
+        ) VALUES (
+                     :devNo, :nm, :pjInpStts, :ctrtNmtm, :brdt, :gndr,
+                     :jbps, :grd, :tCrPer, :rgn, :mblTelno,
+                     :eml, :conttMthd, :ntrvDmndDt, :inputPsbltyDt,
+                     :ogdpCo, :sn, :whtaxYn, :bzmnYn, :kdsEmpYn,
+                     :ctrtCoEmpYn, :clctPickupDt, :giveDt, :bank,
+                     :actno, :dept, :mmDmndUntprc, :addr, :jbttl,
+                     :brkr, :kakaoNick, :ctrtHstryYn, :ms
+                 )
+    `;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        await connection.execute(insertQuery, {
+            devNo: developerData.DEV_NO,
+            nm: developerData.NM,
+            pjInpStts: developerData.PJ_INP_STTS,
+            ctrtNmtm: developerData.CTRT_NMTM,
+            brdt: developerData.BRDT,
+            gndr: developerData.GNDR,
+            jbps: developerData.JBPS,
+            grd: developerData.GRD,
+            tCrPer: developerData.T_CR_PER,
+            rgn: developerData.RGN,
+            mblTelno: developerData.MBL_TELNO,
+            eml: developerData.EML,
+            conttMthd: developerData.CONTT_MTHD,
+            ntrvDmndDt: developerData.NTRV_DMND_DT,
+            inputPsbltyDt: developerData.INPUT_PSBLTY_DT,
+            ogdpCo: developerData.OGDP_CO,
+            sn: developerData.SN,
+            whtaxYn: developerData.WHTAX_YN,
+            bzmnYn: developerData.BZMN_YN,
+            kdsEmpYn: developerData.KDS_EMP_YN,
+            ctrtCoEmpYn: developerData.CTRT_CO_EMP_YN,
+            clctPickupDt: developerData.CLCT_PICKUP_DT,
+            giveDt: developerData.GIVE_DT,
+            bank: developerData.BANK,
+            actno: developerData.ACTNO,
+            dept: developerData.DEPT,
+            mmDmndUntprc: developerData.MM_DMND_UNTPRC,
+            addr: developerData.ADDR,
+            jbttl: developerData.JBTTL,
+            brkr: developerData.BRKR,
+            kakaoNick: developerData.KAKAO_NICK,
+            ctrtHstryYn: developerData.CTRT_HSTRY_YN,
+            ms: developerData.MS,
+        });
+
+        await connection.commit(); // 변경사항 커밋
+        res.status(201).json({ message: 'Developer added successfully' });
+    } catch (err) {
+        console.error("Database error: ", err);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close(); // 연결 종료
+            } catch (err) {
+                console.error("Error closing connection:", err);
             }
         }
     }

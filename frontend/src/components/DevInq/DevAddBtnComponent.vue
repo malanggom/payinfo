@@ -1,7 +1,7 @@
 <template>
   <button class="btn btn-primary" @click="openModal">개발자추가</button>
   <div class="modal fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
-       aria-labelledby="staticBackdropLabel" aria-hidden="true" style="display: block;">
+       aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
       <!-- modal-lg 클래스를 사용하여 큰 모달로 설정 --><!-- Vertically centered scrollable modal -->
       <div class="modal-content">
@@ -16,8 +16,16 @@
               <div class="d-flex align-items-start">
                 <label class="col-form-label fs-5">개인정보</label>
               </div>
-              <!--     이름       -->
               <div class="d-flex row align-items-center">
+                <!--     개발자번호       -->
+                <div class="col-auto d-flex align-items-center p-3">
+                  <label for="devNo" class="pr-1 col-form-label">개발자번호</label>
+                  <div class="col-auto">
+                    <input type="text" id="devNo" class="div_width100 form-control div_flex_center"
+                           aria-describedby="passwordHelpInline" v-model="formData.DEV_NO">
+                  </div>
+                </div>
+                <!--     이름       -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="inputPassword6" class="pr-1 col-form-label">이름</label>
                   <div class="col-auto">
@@ -73,7 +81,7 @@
                   <label for="brdt" class="pr-1 col-form-label">생년월일</label>
                   <div class="col-auto">
                     <input type="text" id="brdt" class="div_width80 form-control div_flex_center"
-                           aria-describedby="passwordHelpInline">
+                           aria-describedby="passwordHelpInline" v-model="formData.BRDT">
                   </div>
                 </div>
                 <!--     일련번호       -->
@@ -81,7 +89,7 @@
                   <label for="sn" class="pr-1 col-form-label">일련번호</label>
                   <div class="col-auto">
                     <input type="text" id="sn" class="div_width90 form-control div_flex_center"
-                           aria-describedby="passwordHelpInline">
+                           aria-describedby="passwordHelpInline" v-model="formData.SN">
                   </div>
                 </div>
                 <!--     휴대전화번호       -->
@@ -151,7 +159,7 @@
                   <label for="inpPsbltyDt" class="pr-1 col-form-label">투입가능일</label>
                   <div class="col-auto">
                     <input type="text" id="inpPsbltyDt" class="div_width100 form-control"
-                           aria-describedby="passwordHelpInline" v-model="formData.INP_PSBLTY_DT">
+                           aria-describedby="passwordHelpInline" v-model="formData.INPUT_PSBLTY_DT">
                   </div>
                 </div>
                 <!--     월요청단가       -->
@@ -335,6 +343,13 @@
                     <div class="col-auto form-check form-switch">
                       <input class="form-check-input" type="checkbox" id="CtrtHstryYn" v-model="formData.CTRT_HSTRY_YN">
                     </div>
+                  <!--     자사정규직여부       -->
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="kdsEmpYn" class="pr-1 col-form-label">자사정규직여부</label>
+                    <div class="col-auto form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="kdsEmpYn" v-model="formData.KDS_EMP_YN">
+                    </div>
                   </div>
                   <!--      계약횟수      -->
                   <div class="col-auto d-flex align-items-center p-3">
@@ -357,17 +372,17 @@
                     <div class="col-auto dropdown">
                       <button id="conttMthd" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        잡코리아지원
+                        {{ selectedConttMthd }}
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" type="button">잡코리아지원</button>
+                          <button class="dropdown-item" type="button" @click="selectConttMthd('잡코리아지원')">잡코리아지원</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">소개자</button>
+                          <button class="dropdown-item" type="button" @click="selectConttMthd('소개자')">소개자</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">이메일지원</button>
+                          <button class="dropdown-item" type="button" @click="selectConttMthd('이메일지원')">이메일지원</button>
                         </li>
                       </ul>
                     </div>
@@ -378,32 +393,32 @@
                     <div class="col-auto dropdown">
                       <button id="pjInpStts" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        프로젝트만료1달전
+                        {{ selectedPjInpStts }}
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" type="button">구직중</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('구직중')">구직중</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">인터뷰대기</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('인터뷰대기')">인터뷰대기</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">인터뷰중</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('인터뷰중')">인터뷰중</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">인터뷰완료</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('인터뷰완료')">인터뷰완료</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">인터뷰합격</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('인터뷰합격')">인터뷰합격</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">프로젝트투입중</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('프로젝트투입중')">프로젝트투입중</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">프로젝트만료1달전</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('프로젝트만료1달전')">프로젝트만료1달전</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">타사프로젝트중</button>
+                          <button class="dropdown-item" type="button" @click="selectPjInpStts('타사프로젝트중')">타사프로젝트중</button>
                         </li>
                       </ul>
                     </div>
@@ -413,7 +428,7 @@
                     <label for="ogdpCo" class="pr-1 col-form-label">소속회사</label>
                     <div class="col-auto">
                       <input type="text" id="ogdpCo" class="div_width130 form-control"
-                             aria-describedby="passwordHelpInline">
+                             aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO">
                     </div>
                   </div>
                   <!--     부서       -->
@@ -421,14 +436,14 @@
                     <label for="dept" class="pr-1 col-form-label">부서</label>
                     <div class="col-auto">
                       <input type="text" id="dept" class="div_width130 form-control"
-                             aria-describedby="passwordHelpInline">
+                             aria-describedby="passwordHelpInline" v-model="formData.DEPT">
                     </div>
                   </div>
                   <!--     계약회사정규직여부       -->
                   <div class="col-auto d-flex align-items-center p-3">
                     <label for="CrtrCoEmpYn" class="pr-1 col-form-label">계약회사정규직여부</label>
                     <div class="col-auto form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="CrtrCoEmpYn">
+                      <input class="form-check-input" type="checkbox" id="CrtrCoEmpYn" v-model="formData.CTRT_CO_EMP_YN">
                     </div>
                   </div>
                 </div>
@@ -442,33 +457,33 @@
                 <!--     대금수령날짜       -->
                 <div class="row align-items-center">
                   <div class="col-auto d-flex align-items-center p-3">
-                    <label for="ClctPickupDt" class="pr-1 col-form-label">대금수령날짜</label>
+                    <label for="clctPickupDt" class="pr-1 col-form-label">대금수령날짜</label>
                     <div class="col-auto dropdown">
-                      <button id="ClctPickupDt" class="btn btn-outline-primary dropdown-toggle" type="button"
+                      <button id="clctPickupDt" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        10
+                        {{ selectedClctPickupDt }}
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" type="button">N/A</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('N/A')">N/A</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">1</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('1')">1</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">5</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('5')">5</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">10</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('10')">10</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">15</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('15')">15</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">21</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('21')">21</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">말</button>
+                          <button class="dropdown-item" type="button" @click="selectClctPickupDt('말')">말</button>
                         </li>
                       </ul>
                     </div>
@@ -478,30 +493,30 @@
                   </div>
                   <!--     지급일자       -->
                   <div class="col-auto d-flex align-items-center p-3">
-                    <label for="GiveDt" class="pr-1 col-form-label">지급일자</label>
+                    <label for="giveDt" class="pr-1 col-form-label">지급일자</label>
                     <div class="col-auto dropdown">
-                      <button id="GiveDt" class="btn btn-outline-primary dropdown-toggle" type="button"
+                      <button id="giveDt" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        10
+                        {{ selectedGiveDt }}
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" type="button">N/A</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('N/A')">N/A</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">5</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('5')">5</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">10</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('10')">10</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">15</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('15')">15</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">21</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('21')">21</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button">말</button>
+                          <button class="dropdown-item" type="button" @click="selectGiveDt('말')">말</button>
                         </li>
                       </ul>
                     </div>
@@ -514,14 +529,14 @@
                     <label for="bank" class="pr-1 col-form-label">은행</label>
                     <div class="col-auto">
                       <input type="text" id="bank" class="div_width130 form-control"
-                             aria-describedby="passwordHelpInline">
+                             aria-describedby="passwordHelpInline" v-model="formData.BANK">
                     </div>
                   </div>
                   <!--     계좌번호       -->
                   <div class="col-auto d-flex align-items-center p-3">
                     <label for="actNo" class="pr-1 col-form-label">계좌번호</label>
                     <div class="col-auto">
-                      <input type="text" id="actNo" class="form-control" aria-describedby="passwordHelpInline">
+                      <input type="text" id="actNo" class="form-control" aria-describedby="passwordHelpInline" v-model="formData.ACTNO">
                     </div>
                   </div>
                 </div>
@@ -532,7 +547,7 @@
         <div class="d-flex align-items-center justify-content-center">
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary" @click="closeModal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
+            <button type="submit" class="btn btn-primary" @click="submitForm">추가</button>
           </div>
         </div>
       </div>
@@ -544,21 +559,32 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
+
+const MBL_TELNO1 =ref('');
+const MBL_TELNO2 =ref('');
+const MBL_TELNO3 =ref('');
+const EML1 =ref('');
+const EML2 =ref('');
 
 const selectedGrade = ref('초급'); // 초기값
 const selectedJbps = ref('사원'); // 초기값
 const selectedJbttl = ref('PMO'); // 초기값
 const selectedMs = ref('현역'); // 초기값
 const selectedCrtrNmtm = ref(0); // 초기값 설정
+const selectedConttMthd = ref('잡코리아지원');
+const selectedPjInpStts = ref('구직중');
+const selectedClctPickupDt = ref(0);
+const selectedGiveDt = ref(0);
 
 // 상태 정의
 const selectedYear = ref(0); // 초기값
 const selectedMonth = ref(0); // 초기값
 const years = Array.from({ length: 36 }, (_, i) => i); // 0부터 35까지
 const months = Array.from({ length: 13 }, (_, i) => i); // 0부터 12까지
-const crtrNmtms = Array.from({ length: 11 },(_, i) => i);
+const crtrNmtms = Array.from({ length: 11 }, (_, i) => i);
+
 const formData = ref({
   DEV_NO: "",
   NM: "",
@@ -568,24 +594,13 @@ const formData = ref({
   GNDR: "",
   JBPS: "",
   GRD: "",
-  T_CR_PER: {
-    T_CR_PER1: "", // 초기값 설정
-    T_CR_PER2: "",
-  },
-  MS: "",
+  T_CR_PER: "",
   RGN: "",
-  MBL_TELNO: {
-    MBL_TELNO1: "",
-    MBL_TELNO2: "",
-    MBL_TELNO3: "",
-  },
-  EML: {
-    EML1: "",
-    EML2: "",
-  },
+  MBL_TELNO: "",
+  EML: "",
   CONTT_MTHD: "",
   NTRV_DMND_DT: "",
-  INP_PSBLTY_DT: "",
+  INPUT_PSBLTY_DT: "",
   OGDP_CO: "",
   SN: "",
   WHTAX_YN: "",
@@ -602,19 +617,25 @@ const formData = ref({
   JBTTL: "",
   BRKR: "",
   KAKAO_NICK: "",
-  CTRT_HSTRY_YN: ""
+  CTRT_HSTRY_YN: "",
+  MS:"",
 });
-
 // 년도 선택 메서드
 const selectYear = (year) => {
-  selectedYear.value = year; // 버튼 클릭 시 선택된 연도로 변경
-  formData.value.T_CR_PER.T_CR_PER1 = year; // 선택된 연도를 formData에 반영
+  selectedYear.value = year; // 선택된 연도로 변경
+  updateT_CR_PER(year, selectedMonth.value); // 선택된 연도와 현재 선택된 월로 업데이트
 };
 
 // 개월 선택 메서드
 const selectMonth = (month) => {
-  selectedMonth.value = month; // 버튼 클릭 시 선택된 개월로 변경
-  formData.value.T_CR_PER.T_CR_PER2 = month; // 선택된 개월을 formData에 반영
+  selectedMonth.value = month; // 선택된 개월로 변경
+  updateT_CR_PER(selectedYear.value, month); // 선택된 연도와 선택된 월로 업데이트
+};
+
+// 년도와 개월을 결합하여 T_CR_PER에 설정하는 메서드
+const updateT_CR_PER = (year, month) => {
+  // 년도와 개월을 결합하여 문자열로 설정
+  formData.value.T_CR_PER = `${year}년 ${month}개월`; // 예: "2024년 8개월"
 };
 
 // 등급 선택 메서드
@@ -638,7 +659,7 @@ const selectJbttl = (jbttl) => {
 // 병역 선택 메서드
 const selectMs = (ms) => {
   selectedMs.value = ms;
-  formData.value.Ms = ms;
+  formData.value.MS = ms; // 대소문자 수정
 };
 
 // 계약횟수 선택 메서드
@@ -647,13 +668,51 @@ const selectCrtrNmtm = (crtrNmtm) => {
   formData.value.CTRT_NMTM = crtrNmtm; // 선택된 계약횟수를 formData에 반영
 };
 
-// 폼 제출 메서드
+// 컨텍방법 선택 메서드
+const selectConttMthd = (conttMthd) => {
+  selectedConttMthd.value = conttMthd;
+  formData.value.CONTT_MTHD = conttMthd;
+};
+
+// 프로젝트 투입상태 선택 메서드
+const selectPjInpStts = (pjInpStts) => {
+  selectedPjInpStts.value = pjInpStts;
+  formData.value.PJ_INP_STTS = pjInpStts;
+};
+
+// 대금수령날짜 선택 메서드
+const selectClctPickupDt = (clctPickupDt) => {
+  selectedClctPickupDt.value = clctPickupDt;
+  formData.value.CLCT_PICKUP_DT = clctPickupDt;
+};
+
+// 지급일자 선택 메서드
+const selectGiveDt = (giveDt) => {
+  selectedGiveDt.value = giveDt;
+  formData.value.GIVE_DT = giveDt;
+};
 const submitForm = async () => {
+
+  // 값을 결합하여 MBL_TELNO에 저장합니다.
+  const fullTelno = `${MBL_TELNO1.value}-${MBL_TELNO2.value}-${MBL_TELNO3.value}`;
+
+  formData.value.MBL_TELNO = fullTelno;
+  console.log(formData.value.MBL_TELNO); // 확인용 출력
+
+  const fullEml = `${EML1.value}@${EML2.value}`;
+  formData.value.EML = fullEml;
+  console.log(formData.value.EML); // 확인용 출력
+
+  console.log(formData.value);
+
   try {
-    const response = await axios.post('/api/submit', formData.value);
-    console.log(response.data.message);
+    const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
+    alert(response.data.message); // 성공 메시지 표시
   } catch (error) {
-    console.error(error.response.data.message);
+    // 에러 메시지 확인 및 출력
+    console.error('Error response:', error.response);
+    const errorMessage = error.response?.data?.message || error.message || '개발자 추가에 실패했습니다.';
+    alert(`오류: ${errorMessage}`);
   }
 };
 
