@@ -95,14 +95,14 @@
                 <!--     휴대전화번호       -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="mblTelno" class="pr-1 col-form-label">휴대전화번호</label>
-                  <input type="text" id="mblTelno" class="div_width55 form-control"
+                  <input type="text" id="mblTelno" class="div_width140 form-control"
                          aria-describedby="passwordHelpInline" v-model="formData.MBL_TELNO">
                 </div>
 
                 <!--     이메일       -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="eml" class="pr-1 col-form-label">이메일</label>
-                  <input type="text" class="div_width130 form-control" aria-describedby="passwordHelpInline"
+                  <input type="text" class="div_width240 form-control" aria-describedby="passwordHelpInline"
                          v-model="formData.EML">
                 </div>
               </div>
@@ -133,7 +133,7 @@
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="addr" class="pr-1 col-form-label">주소</label>
                   <div class="col-auto">
-                    <input type="text" id="addr" class="div_width130 form-control"
+                    <input type="text" id="addr" class="div_width300 form-control"
                            aria-describedby="passwordHelpInline" v-model="formData.ADDR">
                   </div>
                 </div>
@@ -711,7 +711,7 @@ const closeModal = () => {
 }
 
 .modal-dialog {
-  max-width: 90%; /* 최대 너비를 화면의 90%로 설정 */
+  max-width: 450px; /* 최대 너비를 화면의 90%로 설정 */
   width: 90%; /* 너비를 90%로 설정 */
   height: 90%; /* 높이는 자동으로 설정 */
 }
@@ -760,6 +760,18 @@ const closeModal = () => {
 
 .div_width130 {
   width: 130px;
+}
+
+.div_width140 {
+  width: 140px;
+}
+
+.div_width240 {
+  width: 240px;
+}
+
+.div_width300 {
+  width: 300px;
 }
 
 .div_width55 {

@@ -7,6 +7,7 @@
         :defaultColDef="defaultColDef"
         :rowSelection="rowSelection"
         :rowData="rowData"
+        :grid-options="gridOptions"
     />
   </div>
 </template>
@@ -63,14 +64,21 @@ export default defineComponent({
       editable: true,
       filter: true,
       flex: 1,
-      minWidth: 100,
     });
     const rowSelection = ref("multiple");
     const rowData = ref([]);
 
+    const gridOptions = {
+      autoSizeStrategy: {
+        type: 'fitCellContents',
+      },
+      // 다른 그리드 옵션들...
+    };
+
     const onGridReady = async (params) => {
-      gridApi.value = params.api;
-      await fetchData();
+      gridApi.value = params.api; // api를 gridApi에 저장
+      rowData.value = await fetchData(); // fetchData의 반환 값을 rowData에 할당
+      gridApi.value.refreshCells(); // 셀 업데이트
     };
 
     const fetchData = async () => {
@@ -114,10 +122,10 @@ export default defineComponent({
           병역: item.MS,               // 병역
         }));
 
-        rowData.value = translatedData; // 변환된 데이터 할당
-        console.log("할당된 rowData:", rowData.value); // 할당된 데이터 출력
+        return translatedData; // 변환된 데이터를 반환
       } catch (error) {
         console.error('데이터 로드 오류:', error);
+        return []; // 오류 발생 시 빈 배열 반환
       }
     };
 
@@ -127,6 +135,7 @@ export default defineComponent({
       defaultColDef,
       rowSelection,
       rowData,
+      gridOptions, // gridOptions를 반환하여 템플릿에서 사용 가능
       onGridReady,
     };
   },
