@@ -96,23 +96,14 @@
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="mblTelno" class="pr-1 col-form-label">휴대전화번호</label>
                   <input type="text" id="mblTelno" class="div_width55 form-control"
-                         aria-describedby="passwordHelpInline" v-model="formData.MBL_TELNO1">
-                  <span class="plr-1">-</span>
-                  <input type="text" class="div_width65 form-control" aria-describedby="passwordHelpInline"
-                         v-model="formData.MBL_TELNO2">
-                  <span class="plr-1">-</span>
-                  <input type="text" class="div_width65 form-control" aria-describedby="passwordHelpInline"
-                         v-model="formData.MBL_TELNO3">
+                         aria-describedby="passwordHelpInline" v-model="formData.MBL_TELNO">
                 </div>
 
                 <!--     이메일       -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="eml" class="pr-1 col-form-label">이메일</label>
-                  <input type="text" id="eml" class="div_width100 form-control" aria-describedby="passwordHelpInline"
-                         v-model="formData.EML1">
-                  <span class="plr-1">@</span>
                   <input type="text" class="div_width130 form-control" aria-describedby="passwordHelpInline"
-                         v-model="formData.EML2">
+                         v-model="formData.EML">
                 </div>
               </div>
               <!--     3.3%여부       -->
@@ -159,7 +150,7 @@
                   <label for="inpPsbltyDt" class="pr-1 col-form-label">투입가능일</label>
                   <div class="col-auto">
                     <input type="text" id="inpPsbltyDt" class="div_width100 form-control"
-                           aria-describedby="passwordHelpInline" v-model="formData.INPUT_PSBLTY_DT">
+                           aria-describedby="passwordHelpInline" v-model="formData.INP_PSBLTY_DT">
                   </div>
                 </div>
                 <!--     월요청단가       -->
@@ -562,12 +553,6 @@
 import { ref } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 
-const MBL_TELNO1 =ref('');
-const MBL_TELNO2 =ref('');
-const MBL_TELNO3 =ref('');
-const EML1 =ref('');
-const EML2 =ref('');
-
 const selectedGrade = ref('초급'); // 초기값
 const selectedJbps = ref('사원'); // 초기값
 const selectedJbttl = ref('PMO'); // 초기값
@@ -600,7 +585,7 @@ const formData = ref({
   EML: "",
   CONTT_MTHD: "",
   NTRV_DMND_DT: "",
-  INPUT_PSBLTY_DT: "",
+  INP_PSBLTY_DT: "",
   OGDP_CO: "",
   SN: "",
   WHTAX_YN: "",
@@ -692,16 +677,6 @@ const selectGiveDt = (giveDt) => {
   formData.value.GIVE_DT = giveDt;
 };
 const submitForm = async () => {
-
-  // 값을 결합하여 MBL_TELNO에 저장합니다.
-  const fullTelno = `${MBL_TELNO1.value}-${MBL_TELNO2.value}-${MBL_TELNO3.value}`;
-
-  formData.value.MBL_TELNO = fullTelno;
-  console.log(formData.value.MBL_TELNO); // 확인용 출력
-
-  const fullEml = `${EML1.value}@${EML2.value}`;
-  formData.value.EML = fullEml;
-  console.log(formData.value.EML); // 확인용 출력
 
   console.log(formData.value);
 

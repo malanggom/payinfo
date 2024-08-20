@@ -93,7 +93,7 @@ export default defineComponent({
           이메일: item.EML,                  // 이메일
           컨택방법: item.CONTT_MTHD,                       // 컨택방법
           인터뷰요청일: item.NTRV_DMND_DT,          // 인터뷰요청일
-          투입가능일: item.INPUT_PSBLTY_DT,           // 투입가능일
+          투입가능일: item.INP_PSBLTY_DT,           // 투입가능일
           소속회사: item.OGDP_CO,                  // 소속회사
           일련번호: item.SN,                       // 일련번호
           '3.3%여부': item.WHTAX_YN,               // 3.3%여부

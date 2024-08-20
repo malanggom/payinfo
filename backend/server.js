@@ -53,7 +53,7 @@ app.get('/api/data', async (req, res) => {
                 EML: row[11],                 // EML
                 CONTT_MTHD: row[12],          // CONTT_MTHD
                 NTRV_DMND_DT: row[13],        // NTRV_DMND_DT
-                INPUT_PSBLTY_DT: row[14],     // INPUT_PSBLTY_DT
+                INP_PSBLTY_DT: row[14],     // INP_PSBLTY_DT
                 OGDP_CO: row[15],             // OGDP_CO
                 SN: row[16],                  // SN
                 WHTAX_YN: row[17],            // WHTAX_YN
@@ -96,12 +96,19 @@ app.post('/api/addDeveloper', async (req, res) => {
 
     const developerData = req.body; // 요청 본문에서 데이터 받기
 
+    // Boolean 값 처리
+    developerData.WHTAX_YN = developerData.WHTAX_YN ? 1 : 0;
+    developerData.BZMN_YN = developerData.BZMN_YN ? 1 : 0;
+    developerData.KDS_EMP_YN = developerData.KDS_EMP_YN ? 1 : 0;
+    developerData.CTRT_CO_EMP_YN = developerData.CTRT_CO_EMP_YN ? 1 : 0;
+    developerData.CTRT_HSTRY_YN = developerData.CTRT_HSTRY_YN ? 1 : 0;
+
     // INSERT 쿼리
     const insertQuery = `
         INSERT INTO C##SYSON.DEV (
             DEV_NO, NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR,
             JBPS, GRD, T_CR_PER, RGN, MBL_TELNO,
-            EML, CONTT_MTHD, NTRV_DMND_DT, INPUT_PSBLTY_DT,
+            EML, CONTT_MTHD, NTRV_DMND_DT, INP_PSBLTY_DT,
             OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
             CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK,
             ACTNO, DEPT, MM_DMND_UNTPRC, ADDR, JBTTL,
@@ -109,7 +116,7 @@ app.post('/api/addDeveloper', async (req, res) => {
         ) VALUES (
                      :devNo, :nm, :pjInpStts, :ctrtNmtm, :brdt, :gndr,
                      :jbps, :grd, :tCrPer, :rgn, :mblTelno,
-                     :eml, :conttMthd, :ntrvDmndDt, :inputPsbltyDt,
+                     :eml, :conttMthd, :ntrvDmndDt, :inpPsbltyDt,
                      :ogdpCo, :sn, :whtaxYn, :bzmnYn, :kdsEmpYn,
                      :ctrtCoEmpYn, :clctPickupDt, :giveDt, :bank,
                      :actno, :dept, :mmDmndUntprc, :addr, :jbttl,
@@ -134,7 +141,7 @@ app.post('/api/addDeveloper', async (req, res) => {
             eml: developerData.EML,
             conttMthd: developerData.CONTT_MTHD,
             ntrvDmndDt: developerData.NTRV_DMND_DT,
-            inputPsbltyDt: developerData.INPUT_PSBLTY_DT,
+            inpPsbltyDt: developerData.INP_PSBLTY_DT,
             ogdpCo: developerData.OGDP_CO,
             sn: developerData.SN,
             whtaxYn: developerData.WHTAX_YN,
@@ -159,8 +166,42 @@ app.post('/api/addDeveloper', async (req, res) => {
         res.status(201).json({ message: 'Developer added successfully' });
     } catch (err) {
         console.error("Error occurred: ", err); // 에러 로그 출력
+        console.log("Attempting to insert with values:", {
+            devNo: developerData.DEV_NO,
+            nm: developerData.NM,
+            pjInpStts: developerData.PJ_INP_STTS,
+            ctrtNmtm: developerData.CTRT_NMTM,
+            brdt: developerData.BRDT,
+            gndr: developerData.GNDR,
+            jbps: developerData.JBPS,
+            grd: developerData.GRD,
+            tCrPer: developerData.T_CR_PER,
+            rgn: developerData.RGN,
+            mblTelno: developerData.MBL_TELNO,
+            eml: developerData.EML,
+            conttMthd: developerData.CONTT_MTHD,
+            ntrvDmndDt: developerData.NTRV_DMND_DT,
+            inpPsbltyDt: developerData.INP_PSBLTY_DT,
+            ogdpCo: developerData.OGDP_CO,
+            sn: developerData.SN,
+            whtaxYn: developerData.WHTAX_YN,
+            bzmnYn: developerData.BZMN_YN,
+            kdsEmpYn: developerData.KDS_EMP_YN,
+            ctrtCoEmpYn: developerData.CTRT_CO_EMP_YN,
+            clctPickupDt: developerData.CLCT_PICKUP_DT,
+            giveDt: developerData.GIVE_DT,
+            bank: developerData.BANK,
+            actno: developerData.ACTNO,
+            dept: developerData.DEPT,
+            mmDmndUntprc: developerData.MM_DMND_UNTPRC,
+            addr: developerData.ADDR,
+            jbttl: developerData.JBTTL,
+            brkr: developerData.BRKR,
+            kakaoNick: developerData.KAKAO_NICK,
+            ctrtHstryYn: developerData.CTRT_HSTRY_YN,
+            ms: developerData.MS,
+        });
         res.status(500).json({ error: 'Internal Server Error', details: err.message });
-
     } finally {
         if (connection) {
             try {
