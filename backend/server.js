@@ -7,6 +7,8 @@ const port = 8080;
 
 // JSON 요청 본문을 파싱하기 위한 미들웨어
 app.use(express.json());
+
+// CORS 설정
 app.use(cors());
 
 // Oracle Instant Client 경로 설정
@@ -156,14 +158,15 @@ app.post('/api/addDeveloper', async (req, res) => {
         await connection.commit(); // 변경사항 커밋
         res.status(201).json({ message: 'Developer added successfully' });
     } catch (err) {
-        console.error("Database error: ", err);
-        res.status(500).json({ error: 'Database error', details: err.message });
+        console.error("Error occurred: ", err); // 에러 로그 출력
+        res.status(500).json({ error: 'Internal Server Error', details: err.message });
+
     } finally {
         if (connection) {
             try {
                 await connection.close(); // 연결 종료
-            } catch (err) {
-                console.error("Error closing connection:", err);
+            } catch (closeErr) {
+                console.error("Error closing connection:", closeErr);
             }
         }
     }

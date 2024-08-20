@@ -710,7 +710,7 @@ const submitForm = async () => {
     alert(response.data.message); // 성공 메시지 표시
   } catch (error) {
     // 에러 메시지 확인 및 출력
-    console.error('Error response:', error.response);
+    // console.error('Error response:', error.response);
     const errorMessage = error.response?.data?.message || error.message || '개발자 추가에 실패했습니다.';
     alert(`오류: ${errorMessage}`);
   }
