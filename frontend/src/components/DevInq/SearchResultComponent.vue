@@ -8,6 +8,7 @@
         :rowSelection="rowSelection"
         :rowData="rowData"
         :grid-options="gridOptions"
+        :pagination="true"
     />
   </div>
 </template>
