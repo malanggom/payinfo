@@ -55,7 +55,7 @@
 ===========================================================================
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
       activeTab: null // 현재 활성화된 탭을 저장
     }
@@ -69,40 +69,7 @@ export default {
       return this.activeTab === tab; // 현재 탭이 활성화되어 있는지 확인
     }
   }
-  /*
-  async clickButotn() {
-    const formData = new FormData()
-    const URL = "https://xxxxxxx"
-    const svo = {
-      dvo: {
-        devCode: '01001', // 개발자코드
-      }
-    }
-    const svoStr = JSON.stringify(svo)
-    formData.append("svo", [new Blob(svoStr, {type: 'application.json'})], "svo")
-
-    try {
-      /*
-        const response = await fetch(URL, {
-          method : 'POST',
-          body : formData,
-        })
-        if (!response.ok) {
-          return
-        }
-        const resultDaTa = await response.json()
-
-        const resultDaTa = [{
-          col1 : 'aaa',
-          col2 : 'bbb',
-          col3 : 'cccc',
-        }]
-        console.log(resultDaTa)
-      } catch (err){
-        console.log(err.message)
-      }
-  },*/
-} // export default
+}
 </script>
 ===========================================================================
                                 스크립트 종료

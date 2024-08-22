@@ -213,6 +213,23 @@ app.post('/api/addDeveloper', async (req, res) => {
     }
 });
 
+// UPDATE 쿼리
+app.put('/update-data', async (req, res) => {
+    const { id, newData } = req.body; // 클라이언트로부터 id와 수정할 데이터를 받음
+
+    try {
+        const connection = await oracledb.getConnection();
+        const result = await connection.execute(
+            `UPDATE dev SET data_column = :newData WHERE id = :id`,
+            { newData, id },
+            { autoCommit: true } // 자동 커밋
+        );
+        res.status(200).json({ message: 'Data updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update data' });
+    }
+});
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

@@ -25,39 +25,39 @@ export default defineComponent({
   },
   setup() {
     const columnDefs = ref([
-      { field: "개발자번호", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
-      { field: "이름" },
-      { field: "프로젝트투입상태" },
-      { field: "계약횟수" },
-      { field: "생년월일" },
-      { field: "성별" },
-      { field: "직위" },
-      { field: "등급" },
-      { field: "총경력기간" },
-      { field: "지역" },
-      { field: "휴대전화번호" },
-      { field: "이메일" },
-      { field: "컨택방법" },
-      { field: "인터뷰요청일" },
-      { field: "투입가능일" },
-      { field: "소속회사" },
-      { field: "일련번호" },
-      { field: "3.3%여부" },
-      { field: "사업자여부" },
-      { field: "자사정규직여부" },
-      { field: "계약회사정규직여부" },
-      { field: "대금수령날짜" },
-      { field: "지급일자" },
-      { field: "은행" },
-      { field: "계좌번호" },
-      { field: "부서" },
-      { field: "월요청단가" },
-      { field: "주소" },
-      { field: "직책" },
-      { field: "소개자" },
-      { field: "카카오톡닉네임" },
-      { field: "계약이력존재여부" },
-      { field: "병역" },
+      { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: '이름', field: "NM" },
+      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS" },
+      { headerName: '계약횟수', field: "CTRT_NMTM" },
+      { headerName: '생년월일', field: "BRDT" },
+      { headerName: '성별', field: "GNDR" },
+      { headerName: '직위', field: "JBPS" },
+      { headerName: '등급', field: "GRD" },
+      { headerName: '총경력기간', field: "T_CR_PER" },
+      { headerName: '지역', field: "RGN" },
+      { headerName: '휴대전화번호', field: "MBL_TELNO" },
+      { headerName: '이메일', field: "EML" },
+      { headerName: '컨택방법', field: "CONTT_MTHD" },
+      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT" },
+      { headerName: '투입가능일', field: "INP_PSBLTY_DT" },
+      { headerName: '소속회사', field: "OGDP_CO" },
+      { headerName: '일련번호', field: "SN" },
+      { headerName: '3.3%여부', field: "WHTAX_YN" },
+      { headerName: '사업자여부', field: "BZMN_YN" },
+      { headerName: '자사정규직여부', field: "KDS_EMP_YN" },
+      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN" },
+      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT" },
+      { headerName: '지급일자', field: "GIVE_DT" },
+      { headerName: '은행', field: "BANK" },
+      { headerName: '계좌번호', field: "ACTNO" },
+      { headerName: '부서', field: "DEPT" },
+      { headerName: '월요청단가', field: "MM_DMND_UNTPRC" },
+      { headerName: '주소', field: "ADDR" },
+      { headerName: '직책', field: "JBTTL" },
+      { headerName: '소개자', field: "BRKR" },
+      { headerName: '카카오톡닉네임', field: "KAKAO_NICK" },
+      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN" },
+      { headerName: '병역', field: "MS" },
     ]);
 
     const gridApi = shallowRef();
@@ -88,39 +88,39 @@ export default defineComponent({
         const data = await response.json();
 
         const translatedData = data.result.row.map(item => ({
-          개발자번호: item.DEV_NO,                 // 개발자번호
-          이름: item.NM,                           // 이름
-          프로젝트투입상태: item.PJ_INP_STTS,    // 프로젝트투입상태
-          계약횟수: item.CTRT_NMTM,                 // 계약횟수
-          생년월일: item.BRDT,                     // 생년월일
-          성별: item.GNDR,                         // 성별
-          직위: item.JBPS,                         // 직위
-          등급: item.GRD,                          // 등급
-          총경력기간: item.T_CR_PER,               // 총경력기간
-          지역: item.RGN,                           // 지역
-          휴대전화번호: item.MBL_TELNO,                 // 휴대전화번호
-          이메일: item.EML,                  // 이메일
-          컨택방법: item.CONTT_MTHD,                       // 컨택방법
-          인터뷰요청일: item.NTRV_DMND_DT,          // 인터뷰요청일
-          투입가능일: item.INP_PSBLTY_DT,           // 투입가능일
-          소속회사: item.OGDP_CO,                  // 소속회사
-          일련번호: item.SN,                       // 일련번호
-          '3.3%여부': item.WHTAX_YN,               // 3.3%여부
-          사업자여부: item.BZMN_YN,                // 사업자여부
-          자사정규직여부: item.KDS_EMP_YN,         // 자사정규직여부
-          계약회사정규직여부: item.CTRT_CO_EMP_YN, // 계약회사정규직여부
-          대금수령날짜: item.CLCT_PICKUP_DT,       // 대금수령날짜
-          지급일자: item.GIVE_DT,                  // 지급일자
-          은행: item.BANK,                         // 은행
-          계좌번호: item.ACTNO,                    // 계좌번호
-          부서: item.DEPT,                         // 부서
-          월요청단가: item.MM_DMND_UNTPRC,        // 월요청단가
-          주소: item.ADDR,                         // 주소
-          직책: item.JBTTL,                        // 직책
-          소개자: item.BRKR,                       // 소개자
-          카카오톡닉네임: item.KAKAO_NICK,        // 카카오톡닉네임
-          계약이력존재여부: item.CTRT_HSTRY_YN,   // 계약이력존재여부
-          병역: item.MS,               // 병역
+          DEV_NO: item.DEV_NO, // 개발자번호
+          NM: item.NM, // 이름
+          PJ_INP_STTS: item.PJ_INP_STTS, // 프로젝트투입상태
+          CTRT_NMTM: item.CTRT_NMTM, // 계약횟수
+          BRDT: item.BRDT, // 생년월일
+          GNDR: item.GNDR, // 성별
+          JBPS: item.JBPS, // 직위
+          GRD: item.GRD, // 등급
+          T_CR_PER: item.T_CR_PER, // 총경력기간
+          RGN: item.RGN, // 지역
+          MBL_TELNO: item.MBL_TELNO, // 휴대전화번호
+          EML: item.EML, // 이메일
+          CONTT_MTHD: item.CONTT_MTHD, // 컨택방법
+          NTRV_DMND_DT: item.NTRV_DMND_DT, // 인터뷰요청일
+          INP_PSBLTY_DT: item.INP_PSBLTY_DT, // 투입가능일
+          OGDP_CO: item.OGDP_CO, // 소속회사
+          SN: item.SN, // 일련번호
+          WHTAX_YN: item.WHTAX_YN, // 3.3%여부
+          BZMN_YN: item.BZMN_YN, // 사업자여부
+          KDS_EMP_YN: item.KDS_EMP_YN, // 자사정규직여부
+          CTRT_CO_EMP_YN: item.CTRT_CO_EMP_YN, // 계약회사정규직여부
+          CLCT_PICKUP_DT: item.CLCT_PICKUP_DT, // 대금수령날짜
+          GIVE_DT: item.GIVE_DT, // 지급일자
+          BANK: item.BANK, // 은행
+          ACTNO: item.ACTNO, // 계좌번호
+          DEPT: item.DEPT, // 부서
+          MM_DMND_UNTPRC: item.MM_DMND_UNTPRC, // 월요청단가
+          ADDR: item.ADDR, // 주소
+          JBTTL: item.JBTTL, // 직책
+          BRKR: item.BRKR, // 소개자
+          KAKAO_NICK: item.KAKAO_NICK, // 카카오톡닉네임
+          CTRT_HSTRY_YN: item.CTRT_HSTRY_YN, // 계약이력존재여부
+          MS: item.MS, // 병역
         }));
 
         return translatedData; // 변환된 데이터를 반환
