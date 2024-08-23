@@ -9,6 +9,7 @@
         :rowData="rowData"
         :grid-options="gridOptions"
         :pagination="true"
+        @cell-value-changed="onCellValueChanged"
     />
   </div>
 </template>
@@ -130,14 +131,39 @@ export default defineComponent({
       }
     };
 
+    // 셀의 값이 변경될 때 호출되는 함수
+    const onCellValueChanged = async (event) => {
+      console.log(event.data)
+
+      try {
+        const response = await fetch('http://localhost:8080/api/updateData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(event.data),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update data');
+        }
+
+        const result = await response.json();
+        console.log(result.message);
+      } catch (error) {
+        console.error('Error updating data:', error);
+      }
+    };
+
     return {
       columnDefs,
       gridApi,
       defaultColDef,
       rowSelection,
       rowData,
-      gridOptions, // gridOptions를 반환하여 템플릿에서 사용 가능
+      gridOptions,
       onGridReady,
+      onCellValueChanged, // 이벤트 핸들러 반환
     };
   },
 });

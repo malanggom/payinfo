@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
     res.send('서버에 접근하셨습니다!');
 });
 
+app.get('/api/', (req, res) => {
+    res.json({ message: 'API is working!' });
+});
+
 app.get('/api/data', async (req, res) => {
     let connection;
 
@@ -89,7 +93,6 @@ app.get('/api/data', async (req, res) => {
         }
     }
 });
-
 // POST 요청을 처리할 엔드포인트 추가
 app.post('/api/addDeveloper', async (req, res) => {
     let connection;
@@ -214,22 +217,84 @@ app.post('/api/addDeveloper', async (req, res) => {
 });
 
 // UPDATE 쿼리
-app.put('/update-data', async (req, res) => {
-    const { id, newData } = req.body; // 클라이언트로부터 id와 수정할 데이터를 받음
+app.post('/api/updateData', async (req, res) => {
+    const {
+        DEV_NO, NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
+        T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
+        INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
+        CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
+        MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS
+    } = req.body; // 클라이언트로부터 수정할 데이터를 받음
+
+    let connection;
 
     try {
-        const connection = await oracledb.getConnection();
+        connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
-            `UPDATE dev SET data_column = :newData WHERE id = :id`,
-            { newData, id },
+            `UPDATE C##SYSON.DEV SET 
+                NM = :NM, 
+                PJ_INP_STTS = :PJ_INP_STTS, 
+                CTRT_NMTM = :CTRT_NMTM, 
+                BRDT = :BRDT, 
+                GNDR = :GNDR, 
+                JBPS = :JBPS, 
+                GRD = :GRD, 
+                T_CR_PER = :T_CR_PER, 
+                RGN = :RGN, 
+                MBL_TELNO = :MBL_TELNO, 
+                EML = :EML, 
+                CONTT_MTHD = :CONTT_MTHD, 
+                NTRV_DMND_DT = :NTRV_DMND_DT, 
+                INP_PSBLTY_DT = :INP_PSBLTY_DT, 
+                OGDP_CO = :OGDP_CO, 
+                SN = :SN, 
+                WHTAX_YN = :WHTAX_YN, 
+                BZMN_YN = :BZMN_YN, 
+                KDS_EMP_YN = :KDS_EMP_YN, 
+                CTRT_CO_EMP_YN = :CTRT_CO_EMP_YN, 
+                CLCT_PICKUP_DT = :CLCT_PICKUP_DT, 
+                GIVE_DT = :GIVE_DT, 
+                BANK = :BANK, 
+                ACTNO = :ACTNO, 
+                DEPT = :DEPT, 
+                MM_DMND_UNTPRC = :MM_DMND_UNTPRC, 
+                ADDR = :ADDR, 
+                JBTTL = :JBTTL, 
+                BRKR = :BRKR, 
+                KAKAO_NICK = :KAKAO_NICK, 
+                CTRT_HSTRY_YN = :CTRT_HSTRY_YN, 
+                MS = :MS 
+            WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
+            {
+                NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
+                T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
+                INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
+                CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
+                MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS,
+                DEV_NO // WHERE 절에 사용할 DEV_NO
+            },
             { autoCommit: true } // 자동 커밋
         );
+
+        if (result.rowsAffected === 0) {
+            return res.status(404).json({ message: 'Data not found' });
+        }
+
         res.status(200).json({ message: 'Data updated successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to update data' });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close(); // 연결 종료
+            } catch (closeErr) {
+                console.error("Error closing connection:", closeErr);
+            }
+        }
     }
 });
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
