@@ -93,6 +93,7 @@ app.get('/api/data', async (req, res) => {
         }
     }
 });
+
 // POST 요청을 처리할 엔드포인트 추가
 app.post('/api/addDeveloper', async (req, res) => {
     let connection;
@@ -290,6 +291,38 @@ app.post('/api/updateData', async (req, res) => {
                 await connection.close(); // 연결 종료
             } catch (closeErr) {
                 console.error("Error closing connection:", closeErr);
+            }
+        }
+    }
+});
+
+app.delete('/api/deleteData', async (req, res) => {
+    const { devNoList } = req.body;
+
+    if (!devNoList || !Array.isArray(devNoList)) {
+        return res.status(400).json({ message: 'Invalid request body' });
+    }
+
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        // 바인드 변수를 올바르게 설정
+        const sql = `DELETE FROM C##SYSON.DEV WHERE DEV_NO IN (${devNoList.map((_, index) => `${index + 1}`).join(',')})`;
+        console.log('Executing SQL:', sql, 'with params:', devNoList);
+
+        const result = await connection.execute(sql, devNoList.map((devNo, index) => devNo), { autoCommit: true });
+
+        res.json({ message: `${result.rowsAffected} rows deleted` });
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        res.status(500).json({ message: 'Error deleting data' });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
             }
         }
     }

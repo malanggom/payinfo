@@ -3,9 +3,14 @@ import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 import DevAddBtnComponent from "@/components/DevInq/DevAddBtnComponent.vue";
 import SearchFilterDropdownComponent from "@/components/common/SearchFilterDropdownComponent.vue";
+import DeleteRowDataBtnComponent from "@/components/common/DeleteRowDataBtnComponent.vue";
+</script>
+<script>
+
 </script>
 
 <template>
+  <DeleteRowDataBtnComponent/>
   <SearchBarComponent class="mgLR10"/>
   <SearchBtnComponent class="mgLR10"/>
   <SearchFilterDropdownComponent class="mgLR10"/>

@@ -11,6 +11,7 @@
         :pagination="true"
         @cell-value-changed="onCellValueChanged"
     />
+    <DeleteRowDataBtnComponent @remove="removeSelectedRows" />
   </div>
 </template>
 
@@ -19,10 +20,12 @@ import { defineComponent, ref, shallowRef } from "vue";
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import DeleteRowDataBtnComponent from '@/components/common/DeleteRowDataBtnComponent.vue';
 
 export default defineComponent({
   components: {
     "ag-grid-vue": AgGridVue,
+    DeleteRowDataBtnComponent,
   },
   setup() {
     const columnDefs = ref([
@@ -155,7 +158,39 @@ export default defineComponent({
       }
     };
 
+    const removeSelectedRows = async () => {
+      const selectedNodes = gridApi.value.getSelectedNodes();
+      const selectedData = selectedNodes.map(node => node.data);
+
+      // 삭제할 개발자번호 목록
+      const devNoList = selectedData.map(row => row.DEV_NO);
+
+      // 서버에 DELETE 요청 보내기
+      try {
+        const response = await fetch('http://localhost:8080/api/deleteData', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ devNoList }), // 개발자번호 배열 전송
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete data');
+        }
+
+        // 서버에서 삭제가 완료되면 로컬 데이터 갱신
+        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+
+        // 선택된 행 삭제 후 그리드 업데이트
+        gridApi.value.setRowData(rowData.value);
+      } catch (error) {
+        console.error('Error deleting data:', error);
+      }
+    };
+
     return {
+      // 기존 반환값에 removeSelectedRows 추가
       columnDefs,
       gridApi,
       defaultColDef,
@@ -163,7 +198,8 @@ export default defineComponent({
       rowData,
       gridOptions,
       onGridReady,
-      onCellValueChanged, // 이벤트 핸들러 반환
+      onCellValueChanged,
+      removeSelectedRows, // 추가
     };
   },
 });
