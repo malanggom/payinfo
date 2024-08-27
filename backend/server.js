@@ -298,6 +298,7 @@ app.post('/api/updateData', async (req, res) => {
 
 app.delete('/api/deleteData', async (req, res) => {
     const { devNoList } = req.body;
+    console.log(devNoList);
 
     if (!devNoList || !Array.isArray(devNoList)) {
         return res.status(400).json({ message: 'Invalid request body' });
@@ -308,10 +309,14 @@ app.delete('/api/deleteData', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
 
         // 바인드 변수를 올바르게 설정
-        const sql = `DELETE FROM C##SYSON.DEV WHERE DEV_NO IN (${devNoList.map((_, index) => `${index + 1}`).join(',')})`;
-        console.log('Executing SQL:', sql, 'with params:', devNoList);
+        const placeholders = devNoList.map((_, index) => `:${index + 1}`).join(','); // 바인드 변수 자리 표시자
+        const sql = `DELETE FROM C##SYSON.DEV WHERE DEV_NO IN (${placeholders})`;
 
-        const result = await connection.execute(sql, devNoList.map((devNo, index) => devNo), { autoCommit: true });
+        console.log('Executing SQL:', sql, 'with params:', devNoList);
+        const result = await connection.execute(sql, devNoList.reduce((acc, devNo, index) => {
+            acc[index + 1] = devNo; // 바인드 변수에 값 매핑
+            return acc;
+        }, {}), { autoCommit: true });
 
         res.json({ message: `${result.rowsAffected} rows deleted` });
     } catch (error) {

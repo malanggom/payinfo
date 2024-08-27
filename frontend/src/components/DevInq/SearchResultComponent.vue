@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef } from "vue";
+import { defineComponent, ref, shallowRef, provide } from "vue";
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -183,12 +183,12 @@ export default defineComponent({
         rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
 
         // 선택된 행 삭제 후 그리드 업데이트
-        gridApi.value.setRowData(rowData.value);
+        // gridApi.value.setRowData(rowData.value);
       } catch (error) {
         console.error('Error deleting data:', error);
       }
     };
-
+    provide('removeSelectedRows', removeSelectedRows);
     return {
       // 기존 반환값에 removeSelectedRows 추가
       columnDefs,

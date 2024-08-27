@@ -1,16 +1,23 @@
 <script setup>
+import { provide, inject } from 'vue'; // inject 추가
 import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 import DevAddBtnComponent from "@/components/DevInq/DevAddBtnComponent.vue";
 import SearchFilterDropdownComponent from "@/components/common/SearchFilterDropdownComponent.vue";
-import DeleteRowDataBtnComponent from "@/components/common/DeleteRowDataBtnComponent.vue";
-</script>
-<script>
 
+const removeSelectedRows = inject('removeSelectedRows');
+
+const handleRemove = () => {
+  if (removeSelectedRows) {
+    removeSelectedRows();
+  }
+};
+
+provide('removeSelectedRows', handleRemove);
 </script>
 
 <template>
-  <DeleteRowDataBtnComponent/>
+  <button @click="handleRemove">Remove Selected</button>
   <SearchBarComponent class="mgLR10"/>
   <SearchBtnComponent class="mgLR10"/>
   <SearchFilterDropdownComponent class="mgLR10"/>
@@ -18,7 +25,7 @@ import DeleteRowDataBtnComponent from "@/components/common/DeleteRowDataBtnCompo
 </template>
 
 <style>
-.mgLR10{
+.mgLR10 {
   margin-left: 10px;
   margin-right: 10px;
 }
