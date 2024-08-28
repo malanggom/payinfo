@@ -57,7 +57,7 @@ export default defineComponent({
     };
 
 // 이벤트 등록
-    eventbus.SearchResultEvent.add(deleteRowBtnClick);
+    eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
 
     /* eventbus 설정 끝 */
     const columnDefs = ref([
@@ -118,6 +118,7 @@ export default defineComponent({
       gridApi.value.refreshCells(); // 셀 업데이트
     };
 
+// 이벤트 등록
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/data');
@@ -165,6 +166,8 @@ export default defineComponent({
         return []; // 오류 발생 시 빈 배열 반환
       }
     };
+
+    eventbus.SearchResultEvent.add('search', fetchData);
 
     // 셀의 값이 변경될 때 호출되는 함수
     const onCellValueChanged = async (event) => {
