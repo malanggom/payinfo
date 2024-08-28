@@ -1,13 +1,16 @@
 <template>
-  <button @click="handleRemove">Remove Selected</button>
+  <button class="btn btn-primary" @click="handleRemove">삭제</button>
 </template>
 
 <script>
+
+import eventbus from '@/eventbus/eventbus'
+
 export default {
   emits: ['remove'], // 이벤트 정의
   methods: {
-    handleRemove() {
-      this.$emit('remove'); // 이벤트 발생
+    handleRemove: function() { // 화살표 함수가 아닌 일반 함수로 변경
+      eventbus.SearchResultEvent.deleteRowBtnClick(); // 이벤트 호출
     }
   }
 };
