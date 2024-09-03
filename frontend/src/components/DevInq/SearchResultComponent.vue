@@ -25,6 +25,7 @@ export default defineComponent({
     "ag-grid-vue": AgGridVue,
   },
   setup() {
+    //--- 선택된 행 삭제 시작 ---//
     const deleteRowBtnClick = async () => {
       const selectedNodes = gridApi.value.getSelectedNodes();
       const selectedData = selectedNodes.map(node => node.data);
@@ -55,11 +56,10 @@ export default defineComponent({
         console.error('Error deleting data:', error);
       }
     };
-
-// 이벤트 등록
+    // 이벤트 등록
     eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
+    //--- 선택된 행 삭제 끝 ---//
 
-    /* eventbus 설정 끝 */
     const columnDefs = ref([
       { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
       { headerName: '이름', field: "NM" },
@@ -114,11 +114,11 @@ export default defineComponent({
 
     const onGridReady = async (params) => {
       gridApi.value = params.api; // api를 gridApi에 저장
-      rowData.value = await fetchData(); // fetchData의 반환 값을 rowData에 할당
-      gridApi.value.refreshCells(); // 셀 업데이트
+      // fetchData를 직접 호출하지 않고, 이벤트 등록만 수행
+      eventbus.SearchResultEvent.add('search', fetchData);
     };
 
-// 이벤트 등록
+    // 이벤트 등록
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/data');
@@ -159,11 +159,11 @@ export default defineComponent({
           CTRT_HSTRY_YN: item.CTRT_HSTRY_YN, // 계약이력존재여부
           MS: item.MS, // 병역
         }));
-
-        return translatedData; // 변환된 데이터를 반환
+        rowData.value = translatedData;
+        gridApi.value.refreshCells();
       } catch (error) {
         console.error('데이터 로드 오류:', error);
-        return []; // 오류 발생 시 빈 배열 반환
+        rowData.value = [];
       }
     };
 

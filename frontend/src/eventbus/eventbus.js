@@ -13,7 +13,7 @@ export default {
         deleteRowBtnClick() {
             handlers.deleteRow.forEach(handler => handler()); // deleteRow 핸들러만 호출
         },
-        searchDevData() {
+        fetchData() {
             handlers.search.forEach(handler => handler()); // search 핸들러만 호출
         },
     }
