@@ -76,6 +76,15 @@ app.get('/api/data', async (req, res) => {
                 KAKAO_NICK: row[30],          // KAKAO_NICK
                 CTRT_HSTRY_YN: row[31],       // CTRT_HSTRY_YN
                 MS: row[32],                  // MS
+                MDL: row[33],
+                OS: row[34],
+                LANG: row[35],
+                DB: row[36],
+                TOOL: row[37],
+                FRMW: row[38],
+                LBRR: row[39],
+                CMNCT: row[40],
+                ETC: row[41],
             };
         });
 
@@ -116,7 +125,8 @@ app.post('/api/addDeveloper', async (req, res) => {
             OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
             CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK,
             ACTNO, DEPT, MM_DMND_UNTPRC, ADDR, JBTTL,
-            BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS
+            BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
+            LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
         ) VALUES (
                      :devNo, :nm, :pjInpStts, :ctrtNmtm, :brdt, :gndr,
                      :jbps, :grd, :tCrPer, :rgn, :mblTelno,
@@ -124,7 +134,8 @@ app.post('/api/addDeveloper', async (req, res) => {
                      :ogdpCo, :sn, :whtaxYn, :bzmnYn, :kdsEmpYn,
                      :ctrtCoEmpYn, :clctPickupDt, :giveDt, :bank,
                      :actno, :dept, :mmDmndUntprc, :addr, :jbttl,
-                     :brkr, :kakaoNick, :ctrtHstryYn, :ms
+                     :brkr, :kakaoNick, :ctrtHstryYn, :ms, :mdl, :os,
+                     :lang, :db, :tool, :frmw, :lbrr, :cmnct, :etc
                  )
     `;
 
@@ -164,6 +175,15 @@ app.post('/api/addDeveloper', async (req, res) => {
             kakaoNick: developerData.KAKAO_NICK,
             ctrtHstryYn: developerData.CTRT_HSTRY_YN,
             ms: developerData.MS,
+            mdl: developerData.MDL,
+            os: developerData.OS,
+            lang: developerData.LANG,
+            db: developerData.DB,
+            tool: developerData.TOOL,
+            frmw: developerData.FRMW,
+            lbrr: developerData.LBRR,
+            cmnct: developerData.CMNCT,
+            etc: developerData.ETC,
         });
 
         await connection.commit(); // 변경사항 커밋
@@ -204,6 +224,15 @@ app.post('/api/addDeveloper', async (req, res) => {
             kakaoNick: developerData.KAKAO_NICK,
             ctrtHstryYn: developerData.CTRT_HSTRY_YN,
             ms: developerData.MS,
+            mdl: developerData.MDL,
+            os: developerData.OS,
+            lang: developerData.LANG,
+            db: developerData.DB,
+            tool: developerData.TOOL,
+            frmw: developerData.FRMW,
+            lbrr: developerData.LBRR,
+            cmnct: developerData.CMNCT,
+            etc: developerData.ETC,
         });
         res.status(500).json({ error: 'Internal Server Error', details: err.message });
     } finally {
@@ -224,7 +253,8 @@ app.post('/api/updateData', async (req, res) => {
         T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
         INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
         CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
-        MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS
+        MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
+        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
     } = req.body; // 클라이언트로부터 수정할 데이터를 받음
 
     let connection;
@@ -264,14 +294,24 @@ app.post('/api/updateData', async (req, res) => {
                 BRKR = :BRKR, 
                 KAKAO_NICK = :KAKAO_NICK, 
                 CTRT_HSTRY_YN = :CTRT_HSTRY_YN, 
-                MS = :MS 
+                MS = :MS,
+                MDL = :MDL,
+                OS = :OS,
+                LANG = :LANG,
+                DB = :DB,
+                TOOL = :TOOL,
+                FRMW = :FRMW,
+                LBRR = :LBRR,
+                CMNCT = :CMNCT,
+                ETC = :ETC
             WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
             {
                 NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
                 T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
                 INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
                 CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
-                MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS,
+                MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
+                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
                 DEV_NO // WHERE 절에 사용할 DEV_NO
             },
             { autoCommit: true } // 자동 커밋

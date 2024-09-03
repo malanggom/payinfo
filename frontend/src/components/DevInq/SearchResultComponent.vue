@@ -94,6 +94,15 @@ export default defineComponent({
       { headerName: '카카오톡닉네임', field: "KAKAO_NICK" },
       { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN" },
       { headerName: '병역', field: "MS" },
+      { headerName: '기종', field: "MDL" },
+      { headerName: '운영체제', field: "OS" },
+      { headerName: '언어', field: "LANG" },
+      { headerName: '데이터베이스', field: "DB" },
+      { headerName: '툴', field: "TOOL" },
+      { headerName: '프레임워크', field: "FRMW" },
+      { headerName: '라이브러리', field: "LBRR" },
+      { headerName: '통신', field: "CMNCT" },
+      { headerName: '기타', field: "ETC" },
     ]);
 
     const gridApi = shallowRef();
@@ -158,6 +167,15 @@ export default defineComponent({
           KAKAO_NICK: item.KAKAO_NICK, // 카카오톡닉네임
           CTRT_HSTRY_YN: item.CTRT_HSTRY_YN, // 계약이력존재여부
           MS: item.MS, // 병역
+          MDL: item.MDL, // 모델
+          OS: item.OS, // 운영 체제
+          LANG: item.LANG, // 언어
+          DB: item.DB, // 데이터베이스
+          TOOL: item.TOOL, // 툴
+          FRMW: item.FRMW, // 프레임워크
+          LBRR: item.LBRR, // 라이브러리
+          CMNCT: item.CMNCT, // 통신
+          ETC: item.ETC // 기타
         }));
         rowData.value = translatedData;
         gridApi.value.refreshCells();
