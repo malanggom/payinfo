@@ -79,18 +79,20 @@ export default {
 <style>
 .grid-container{
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 250px 1fr;
 }
 
 .grid-item{
   display: grid;
+  background-color:#2c3e50;
 }
 
 .grid-item2{
   display: grid;
   grid-template-rows: 50px 50px 50px 1fr;
-  padding-top: 30px;
+  padding-top: 20px;
   padding-right: 10px;
+  background-color:#f6f6f6;
 }
 
 #app {
@@ -98,21 +100,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   height: 100%;
 }
 
 nav {
-  padding: 30px;
+  padding-top: 20px;
 }
 
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #ffffff;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #ffffff;
 }
 
 .nav__menu{
@@ -120,6 +121,7 @@ nav a.router-link-exact-active {
   align-items: center;
   justify-content: center;
   height: 50px;
+  color: #ffffff;
 }
 
 html, head, body, main{

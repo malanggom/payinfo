@@ -14,9 +14,14 @@ export default {
 </script>
 
 <template>
-<button class="btn btn-outline-primary" @click="handleRemove">검색</button>
+<button class="btn searchBtnStyle" @click="handleRemove">검색</button>
 </template>
 
 <style scoped>
+.searchBtnStyle{
+  background-color: #b4c7dd;
+  border-radius: 20px;
+  width: 70px;
+}
 
 </style>

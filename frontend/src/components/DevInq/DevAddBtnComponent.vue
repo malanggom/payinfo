@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-primary" @click="openModal">개발자추가</button>
+  <button class="btn devAddBtnStyle" @click="openModal">개발자추가</button>
   <div class="modal fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
        aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -885,5 +885,12 @@ const closeModal = () => {
 .plr-1 {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.devAddBtnStyle{
+  background-color: #57687c;
+  border-radius: 20px;
+  color: #c9d6df;
+  width: 120px;
 }
 </style>

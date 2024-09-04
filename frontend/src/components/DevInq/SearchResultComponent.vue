@@ -1,5 +1,5 @@
 <template>
-  <div class="ag-theme-quartz search-result" style="width: 100%; height: 98%;">
+  <div class="ag-theme-quartz search-result pl10" style="width: 100%; height: 98%;">
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -110,7 +110,8 @@ export default defineComponent({
       editable: true,
       filter: true,
       flex: 1,
-      headerClass: "centered" // 모든 열에 중앙 정렬 클래스 추가
+      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
+      headerStyle: "headerColor" // 배경색 설정
     });
     const rowSelection = ref("multiple");
     const rowData = ref([]);
@@ -246,5 +247,12 @@ export default defineComponent({
   .ag-header-cell-label {
     justify-content: center !important;
   }
+}
+
+.headerColor{
+  background-color: #e8e8e8 !important;;
+}
+.pl10{
+  padding-left: 10px;
 }
 </style>
