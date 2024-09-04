@@ -442,6 +442,79 @@
             </div>
             <div class="b_line pb-3">
               <div class="d-flex align-items-start">
+                <label class="col-form-label fs-5">보유스킬</label>
+              </div>
+              <div class="d-flex row align-items-center">
+                <!--     기종       -->
+                <div class="row align-items-center">
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Mdl" class="pr-1 col-form-label">기종</label>
+                    <div class="col-auto">
+                      <input type="text" id="Mdl" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.MDL">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Os" class="pr-1 col-form-label">운영체제</label>
+                    <div class="col-auto">
+                      <input type="text" id="Os" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.OS">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Lang" class="pr-1 col-form-label">언어</label>
+                    <div class="col-auto">
+                      <input type="text" id="Lang" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.LANG">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Db" class="pr-1 col-form-label">데이터베이스</label>
+                    <div class="col-auto">
+                      <input type="text" id="Db" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.DB">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Tool" class="pr-1 col-form-label">툴</label>
+                    <div class="col-auto">
+                      <input type="text" id="Tool" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.TOOL">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Frmw" class="pr-1 col-form-label">프레임워크</label>
+                    <div class="col-auto">
+                      <input type="text" id="Frmw" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.FRMW">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Lbrr" class="pr-1 col-form-label">라이브러리</label>
+                    <div class="col-auto">
+                      <input type="text" id="Lbrr" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.LBRR">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Cmnct" class="pr-1 col-form-label">통신</label>
+                    <div class="col-auto">
+                      <input type="text" id="Cmnct" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.CMNCT">
+                    </div>
+                  </div>
+                  <div class="col-auto d-flex align-items-center p-3">
+                    <label for="Etc" class="pr-1 col-form-label">기타</label>
+                    <div class="col-auto">
+                      <input type="text" id="Etc" class="div_width130 form-control"
+                             aria-describedby="passwordHelpInline" v-model="formData.ETC">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="b_line pb-3">
+              <div class="d-flex align-items-start">
                 <label class="col-form-label fs-5">지급정보</label>
               </div>
               <div class="d-flex row align-items-center">
@@ -603,7 +676,16 @@ const formData = ref({
   BRKR: "",
   KAKAO_NICK: "",
   CTRT_HSTRY_YN: "",
-  MS:"",
+  MS: "",
+  MDL: "",
+  OS: "",
+  LANG: "",
+  DB: "",
+  TOOL: "",
+  FRMW: "",
+  LBRR: "",
+  CMNCT: "",
+  ETC: "",
 });
 // 년도 선택 메서드
 const selectYear = (year) => {
@@ -711,7 +793,7 @@ const closeModal = () => {
 }
 
 .modal-dialog {
-  max-width: 450px; /* 최대 너비를 화면의 90%로 설정 */
+  max-width: 90%; /* 최대 너비를 화면의 90%로 설정 */
   width: 90%; /* 너비를 90%로 설정 */
   height: 90%; /* 높이는 자동으로 설정 */
 }

@@ -110,6 +110,7 @@ export default defineComponent({
       editable: true,
       filter: true,
       flex: 1,
+      headerClass: "centered" // 모든 열에 중앙 정렬 클래스 추가
     });
     const rowSelection = ref("multiple");
     const rowData = ref([]);
@@ -230,4 +231,10 @@ export default defineComponent({
 <style>
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-quartz.css";
+
+.centered {
+  .ag-header-cell-label {
+    justify-content: center !important;
+  }
+}
 </style>
