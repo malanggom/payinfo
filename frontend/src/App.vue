@@ -88,7 +88,7 @@ export default {
 
 .grid-item2{
   display: grid;
-  grid-template-rows: 50px 50px 1fr;
+  grid-template-rows: 50px 50px 50px 1fr;
   padding-top: 30px;
   padding-right: 10px;
 }

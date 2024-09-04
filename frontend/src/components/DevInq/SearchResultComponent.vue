@@ -1,5 +1,5 @@
 <template>
-  <div class="ag-theme-quartz search-result" style="width: 100%; height: 90%;">
+  <div class="ag-theme-quartz search-result" style="width: 100%; height: 98%;">
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -119,7 +119,17 @@ export default defineComponent({
       autoSizeStrategy: {
         type: 'fitCellContents',
       },
-      // 다른 그리드 옵션들...
+      localeText: {
+        // 필터 관련 텍스트를 한글로 변경
+        contains: '포함',
+        notContains: '포함하지 않음',
+        equals: '같음',
+        notEqual: '같지 않음',
+        startsWith: '시작하는',
+        endsWith: '끝나는',
+        blank: '비어 있음',
+        notBlank: '비어 있지 않음',
+      },
     };
 
     const onGridReady = async (params) => {
