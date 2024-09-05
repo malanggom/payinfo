@@ -253,12 +253,12 @@ app.post('/api/addDeveloper', async (req, res) => {
 // UPDATE 쿼리
 app.post('/api/updateData', async (req, res) => {
     const {
-        DEV_NO, NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
+        NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
         T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
         INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
         CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
         MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
+        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG
     } = req.body; // 클라이언트로부터 수정할 데이터를 받음
 
     let connection;
@@ -307,7 +307,9 @@ app.post('/api/updateData', async (req, res) => {
                 FRMW = :FRMW,
                 LBRR = :LBRR,
                 CMNCT = :CMNCT,
-                ETC = :ETC
+                ETC = :ETC,
+                AGE = :AGE,
+                ACBG = :ACBG,
             WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
             {
                 NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
@@ -315,7 +317,7 @@ app.post('/api/updateData', async (req, res) => {
                 INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
                 CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
                 MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
+                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG,
                 DEV_NO // WHERE 절에 사용할 DEV_NO
             },
             { autoCommit: true } // 자동 커밋

@@ -523,8 +523,8 @@
             </div>
             <div class="b_line pb-3">
               <div class="d-flex align-items-start">
-                <label class="col-form-label fs-5">지급정보</label>
-              </div>
+              <label class="col-form-label fs-5">지급정보</label>
+            </div>
               <div class="d-flex row align-items-center">
                 <!--     대금수령날짜       -->
                 <div class="row align-items-center">
