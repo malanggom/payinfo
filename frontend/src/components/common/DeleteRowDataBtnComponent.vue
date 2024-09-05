@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-primary" @click="handleRemove">삭제</button>
+  <button class="btn devDelBtnStyle" @click="handleRemove">삭제</button>
 </template>
 
 <script>
@@ -18,4 +18,10 @@ export default {
 
 <style scoped>
 /* 스타일 추가 */
+.devDelBtnStyle{
+  background-color: #57687c;
+  color: #c9d6df;
+  border-radius: 20px;
+  width: 70px;
+}
 </style>

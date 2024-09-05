@@ -1,15 +1,11 @@
 <script setup>
 
+import SearchFilterBtnComponent from "@/components/common/SearchFilterBtnComponent.vue";
 </script>
 
 <template>
-<div class="pl10">
-  <button class="btn btn-primary">필터</button>
-</div>
+  <SearchFilterBtnComponent class="mgLR10"/>
 </template>
 
 <style scoped>
-.pl10{
-  padding-left: 10px;
-}
 </style>
