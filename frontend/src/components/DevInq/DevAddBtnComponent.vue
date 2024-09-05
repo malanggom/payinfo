@@ -17,14 +17,6 @@
                 <label class="col-form-label fs-5">개인정보</label>
               </div>
               <div class="d-flex row align-items-center">
-                <!--     개발자번호       -->
-                <div class="col-auto d-flex align-items-center p-3">
-                  <label for="devNo" class="pr-1 col-form-label">개발자번호</label>
-                  <div class="col-auto">
-                    <input type="text" id="devNo" class="div_width100 form-control div_flex_center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DEV_NO">
-                  </div>
-                </div>
                 <!--     이름       -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="inputPassword6" class="pr-1 col-form-label">이름</label>
@@ -160,8 +152,24 @@
                          aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC">만원
                 </div>
               </div>
-              <!-- 총경력기간 -->
               <div class="row align-items-center">
+                <!--     나이       -->
+                <div class="col-auto d-flex align-items-center p-3">
+                  <label for="age" class="pr-1 col-form-label">나이</label>
+                  <div class="col-auto">
+                    <input type="text" id="age" class="div_width100 form-control div_flex_center"
+                           aria-describedby="passwordHelpInline" v-model="formData.AGE">
+                  </div>
+                </div>
+                <!--     학력       -->
+                <div class="col-auto d-flex align-items-center p-3">
+                  <label for="acbg" class="pr-1 col-form-label">학력</label>
+                  <div class="col-auto">
+                    <input type="text" id="acbg" class="div_width100 form-control div_flex_center"
+                           aria-describedby="passwordHelpInline" v-model="formData.ACBG">
+                  </div>
+                </div>
+                <!-- 총경력기간 -->
                 <div class="col-auto d-flex align-items-center p-3">
                   <label for="tCrPer" class="pr-1 col-form-label">총 경력기간</label>
                   <div class="col-auto dropdown">
@@ -686,6 +694,8 @@ const formData = ref({
   LBRR: "",
   CMNCT: "",
   ETC: "",
+  AGE: "",
+  ACBG: "",
 });
 // 년도 선택 메서드
 const selectYear = (year) => {

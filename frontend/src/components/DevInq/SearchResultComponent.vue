@@ -66,6 +66,8 @@ export default defineComponent({
       { headerName: '프로젝트투입상태', field: "PJ_INP_STTS" },
       { headerName: '계약횟수', field: "CTRT_NMTM" },
       { headerName: '생년월일', field: "BRDT" },
+      { headerName: '나이', field: "AGE" },
+      { headerName: '학력', field: "ACBG" },
       { headerName: '성별', field: "GNDR" },
       { headerName: '직위', field: "JBPS" },
       { headerName: '등급', field: "GRD" },
@@ -187,7 +189,9 @@ export default defineComponent({
           FRMW: item.FRMW, // 프레임워크
           LBRR: item.LBRR, // 라이브러리
           CMNCT: item.CMNCT, // 통신
-          ETC: item.ETC // 기타
+          ETC: item.ETC, // 기타
+          AGE: item.AGE, // 나이
+          ACBG: item.ACBG // 학력
         }));
         rowData.value = translatedData;
         gridApi.value.refreshCells();

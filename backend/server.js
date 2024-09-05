@@ -85,6 +85,8 @@ app.get('/api/data', async (req, res) => {
                 LBRR: row[39],
                 CMNCT: row[40],
                 ETC: row[41],
+                AGE: row[42],
+                ACBG: row[43],
             };
         });
 
@@ -119,30 +121,29 @@ app.post('/api/addDeveloper', async (req, res) => {
     // INSERT 쿼리
     const insertQuery = `
         INSERT INTO C##SYSON.DEV (
-            DEV_NO, NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR,
+            NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR,
             JBPS, GRD, T_CR_PER, RGN, MBL_TELNO,
             EML, CONTT_MTHD, NTRV_DMND_DT, INP_PSBLTY_DT,
             OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
             CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK,
             ACTNO, DEPT, MM_DMND_UNTPRC, ADDR, JBTTL,
             BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-            LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC,
+            LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG
         ) VALUES (
-                     :devNo, :nm, :pjInpStts, :ctrtNmtm, :brdt, :gndr,
+                     :nm, :pjInpStts, :ctrtNmtm, :brdt, :gndr,
                      :jbps, :grd, :tCrPer, :rgn, :mblTelno,
                      :eml, :conttMthd, :ntrvDmndDt, :inpPsbltyDt,
                      :ogdpCo, :sn, :whtaxYn, :bzmnYn, :kdsEmpYn,
                      :ctrtCoEmpYn, :clctPickupDt, :giveDt, :bank,
                      :actno, :dept, :mmDmndUntprc, :addr, :jbttl,
                      :brkr, :kakaoNick, :ctrtHstryYn, :ms, :mdl, :os,
-                     :lang, :db, :tool, :frmw, :lbrr, :cmnct, :etc
+                     :lang, :db, :tool, :frmw, :lbrr, :cmnct, :etc, :age, :acbg
                  )
     `;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
         await connection.execute(insertQuery, {
-            devNo: developerData.DEV_NO,
             nm: developerData.NM,
             pjInpStts: developerData.PJ_INP_STTS,
             ctrtNmtm: developerData.CTRT_NMTM,
@@ -184,6 +185,8 @@ app.post('/api/addDeveloper', async (req, res) => {
             lbrr: developerData.LBRR,
             cmnct: developerData.CMNCT,
             etc: developerData.ETC,
+            age: developerData.AGE,
+            acbg: developerData.ACBG,
         });
 
         await connection.commit(); // 변경사항 커밋
@@ -191,7 +194,6 @@ app.post('/api/addDeveloper', async (req, res) => {
     } catch (err) {
         console.error("Error occurred: ", err); // 에러 로그 출력
         console.log("Attempting to insert with values:", {
-            devNo: developerData.DEV_NO,
             nm: developerData.NM,
             pjInpStts: developerData.PJ_INP_STTS,
             ctrtNmtm: developerData.CTRT_NMTM,
@@ -233,6 +235,8 @@ app.post('/api/addDeveloper', async (req, res) => {
             lbrr: developerData.LBRR,
             cmnct: developerData.CMNCT,
             etc: developerData.ETC,
+            age: developerData.AGE,
+            acbg: developerData.ACBG,
         });
         res.status(500).json({ error: 'Internal Server Error', details: err.message });
     } finally {
