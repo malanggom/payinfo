@@ -1,6 +1,7 @@
 let handlers = {
     deleteRow: [],
-    search: []
+    search: [],
+    reset: []
 };
 
 export default {
@@ -15,6 +16,9 @@ export default {
         },
         fetchData() {
             handlers.search.forEach(handler => handler()); // search 핸들러만 호출
+        },
+        resetFilter(){
+            handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
         },
     }
 }

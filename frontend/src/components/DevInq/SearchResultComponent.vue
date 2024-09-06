@@ -60,63 +60,18 @@ export default defineComponent({
     eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
     //--- 선택된 행 삭제 끝 ---//
 
-    const columnDefs = ref([
-      { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: '이름', field: "NM" },
-      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS" },
-      { headerName: '계약횟수', field: "CTRT_NMTM" },
-      { headerName: '생년월일', field: "BRDT" },
-      { headerName: '나이', field: "AGE" },
-      { headerName: '학력', field: "ACBG" },
-      { headerName: '성별', field: "GNDR" },
-      { headerName: '직위', field: "JBPS" },
-      { headerName: '등급', field: "GRD" },
-      { headerName: '총경력기간', field: "T_CR_PER" },
-      { headerName: '지역', field: "RGN" },
-      { headerName: '휴대전화번호', field: "MBL_TELNO" },
-      { headerName: '이메일', field: "EML" },
-      { headerName: '컨택방법', field: "CONTT_MTHD" },
-      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT" },
-      { headerName: '투입가능일', field: "INP_PSBLTY_DT" },
-      { headerName: '소속회사', field: "OGDP_CO" },
-      { headerName: '일련번호', field: "SN" },
-      { headerName: '3.3%여부', field: "WHTAX_YN" },
-      { headerName: '사업자여부', field: "BZMN_YN" },
-      { headerName: '자사정규직여부', field: "KDS_EMP_YN" },
-      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN" },
-      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT" },
-      { headerName: '지급일자', field: "GIVE_DT" },
-      { headerName: '은행', field: "BANK" },
-      { headerName: '계좌번호', field: "ACTNO" },
-      { headerName: '부서', field: "DEPT" },
-      { headerName: '월요청단가', field: "MM_DMND_UNTPRC" },
-      { headerName: '주소', field: "ADDR" },
-      { headerName: '직책', field: "JBTTL" },
-      { headerName: '소개자', field: "BRKR" },
-      { headerName: '카카오톡닉네임', field: "KAKAO_NICK" },
-      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN" },
-      { headerName: '병역', field: "MS" },
-      { headerName: '기종', field: "MDL" },
-      { headerName: '운영체제', field: "OS" },
-      { headerName: '언어', field: "LANG" },
-      { headerName: '데이터베이스', field: "DB" },
-      { headerName: '툴', field: "TOOL" },
-      { headerName: '프레임워크', field: "FRMW" },
-      { headerName: '라이브러리', field: "LBRR" },
-      { headerName: '통신', field: "CMNCT" },
-      { headerName: '기타', field: "ETC" },
-    ]);
-
-    const gridApi = shallowRef();
-    const defaultColDef = ref({
-      editable: true,
-      filter: true,
-      flex: 1,
-      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
-      headerStyle: "headerColor" // 배경색 설정
-    });
-    const rowSelection = ref("multiple");
-    const rowData = ref([]);
+    const textFilterParams ={
+      filterOptions: ["contains", "notContains"],
+      caseSensitive: false,
+      trimInput: true,
+      buttons: ["cancel", "reset", "apply"],
+      localeText: {
+        cancel: '취소',
+        reset: '초기화', // 필요에 따라 추가
+        apply: '적용', // 필요에 따라 추가
+      },
+      closeOnApply: true,
+    };
 
     const gridOptions = {
       autoSizeStrategy: {
@@ -132,8 +87,68 @@ export default defineComponent({
         endsWith: '끝나는',
         blank: '비어 있음',
         notBlank: '비어 있지 않음',
+        empty: '하나를 선택',
       },
     };
+
+    const columnDefs = ref([
+      { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: '이름', field: "NM", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약횟수', field: "CTRT_NMTM" },
+      { headerName: '생년월일', field: "BRDT" },
+      { headerName: '나이', field: "AGE" },
+      { headerName: '학력', field: "ACBG", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '성별', field: "GNDR", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '직위', field: "JBPS", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '등급', field: "GRD", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '총경력기간', field: "T_CR_PER" },
+      { headerName: '지역', field: "RGN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '휴대전화번호', field: "MBL_TELNO" },
+      { headerName: '이메일', field: "EML", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '컨택방법', field: "CONTT_MTHD", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT" },
+      { headerName: '투입가능일', field: "INP_PSBLTY_DT" },
+      { headerName: '소속회사', field: "OGDP_CO", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '일련번호', field: "SN" },
+      { headerName: '3.3%여부', field: "WHTAX_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '사업자여부', field: "BZMN_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '자사정규직여부', field: "KDS_EMP_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT" },
+      { headerName: '지급일자', field: "GIVE_DT" },
+      { headerName: '은행', field: "BANK", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계좌번호', field: "ACTNO" },
+      { headerName: '부서', field: "DEPT", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '월요청단가', field: "MM_DMND_UNTPRC" },
+      { headerName: '주소', field: "ADDR", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '직책', field: "JBTTL", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '소개자', field: "BRKR", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '카카오톡닉네임', field: "KAKAO_NICK", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '병역', field: "MS", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '기종', field: "MDL", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '운영체제', field: "OS", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '언어', field: "LANG", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '데이터베이스', field: "DB", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '툴', field: "TOOL", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '프레임워크', field: "FRMW", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '라이브러리', field: "LBRR", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '통신', field: "CMNCT", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '기타', field: "ETC", filter: "agTextColumnFilter", filterParams: textFilterParams},
+    ]);
+
+    const gridApi = shallowRef();
+    const defaultColDef = ref({
+      editable: true,
+      filter: true,
+      flex: 1,
+      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
+      headerStyle: "headerColor" // 배경색 설정
+    });
+    const rowSelection = ref("multiple");
+    const rowData = ref([]);
+
 
     const onGridReady = async (params) => {
       gridApi.value = params.api; // api를 gridApi에 저장
@@ -227,6 +242,60 @@ export default defineComponent({
       }
     };
 
+    //--- 필터초기화 시작 ---//
+    const resetFilter = async () => {
+      gridApi.value.setColumnFilterModel({
+        NM: null,
+        PJ_INP_STTS: null,
+        CTRT_NMTM: null,
+        BRDT: null,
+        AGE: null,
+        ACBG: null,
+        GNDR: null,
+        JBPS: null,
+        GRD: null,
+        T_CR_PER: null,
+        RGN: null,
+        MBL_TELNO: null,
+        EML: null,
+        CONTT_MTHD: null,
+        NTRV_DMND_DT: null,
+        INP_PSBLTY_DT: null,
+        OGDP_CO: null,
+        SN: null,
+        WHTAX_YN: null,
+        BZMN_YN: null,
+        KDS_EMP_YN: null,
+        CTRT_CO_EMP_YN: null,
+        CLCT_PICKUP_DT: null,
+        GIVE_DT: null,
+        BANK: null,
+        ACTNO: null,
+        DEPT: null,
+        MM_DMND_UNTPRC: null,
+        ADDR: null,
+        JBTTL: null,
+        BRKR: null,
+        KAKAO_NICK: null,
+        CTRT_HSTRY_YN: null,
+        MS: null,
+        MDL: null,
+        OS: null,
+        LANG: null,
+        DB: null,
+        TOOL: null,
+        FRMW: null,
+        LBRR: null,
+        CMNCT: null,
+        ETC: null,
+      }).then(() => {
+        gridApi.value.onFilterChanged();
+      });
+    };
+
+    // 이벤트 등록
+    eventbus.SearchResultEvent.add('reset', resetFilter);
+    //--- 필터초기화 끝 ---//
 
     return {
       columnDefs,
