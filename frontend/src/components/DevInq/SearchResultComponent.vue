@@ -243,54 +243,8 @@ export default defineComponent({
     };
 
     //--- 필터초기화 시작 ---//
-    const resetFilter = async () => {
-      gridApi.value.setColumnFilterModel({
-        NM: null,
-        PJ_INP_STTS: null,
-        CTRT_NMTM: null,
-        BRDT: null,
-        AGE: null,
-        ACBG: null,
-        GNDR: null,
-        JBPS: null,
-        GRD: null,
-        T_CR_PER: null,
-        RGN: null,
-        MBL_TELNO: null,
-        EML: null,
-        CONTT_MTHD: null,
-        NTRV_DMND_DT: null,
-        INP_PSBLTY_DT: null,
-        OGDP_CO: null,
-        SN: null,
-        WHTAX_YN: null,
-        BZMN_YN: null,
-        KDS_EMP_YN: null,
-        CTRT_CO_EMP_YN: null,
-        CLCT_PICKUP_DT: null,
-        GIVE_DT: null,
-        BANK: null,
-        ACTNO: null,
-        DEPT: null,
-        MM_DMND_UNTPRC: null,
-        ADDR: null,
-        JBTTL: null,
-        BRKR: null,
-        KAKAO_NICK: null,
-        CTRT_HSTRY_YN: null,
-        MS: null,
-        MDL: null,
-        OS: null,
-        LANG: null,
-        DB: null,
-        TOOL: null,
-        FRMW: null,
-        LBRR: null,
-        CMNCT: null,
-        ETC: null,
-      }).then(() => {
-        gridApi.value.onFilterChanged();
-      });
+    const resetFilter = () => {
+      gridApi.value.setFilterModel(null);
     };
 
     // 이벤트 등록
@@ -307,6 +261,7 @@ export default defineComponent({
       onGridReady,
       onCellValueChanged,
       deleteRowBtnClick,
+      resetFilter,
     };
   },
 });
