@@ -242,6 +242,10 @@ export default defineComponent({
       }
     };
 
+    const filters = ref([]);
+    filters.value = gridApi.value;
+    console.log(filters);
+
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
