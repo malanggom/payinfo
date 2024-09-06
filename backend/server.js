@@ -258,7 +258,7 @@ app.post('/api/updateData', async (req, res) => {
         INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
         CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
         MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG
+        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, DEV_NO
     } = req.body; // 클라이언트로부터 수정할 데이터를 받음
 
     let connection;
@@ -309,7 +309,7 @@ app.post('/api/updateData', async (req, res) => {
                 CMNCT = :CMNCT,
                 ETC = :ETC,
                 AGE = :AGE,
-                ACBG = :ACBG,
+                ACBG = :ACBG
             WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
             {
                 NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
