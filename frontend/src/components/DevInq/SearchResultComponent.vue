@@ -244,7 +244,6 @@ export default defineComponent({
 
     const filters = ref([]);
     filters.value = gridApi.value;
-    console.log(filters);
 
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
@@ -254,6 +253,16 @@ export default defineComponent({
     // 이벤트 등록
     eventbus.SearchResultEvent.add('reset', resetFilter);
     //--- 필터초기화 끝 ---//
+
+    const getCurrentFilterModel = () => {
+      if (gridApi.value) {
+        const filterModel = gridApi.value.getFilterModel();
+        console.log('현재 필터 모델:', filterModel);
+        return filterModel; // 필요에 따라 반환하거나 추가 작업 수행
+      }
+    };
+
+    getCurrentFilterModel();
 
     return {
       columnDefs,
@@ -266,6 +275,7 @@ export default defineComponent({
       onCellValueChanged,
       deleteRowBtnClick,
       resetFilter,
+      getCurrentFilterModel,
     };
   },
 });
