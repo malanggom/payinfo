@@ -1,7 +1,9 @@
 let handlers = {
     deleteRow: [],
     search: [],
-    reset: []
+    reset: [],
+    filterUpdate: [],
+    resetButtons: [] // 새로운 이벤트 추가
 };
 
 export default {
@@ -14,11 +16,17 @@ export default {
         deleteRowBtnClick() {
             handlers.deleteRow.forEach(handler => handler()); // deleteRow 핸들러만 호출
         },
-        fetchData() {
-            handlers.search.forEach(handler => handler()); // search 핸들러만 호출
+        fetchData(type, filter) {
+            handlers.search.forEach(handler => handler(type, filter));
         },
         resetFilter(){
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
+        },
+        filterUpdate(type, filter) {
+            handlers.filterUpdate.forEach(handler => handler(type, filter));
+        },
+        resetButtons() {
+            handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
         },
     }
 }

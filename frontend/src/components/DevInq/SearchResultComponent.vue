@@ -148,12 +148,42 @@ export default defineComponent({
     });
     const rowSelection = ref("multiple");
     const rowData = ref([]);
-
+    const filterModel = ref([]);
 
     const onGridReady = async (params) => {
       gridApi.value = params.api; // api를 gridApi에 저장
+
       // fetchData를 직접 호출하지 않고, 이벤트 등록만 수행
       eventbus.SearchResultEvent.add('search', fetchData);
+
+      // 필터 변경 시 호출되는 이벤트 등록
+      params.api.addEventListener('filterChanged', () => {
+        filterModel.value = getCurrentFilterModel();
+
+        if(filterModel.value) {
+          if (filterModel.value.NM) {
+            // NM 필터가 존재할 때 이벤트 발생
+            eventbus.SearchResultEvent.filterUpdate(filterModel.value.NM.type, filterModel.value.NM.filter);
+          }
+
+          if (filterModel.value.AGE) {
+            eventbus.SearchResultEvent.filterUpdate(filterModel.value.AGE.type, filterModel.value.AGE.filter);
+          }
+
+          // 추가적인 필터에 대한 처리
+          if (!filterModel.value.NM && !filterModel.value.AGE) {
+            // NM 필터가 없을 경우 빈 값으로 버튼 업데이트
+            eventbus.SearchResultEvent.filterUpdate('', '');
+
+          }
+        }
+      });
+    };
+
+    const getCurrentFilterModel = () => {
+      if (gridApi.value) {
+        return gridApi.value.getFilterModel(); // filterModel을 반환
+      }
     };
 
     // 이벤트 등록
@@ -254,15 +284,6 @@ export default defineComponent({
     eventbus.SearchResultEvent.add('reset', resetFilter);
     //--- 필터초기화 끝 ---//
 
-    const getCurrentFilterModel = () => {
-      if (gridApi.value) {
-        const filterModel = gridApi.value.getFilterModel();
-        console.log('현재 필터 모델:', filterModel);
-        return filterModel; // 필요에 따라 반환하거나 추가 작업 수행
-      }
-    };
-
-    getCurrentFilterModel();
 
     return {
       columnDefs,
