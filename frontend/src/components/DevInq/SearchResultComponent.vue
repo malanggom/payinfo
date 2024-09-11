@@ -8,6 +8,7 @@
         :rowSelection="rowSelection"
         :rowData="rowData"
         :grid-options="gridOptions"
+        :textFilterParams="textFilterParams"
         :pagination="true"
         @cell-value-changed="onCellValueChanged"
     />
@@ -25,40 +26,14 @@ export default defineComponent({
     "ag-grid-vue": AgGridVue,
   },
   setup() {
-    //--- 선택된 행 삭제 시작 ---//
-    const deleteRowBtnClick = async () => {
-      const selectedNodes = gridApi.value.getSelectedNodes();
-      const selectedData = selectedNodes.map(node => node.data);
-
-      // 삭제할 개발자번호 목록
-      const devNoList = selectedData.map(row => row.DEV_NO);
-
-      // 서버에 DELETE 요청 보내기
-      try {
-        const response = await fetch('http://localhost:8080/api/deleteData', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ devNoList }), // 개발자번호 배열 전송
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete data');
-        }
-
-        // 서버에서 삭제가 완료되면 로컬 데이터 갱신
-        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
-
-        // 선택된 행 삭제 후 그리드 업데이트
-        // gridApi.value.setRowData(rowData.value);
-      } catch (error) {
-        console.error('Error deleting data:', error);
-      }
-    };
-    // 이벤트 등록
-    eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
-    //--- 선택된 행 삭제 끝 ---//
+    const gridApi = shallowRef();
+    const defaultColDef = ref({
+      editable: true,
+      filter: true,
+      flex: 1,
+      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
+      headerStyle: "headerColor" // 배경색 설정
+    });
 
     const textFilterParams ={
       filterOptions: ["contains", "notContains"],
@@ -138,44 +113,53 @@ export default defineComponent({
       { headerName: '기타', field: "ETC", filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
 
-    const gridApi = shallowRef();
-    const defaultColDef = ref({
-      editable: true,
-      filter: true,
-      flex: 1,
-      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
-      headerStyle: "headerColor" // 배경색 설정
-    });
     const rowSelection = ref("multiple");
     const rowData = ref([]);
+    const currentlyActiveFilterModel = ref([]);
     const filterModel = ref([]);
 
     const onGridReady = async (params) => {
-      gridApi.value = params.api; // api를 gridApi에 저장
+      gridApi.value = params.api;
 
-      // fetchData를 직접 호출하지 않고, 이벤트 등록만 수행
       eventbus.SearchResultEvent.add('search', fetchData);
 
-      // 필터 변경 시 호출되는 이벤트 등록
       params.api.addEventListener('filterChanged', () => {
         filterModel.value = getCurrentFilterModel();
+        console.log('필터모델:', filterModel.value);
 
-        if(filterModel.value) {
-          if (filterModel.value.NM) {
-            // NM 필터가 존재할 때 이벤트 발생
-            eventbus.SearchResultEvent.filterUpdate(filterModel.value.NM.type, filterModel.value.NM.filter);
-          }
+        // filterModel.value가 객체일 때 각 필터를 currentlyActiveFilterModel에 추가
+        if (filterModel.value) {
+          // filterModel의 각 필터를 순회
+          Object.keys(filterModel.value).forEach(key => {
+            const newFilter = filterModel.value[key];
 
-          if (filterModel.value.AGE) {
-            eventbus.SearchResultEvent.filterUpdate(filterModel.value.AGE.type, filterModel.value.AGE.filter);
-          }
+            // 현재 활성화된 필터에 이미 존재하지 않는 경우에만 추가
+            const exists = currentlyActiveFilterModel.value.some(activeFilter =>
+                activeFilter[key] && activeFilter[key].filter === newFilter.filter
+            );
 
-          // 추가적인 필터에 대한 처리
-          if (!filterModel.value.NM && !filterModel.value.AGE) {
-            // NM 필터가 없을 경우 빈 값으로 버튼 업데이트
-            eventbus.SearchResultEvent.filterUpdate('', '');
+            if (!exists) {
+              currentlyActiveFilterModel.value.push({ [key]: newFilter });
+              if (filterModel.value.NM) {
+                currentlyActiveFilterModel.value.push({ NM: filterModel.value.NM });
+                eventbus.SearchResultEvent.filterUpdate(filterModel.value.NM.type, filterModel.value.NM.filter);
+              }
 
-          }
+              if (filterModel.value.AGE) {
+                currentlyActiveFilterModel.value.push({ AGE: filterModel.value.AGE });
+                eventbus.SearchResultEvent.filterUpdate(filterModel.value.AGE.type, filterModel.value.AGE.filter);
+              }
+
+              // 추가적인 필터에 대한 처리
+              if (!filterModel.value.NM && !filterModel.value.AGE) {
+                // NM 필터가 없을 경우 빈 값으로 버튼 업데이트
+                eventbus.SearchResultEvent.filterUpdate('', '');
+              }
+              console.log(`추가된 필터: ${key}`, newFilter);
+            } else {
+              alert(`현재 필터 ${key}는 이미 활성화되어 있습니다.`);
+            }
+          });
         }
       });
     };
@@ -186,7 +170,6 @@ export default defineComponent({
       }
     };
 
-    // 이벤트 등록
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/data');
@@ -283,6 +266,41 @@ export default defineComponent({
     // 이벤트 등록
     eventbus.SearchResultEvent.add('reset', resetFilter);
     //--- 필터초기화 끝 ---//
+    //--- 선택된 행 삭제 시작 ---//
+    const deleteRowBtnClick = async () => {
+      const selectedNodes = gridApi.value.getSelectedNodes();
+      const selectedData = selectedNodes.map(node => node.data);
+
+      // 삭제할 개발자번호 목록
+      const devNoList = selectedData.map(row => row.DEV_NO);
+
+      // 서버에 DELETE 요청 보내기
+      try {
+        const response = await fetch('http://localhost:8080/api/deleteData', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ devNoList }), // 개발자번호 배열 전송
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete data');
+        }
+
+        // 서버에서 삭제가 완료되면 로컬 데이터 갱신
+        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+
+        // 선택된 행 삭제 후 그리드 업데이트
+        // gridApi.value.setRowData(rowData.value);
+      } catch (error) {
+        console.error('Error deleting data:', error);
+        alert("삭제할 개발자를 선택해주세요.");
+      }
+    };
+    // 이벤트 등록
+    eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
+    //--- 선택된 행 삭제 끝 ---//
 
 
     return {
@@ -297,6 +315,7 @@ export default defineComponent({
       deleteRowBtnClick,
       resetFilter,
       getCurrentFilterModel,
+      textFilterParams,
     };
   },
 });

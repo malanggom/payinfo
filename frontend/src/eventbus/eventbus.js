@@ -6,6 +6,8 @@ let handlers = {
     resetButtons: [] // 새로운 이벤트 추가
 };
 
+export { handlers }; // handlers를 export
+
 export default {
     SearchResultEvent: {
         add(eventType, handler) {
@@ -25,8 +27,8 @@ export default {
         filterUpdate(type, filter) {
             handlers.filterUpdate.forEach(handler => handler(type, filter));
         },
-        resetButtons() {
-            handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
+        removeFilter(type, filter) {
+            handlers.filterUpdate.forEach((handler) => handler(type, filter));
         },
     }
 }

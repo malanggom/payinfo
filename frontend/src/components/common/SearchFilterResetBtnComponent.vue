@@ -8,7 +8,6 @@ export default {
   methods: {
     handleRemove: function() { // 화살표 함수가 아닌 일반 함수로 변경
       eventbus.SearchResultEvent.resetFilter(); // 이벤트 호출
-      eventbus.SearchResultEvent.resetButtons(); // 버튼 초기화 이벤트 호출
     }
   }
 };
