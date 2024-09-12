@@ -142,7 +142,7 @@ export default defineComponent({
               currentlyActiveFilterModel.value.push({ [key]: newFilter });
               if (filterModel.value.NM) {
                 currentlyActiveFilterModel.value.push({ NM: filterModel.value.NM });
-                eventbus.SearchResultEvent.filterUpdate(filterModel.value.NM.type, filterModel.value.NM.filter);
+                eventbus.SearchResultEvent.filterUpdate( Object.keys(filterModel.value)[0], filterModel.value.NM.type, filterModel.value.NM.filter);
               }
 
               if (filterModel.value.AGE) {

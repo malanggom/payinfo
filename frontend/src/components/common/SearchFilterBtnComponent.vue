@@ -4,13 +4,13 @@ import eventbus from '@/eventbus/eventbus';
 
 const buttons = ref([]);
 
-const updateButtonData = (type, filter) => {
-  buttons.value.push({ type, filter });
-};
+const updateButtonData = (keyName, type, filter) => {
+  buttons.value.push({ keyName, type, filter });
+}
 
 const resetButtons = () => {
   buttons.value = [];
-};
+}
 
 const removeButton = (index) => {
   const button = buttons.value[index];
@@ -30,7 +30,7 @@ onMounted(() => {
 <template>
   <div>
     <button v-for="(button, index) in buttons" :key="index" class="btn filterBtn">
-      {{ button.type }}: {{ button.filter }}
+      {{ button.keyName }}: {{ button.filter }}
       <span class="remove-btn" @click.stop="removeButton(index)">X</span>
     </button>
   </div>

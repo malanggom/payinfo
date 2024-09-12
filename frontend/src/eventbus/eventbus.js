@@ -24,8 +24,8 @@ export default {
         resetFilter(){
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
         },
-        filterUpdate(type, filter) {
-            handlers.filterUpdate.forEach(handler => handler(type, filter));
+        filterUpdate(keyName, type, filter) {
+            handlers.filterUpdate.forEach(handler => handler(keyName, type, filter));
         },
         removeFilter(type, filter) {
             handlers.filterUpdate.forEach((handler) => handler(type, filter));
