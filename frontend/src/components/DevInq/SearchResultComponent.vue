@@ -115,7 +115,7 @@ export default defineComponent({
 
     const rowSelection = ref("multiple");
     const rowData = ref([]);
-    const currentlyActiveFilterModel = ref([]);
+    const currentlyActiveFilterModel = ref({});
     const filterModel = ref([]);
 
     const onGridReady = async (params) => {
@@ -126,27 +126,34 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', () => {
         filterModel.value = getCurrentFilterModel();
         console.log('필터모델:', filterModel.value);
+        if (
+            Object.keys(currentlyActiveFilterModel.value).length === Object.keys(filterModel.value).length &&
+            Object.keys(currentlyActiveFilterModel.value).every(key => {
+              const activeFilter = currentlyActiveFilterModel.value[key];
+              const newFilter = filterModel.value[key];
+              return activeFilter.type === newFilter.type && activeFilter.filter === newFilter.filter;
+            })
+        ) {
+          console.log('같은 필터를 입력하였습니다.');
+        }
+        currentlyActiveFilterModel.value = filterModel.value;
+        console.log('활성화필터모델:', currentlyActiveFilterModel.value);
+        // if(filterModelKeys.value)
 
+        // filterModelKeys.value = Object.keys(filterModel.value);
         // filterModel.value가 객체일 때 각 필터를 currentlyActiveFilterModel에 추가
         if (filterModel.value) {
           // filterModel의 각 필터를 순회
           Object.keys(filterModel.value).forEach(key => {
             const newFilter = filterModel.value[key];
 
-            // 현재 활성화된 필터에 이미 존재하지 않는 경우에만 추가
-            const exists = currentlyActiveFilterModel.value.some(activeFilter =>
-                activeFilter[key] && activeFilter[key].filter === newFilter.filter
-            );
 
-            if (!exists) {
-              currentlyActiveFilterModel.value.push({ [key]: newFilter });
-              if (filterModel.value.NM) {
-                currentlyActiveFilterModel.value.push({ NM: filterModel.value.NM });
+              if (Object.keys(filterModel.value)[0] === 'NM') {
+                console.log(Object.keys(filterModel.value)[0]);
                 eventbus.SearchResultEvent.filterUpdate( Object.keys(filterModel.value)[0], filterModel.value.NM.type, filterModel.value.NM.filter);
               }
 
               if (filterModel.value.AGE) {
-                currentlyActiveFilterModel.value.push({ AGE: filterModel.value.AGE });
                 eventbus.SearchResultEvent.filterUpdate(filterModel.value.AGE.type, filterModel.value.AGE.filter);
               }
 
@@ -156,9 +163,6 @@ export default defineComponent({
                 eventbus.SearchResultEvent.filterUpdate('', '');
               }
               console.log(`추가된 필터: ${key}`, newFilter);
-            } else {
-              alert(`현재 필터 ${key}는 이미 활성화되어 있습니다.`);
-            }
           });
         }
       });
@@ -261,6 +265,7 @@ export default defineComponent({
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
+      // eventbus.SearchResultEvent.filterUpdate('', '','');
     };
 
     // 이벤트 등록

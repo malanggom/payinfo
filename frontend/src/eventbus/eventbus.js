@@ -24,11 +24,11 @@ export default {
         resetFilter(){
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
         },
-        filterUpdate(keyName, type, filter) {
-            handlers.filterUpdate.forEach(handler => handler(keyName, type, filter));
+        filterUpdate(type, filter) {
+            handlers.filterUpdate.forEach(handler => handler(type, filter));
         },
         removeFilter(type, filter) {
-            handlers.filterUpdate.forEach((handler) => handler(type, filter));
+            handlers.filterUpdate.forEach(handler => handler(type, filter));
         },
     }
 }

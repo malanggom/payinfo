@@ -9,6 +9,9 @@ const updateButtonData = (keyName, type, filter) => {
 }
 
 const resetButtons = () => {
+  buttons.value.forEach(button => {
+    eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
+  });
   buttons.value = [];
 }
 
@@ -30,7 +33,7 @@ onMounted(() => {
 <template>
   <div>
     <button v-for="(button, index) in buttons" :key="index" class="btn filterBtn">
-      {{ button.keyName }}: {{ button.filter }}
+      {{ button.keyName }}: {{ button.filter }} {{ button.type }}
       <span class="remove-btn" @click.stop="removeButton(index)">X</span>
     </button>
   </div>
