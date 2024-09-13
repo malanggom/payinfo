@@ -21,39 +21,52 @@ import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import eventbus from '@/eventbus/eventbus'
+
+//Vue 3에서 컴포넌트를 정의하는 함수입니다. 이 함수는 컴포넌트의 옵션을 포함하는 객체를 인자로 받습니다.
 export default defineComponent({
+  //ag-grid-vue3패키지를 가져온 모듈 AgGridVue를 ag-grid-vue라는 이름으로 현재 컴포넌트에서 사용할 때 사용한다.
   components: {
     "ag-grid-vue": AgGridVue,
   },
+  //이 함수는 Vue 3 컴포넌트의 생명 주기 중에 초기화되는 함수로, 컴포넌트가 생성될 때 실행됩니다.
+  //이 함수는 컴포넌트의 반응형 상태 및 메소드를 정의하고 반환하여, 템플릿에서 사용할 수 있도록 합니다.
   setup() {
+    //gridApi라는 변수를 정의하고 shallowRef()를 사용하여 반응형 참조를 생성합니다.
+    //shallowRef()는 객체의 내부 값을 추적하지 않고, 기본 값만 반응형으로 만드는 함수입니다. 주로 성능 최적화를 위해 사용됩니다.
+    //이 경우, gridApi는 AG Grid API를 참조하기 위해 사용될 것입니다.
     const gridApi = shallowRef();
+    //defaultColDef라는 변수를 정의하고 ref()를 사용하여 반응형 객체를 생성합니다.
+    //ref()는 기본 타입의 값을 반응형으로 만들어 Vue의 반응형 시스템에서 관리할 수 있게 합니다.
+    //AG Grid의 열(column) 정의의 기본 설정을 포함하는 객체
     const defaultColDef = ref({
-      editable: true,
-      filter: true,
-      flex: 1,
-      headerClass: "centered", // 모든 열에 중앙 정렬 클래스 추가
-      headerStyle: "headerColor" // 배경색 설정
+      editable: true,//열의 셀을 편집 가능하게 설정합니다.
+      filter: true,//열에서 필터링 기능을 활성화합니다.
+      flex: 1,//이 열이 가용 공간을 어떻게 차지할지를 설정합니다. flex 값이 높을수록 더 많은 공간을 차지합니다.
+      headerClass: "centered", //모든 열의 헤더에 "centered"라는 CSS 클래스를 적용하여 중앙 정렬합니다.
+      headerStyle: "headerColor" //헤더의 배경색을 설정하는 CSS 클래스입니다.
     });
 
+    //AG Grid에서 사용할 텍스트 필터의 매개변수를 정의하는 객체
     const textFilterParams ={
-      filterOptions: ["contains", "notContains"],
-      caseSensitive: false,
-      trimInput: true,
-      buttons: ["cancel", "reset", "apply"],
-      localeText: {
+      filterOptions: ["contains", "notContains"],//필터링 옵션을 정의합니다. 사용자가 선택할 수 있는 필터링 방법으로 "contains" (포함)와 "notContains" (포함되지 않음)를 제공합니다.
+      caseSensitive: false,//대소문자를 구분하지 않도록 설정합니다. 이 경우, 필터링 시 대소문자를 무시합니다.
+      trimInput: true,//입력값의 앞뒤 공백을 자동으로 제거하도록 설정합니다. 사용자가 입력한 값이 공백을 포함하더라도 이를 제거하여 필터링에 영향을 주지 않게 합니다.
+      buttons: ["cancel", "reset", "apply"],//필터 UI에 표시할 버튼을 정의합니다. 여기서는 "취소", "초기화", "적용" 버튼이 표시됩니다.
+      localeText: {//버튼에 대한 로컬라이즈된 텍스트를 정의합니다.
         cancel: '취소',
-        reset: '초기화', // 필요에 따라 추가
-        apply: '적용', // 필요에 따라 추가
+        reset: '초기화',
+        apply: '적용',
       },
-      closeOnApply: true,
+      closeOnApply: true,//"적용" 버튼을 클릭했을 때 필터 UI를 닫도록 설정합니다. 사용자가 필터를 적용한 후 UI가 자동으로 닫히게 됩니다.
     };
 
+    //열의 너비 자동 조절 전략을 설정합니다.
+    //각 열의 셀 내용에 맞춰 열의 너비를 자동으로 조절하도록 설정합니다. 즉, 셀의 내용이 잘리지 않도록 열 크기를 조정합니다.
     const gridOptions = {
       autoSizeStrategy: {
         type: 'fitCellContents',
       },
-      localeText: {
-        // 필터 관련 텍스트를 한글로 변경
+      localeText: {// 필터 관련 텍스트를 한글로 변경
         contains: '포함',
         notContains: '포함하지 않음',
         equals: '같음',
@@ -66,57 +79,71 @@ export default defineComponent({
       },
     };
 
+    //columnDefs는 Vue의 반응형 객체로, AG Grid에서 사용할 열(column)의 정의 목록입니다. 각 열은 객체로 정의되어 있습니다.
     const columnDefs = ref([
+      //headerName: 열의 헤더에 표시될 이름입니다.
+      //field: 데이터의 어떤 필드를 이 열과 연결할지를 지정합니다. 이 필드는 데이터 소스에서 가져온 객체의 키입니다.
+      //minWidth: 열의 최소 너비를 설정합니다. 이 값보다 작아지지 않도록 보장합니다.
+      //checkboxSelection: 이 열에서 체크박스를 표시할지 여부를 결정합니다. 주로 선택 기능이 필요한 경우 사용됩니다.
+      //headerCheckboxSelection: 헤더에 체크박스를 추가하여 전체 선택/해제를 가능하게 합니다.
+      //filter: 이 열에서 사용할 필터링 방법을 지정합니다. 예를 들어, "agTextColumnFilter"는 텍스트 기반 필터를 사용합니다.
+      //filterParams: 필터의 추가 설정을 위한 매개변수입니다.
       { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: '이름', field: "NM", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약횟수', field: "CTRT_NMTM" },
-      { headerName: '생년월일', field: "BRDT" },
-      { headerName: '나이', field: "AGE" },
-      { headerName: '학력', field: "ACBG", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '성별', field: "GNDR", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '직위', field: "JBPS", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '등급', field: "GRD", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '총경력기간', field: "T_CR_PER" },
-      { headerName: '지역', field: "RGN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '휴대전화번호', field: "MBL_TELNO" },
-      { headerName: '이메일', field: "EML", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '컨택방법', field: "CONTT_MTHD", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT" },
-      { headerName: '투입가능일', field: "INP_PSBLTY_DT" },
-      { headerName: '소속회사', field: "OGDP_CO", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '일련번호', field: "SN" },
-      { headerName: '3.3%여부', field: "WHTAX_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '사업자여부', field: "BZMN_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '자사정규직여부', field: "KDS_EMP_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT" },
-      { headerName: '지급일자', field: "GIVE_DT" },
-      { headerName: '은행', field: "BANK", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계좌번호', field: "ACTNO" },
-      { headerName: '부서', field: "DEPT", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '월요청단가', field: "MM_DMND_UNTPRC" },
-      { headerName: '주소', field: "ADDR", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '직책', field: "JBTTL", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '소개자', field: "BRKR", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '카카오톡닉네임', field: "KAKAO_NICK", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '병역', field: "MS", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '기종', field: "MDL", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '운영체제', field: "OS", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '언어', field: "LANG", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '데이터베이스', field: "DB", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '툴', field: "TOOL", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '프레임워크', field: "FRMW", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '라이브러리', field: "LBRR", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '통신', field: "CMNCT", filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '기타', field: "ETC", filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140 },
+      { headerName: '생년월일', field: "BRDT", minWidth: 140 },
+      { headerName: '나이', field: "AGE", minWidth: 100 },
+      { headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '성별', field: "GNDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '총경력기간', field: "T_CR_PER", minWidth: 170 },
+      { headerName: '지역', field: "RGN", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 190 },
+      { headerName: '이메일', field: "EML", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '컨택방법', field: "CONTT_MTHD", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT", minWidth: 190 },
+      { headerName: '투입가능일', field: "INP_PSBLTY_DT", minWidth: 170 },
+      { headerName: '소속회사', field: "OGDP_CO", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '일련번호', field: "SN", minWidth: 140 },
+      { headerName: '3.3%여부', field: "WHTAX_YN", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '사업자여부', field: "BZMN_YN", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '자사정규직여부', field: "KDS_EMP_YN", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", minWidth: 210, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT", minWidth: 190 },
+      { headerName: '지급일자', field: "GIVE_DT", minWidth: 140 },
+      { headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계좌번호', field: "ACTNO", minWidth: 140 },
+      { headerName: '부서', field: "DEPT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '월요청단가', field: "MM_DMND_UNTPRC", minWidth: 170 },
+      { headerName: '주소', field: "ADDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '직책', field: "JBTTL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '소개자', field: "BRKR", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '카카오톡닉네임', field: "KAKAO_NICK", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '병역', field: "MS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '운영체제', field: "OS", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '데이터베이스', field: "DB", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '툴', field: "TOOL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '프레임워크', field: "FRMW", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '라이브러리', field: "LBRR", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
 
     const rowSelection = ref("multiple");
     const rowData = ref([]);
     const currentlyActiveFilterModel = ref({});
     const filterModel = ref([]);
+
+    const getCurrentFilterModel = () => {
+      if (gridApi.value) {
+        return gridApi.value.getFilterModel(); // filterModel을 반환
+      }
+    };
 
     const onGridReady = async (params) => {
       gridApi.value = params.api;
@@ -125,6 +152,12 @@ export default defineComponent({
 
       params.api.addEventListener('filterChanged', () => {
         filterModel.value = getCurrentFilterModel();
+
+        const filterModelObjectLength = Object.keys(filterModel.value).length;
+        for (let i = 0; i < filterModelObjectLength; i++) {
+          console.log('길이',filterModelObjectLength);
+        }
+        // Object.keys(filterModel.value)[0]
         console.log('필터모델:', filterModel.value);
         if (
             Object.keys(currentlyActiveFilterModel.value).length === Object.keys(filterModel.value).length &&
@@ -150,6 +183,7 @@ export default defineComponent({
 
               if (Object.keys(filterModel.value)[0] === 'NM') {
                 console.log(Object.keys(filterModel.value)[0]);
+                // currentlyActiveFilterModel.value.push({ NM: filterModel.value.NM });
                 eventbus.SearchResultEvent.filterUpdate( Object.keys(filterModel.value)[0], filterModel.value.NM.type, filterModel.value.NM.filter);
               }
 
@@ -168,11 +202,6 @@ export default defineComponent({
       });
     };
 
-    const getCurrentFilterModel = () => {
-      if (gridApi.value) {
-        return gridApi.value.getFilterModel(); // filterModel을 반환
-      }
-    };
 
     const fetchData = async () => {
       try {
@@ -233,8 +262,6 @@ export default defineComponent({
       }
     };
 
-    eventbus.SearchResultEvent.add('search', fetchData);
-
     // 셀의 값이 변경될 때 호출되는 함수
     const onCellValueChanged = async (event) => {
       console.log(event.data)
@@ -258,9 +285,6 @@ export default defineComponent({
         console.error('Error updating data:', error);
       }
     };
-
-    const filters = ref([]);
-    filters.value = gridApi.value;
 
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
