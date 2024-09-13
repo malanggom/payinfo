@@ -137,7 +137,10 @@ export default defineComponent({
     const rowSelection = ref("multiple");
     const rowData = ref([]);
     const currentlyActiveFilterModel = ref({});
+    const currentlyActiveFilterModelKeys = ref({});
     const filterModel = ref([]);
+
+    const filterModelObjectKeys = ref([]);
 
     const getCurrentFilterModel = () => {
       if (gridApi.value) {
@@ -153,9 +156,13 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', () => {
         filterModel.value = getCurrentFilterModel();
 
+        filterModelObjectKeys.value = Object.keys(filterModel.value);
         const filterModelObjectLength = Object.keys(filterModel.value).length;
         for (let i = 0; i < filterModelObjectLength; i++) {
-          console.log('길이',filterModelObjectLength);
+          if(currentlyActiveFilterModelKeys.value === filterModelObjectKeys.value){
+
+            console.log('길이',filterModelObjectLength);
+          }
         }
         // Object.keys(filterModel.value)[0]
         console.log('필터모델:', filterModel.value);
