@@ -88,8 +88,8 @@ export default defineComponent({
       //headerCheckboxSelection: 헤더에 체크박스를 추가하여 전체 선택/해제를 가능하게 합니다.
       //filter: 이 열에서 사용할 필터링 방법을 지정합니다. 예를 들어, "agTextColumnFilter"는 텍스트 기반 필터를 사용합니다.
       //filterParams: 필터의 추가 설정을 위한 매개변수입니다.
-      { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      // { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, checkboxSelection: true, headerCheckboxSelection: true },
       { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
       { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140 },
       { headerName: '생년월일', field: "BRDT", minWidth: 140 },
