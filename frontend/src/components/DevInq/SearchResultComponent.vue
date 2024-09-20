@@ -154,12 +154,6 @@ export default defineComponent({
 
         filterModel.value = getCurrentFilterModel();
         console.log(filterModel.value);
-
-        // console.log(Object.keys(filterModel.value));
-        // console.log(Object.keys(filterModel.value)[0]);
-        // console.log(Object.keys(filterModel.value).length);
-        // console.log(Object.keys(currentlyActiveFilterModel.value).length);
-        // 필터 키와 값을 출력
         var i;
         Object.keys(filterModel.value).forEach(key => {
           const filterObject = filterModel.value[key];
@@ -173,10 +167,10 @@ export default defineComponent({
                 if (filterObject?.conditions[i].filter === filterObject?.conditions[j].filter
                     && filterObject?.conditions[i].type === filterObject?.conditions[j].type) {
                   console.log('동일한 필터입니다.');
+                  eventbus.SearchResultEvent.filterUpdate(filterObject?.conditions[i].type, filterObject?.conditions[i].filter);
+
                   // 동일한 필터를 찾으면 제거할 인덱스 추가
                   filtersToRemove.push(j); // j는 중복된 필터의 인덱스
-                }else{
-                  console.log('동일한 필터가 아닙니다.');
                 }
               }
             }
@@ -190,88 +184,11 @@ export default defineComponent({
             const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
             params.api.setFilterModel(updatedFilterModel);
             console.log('업데이트된 필터 모델:', updatedFilterModel);
+
+          }else{
+            eventbus.SearchResultEvent.filterUpdate(filterModel.value[key].type, filterModel.value[key].filter);
           }
         });
-
-        // filterValue를 가져오기
-        // if(filterObject){
-        //
-        // }else{
-        //   const filterValue = filterObject?.filter; // 옵셔널 체이닝 사용
-        //   console.log(`필터 키: ${key}, 필터 값: ${filterValue}`);
-        // }
-        // var filterModelKeyLength;
-        // var i;
-        // filterModelKeyLength=Object.keys(filterModel.value).length;
-        // var currentlyActiveFilterModelKeyLength;
-        // currentlyActiveFilterModelKeyLength=Object.keys(currentlyActiveFilterModel.value).length;
-        // var j;
-        // if(currentlyActiveFilterModelKeyLength === 0){
-        //   currentlyActiveFilterModel.value = filterModel.value;
-        // }else{
-        //   for(i=0;i<filterModelKeyLength;i++){
-        //     for(j=0;j<currentlyActiveFilterModelKeyLength;j++){
-        //       if(Object.keys(filterModel.value)[i] === Object.keys(currentlyActiveFilterModel.value)[j]){
-        //         // 필터 키와 값을 출력
-        //         // Object.keys(filterModel.value).forEach(key => {
-        //         //   const filterValue = filterModel.value[key]?.filter; // 옵셔널 체이닝 사용
-        //         //   console.log(`필터 키: ${key}, 필터 값: ${filterValue}`);
-        //       // });
-        //
-        //         console.log('같은필터입니다.');
-        //         if(filterModel.value[i].type === currentlyActiveFilterModel.value[j].type){
-        //           if(filterModel.value[i].filter === currentlyActiveFilterModel.value[j].filter){
-        //
-        //             console.log('같은필터입니다.');
-        //           }else{
-        //             console.log('필터추가입니다..');
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-
-        // if (
-        //     Object.keys(currentlyActiveFilterModel.value).length === Object.keys(filterModel.value).length &&
-        //     Object.keys(currentlyActiveFilterModel.value).every(key => {
-        //       const activeFilter = currentlyActiveFilterModel.value[key];
-        //       const newFilter = filterModel.value[key];
-        //       return activeFilter.type === newFilter.type && activeFilter.filter === newFilter.filter;
-        //     })
-        // ) {
-        //   console.log('같은 필터를 입력하였습니다.');
-        // }
-        // currentlyActiveFilterModel.value = filterModel.value;
-        // console.log('활성화필터모델:', currentlyActiveFilterModel.value);
-        // // if(filterModelKeys.value)
-        //
-        // // filterModelKeys.value = Object.keys(filterModel.value);
-        // // filterModel.value가 객체일 때 각 필터를 currentlyActiveFilterModel에 추가
-        // if (filterModel.value) {
-        //   // filterModel의 각 필터를 순회
-        //   Object.keys(filterModel.value).forEach(key => {
-        //     const newFilter = filterModel.value[key];
-        //
-        //
-        //       if (Object.keys(filterModel.value)[0] === 'NM') {
-        //         console.log(Object.keys(filterModel.value)[0]);
-        //         // currentlyActiveFilterModel.value.push({ NM: filterModel.value.NM });
-        //         eventbus.SearchResultEvent.filterUpdate( Object.keys(filterModel.value)[0], filterModel.value.NM.type, filterModel.value.NM.filter);
-        //       }
-        //
-        //       if (filterModel.value.AGE) {
-        //         eventbus.SearchResultEvent.filterUpdate(filterModel.value.AGE.type, filterModel.value.AGE.filter);
-        //       }
-        //
-        //       // 추가적인 필터에 대한 처리
-        //       if (!filterModel.value.NM && !filterModel.value.AGE) {
-        //         // NM 필터가 없을 경우 빈 값으로 버튼 업데이트
-        //         eventbus.SearchResultEvent.filterUpdate('', '');
-        //       }
-        //       console.log(`추가된 필터: ${key}`, newFilter);
-        //   });
-        // }
       });
     };
 
