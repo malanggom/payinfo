@@ -4,8 +4,66 @@ import eventbus from '@/eventbus/eventbus';
 
 const buttons = ref([]);
 
+// 필터 타입에 대한 한글 매핑
+const filterTypeMap = {
+  contains: '포함',
+  notContains: '포함하지 않음',
+  equals: '같음',
+  notEqual: '같지 않음',
+  startsWith: '시작하는',
+  endsWith: '끝나는',
+};
+
+// 필드 이름에 대한 한글 매핑
+const fieldNameMap = {
+  NM: '이름',
+  AGE: '나이',
+  PJ_INP_STTS: '프로젝트투입상태',
+  CTRT_NMTM: '계약횟수',
+  BRDT: '생년월일',
+  GNDR: '성별',
+  JBPS: '직위',
+  GRD: '등급',
+  T_CR_PER: '총경력기간',
+  RGN: '지역',
+  MBL_TELNO: '휴대전화번호',
+  EML: '이메일',
+  CONTT_MTHD: '컨택방법',
+  NTRV_DMND_DT: '인터뷰요청일',
+  INP_PSBLTY_DT: '투입가능일',
+  OGDP_CO: '소속회사',
+  SN: '일련번호',
+  WHTAX_YN: '3.3%여부',
+  BZMN_YN: '사업자여부',
+  KDS_EMP_YN: '자사정규직여부',
+  CTRT_CO_EMP_YN: '계약회사정규직여부',
+  CLCT_PICKUP_DT: '대금수령날짜',
+  GIVE_DT: '지급일자',
+  BANK: '은행',
+  ACTNO: '계좌번호',
+  DEPT: '부서',
+  MM_DMND_UNTPRC: '월요청단가',
+  ADDR: '주소',
+  JBTTL: '직책',
+  BRKR: '소개자',
+  KAKAO_NICK: '카카오톡닉네임',
+  CTRT_HSTRY_YN: '계약이력존재여부',
+  MS: '병역',
+  MDL: '모델',
+  OS: '운영체제',
+  LANG: '언어',
+  DB: '데이터베이스',
+  TOOL: '툴',
+  FRMW: '프레임워크',
+  LBRR: '라이브러리',
+  CMNCT: '통신',
+  ETC: '기타',
+};
+
 const updateButtonData = (keyName, type, filter) => {
-  buttons.value.push({ keyName, type, filter });
+  const displayType = filterTypeMap[type] || type; // 타입을 매핑하여 한글로 변환
+  const displayKeyName = fieldNameMap[keyName] || keyName; // 필드 이름을 매핑하여 한글로 변환
+  buttons.value.push({ keyName: displayKeyName, type: displayType, filter });
 }
 
 const resetButtons = () => {

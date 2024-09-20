@@ -167,7 +167,7 @@ export default defineComponent({
                 if (filterObject?.conditions[i].filter === filterObject?.conditions[j].filter
                     && filterObject?.conditions[i].type === filterObject?.conditions[j].type) {
                   console.log('동일한 필터입니다.');
-                  eventbus.SearchResultEvent.filterUpdate(filterObject?.conditions[i].type, filterObject?.conditions[i].filter);
+                  eventbus.SearchResultEvent.filterUpdate(filterObject?.conditions[i], filterObject?.conditions[i].type, filterObject?.conditions[i].filter);
 
                   // 동일한 필터를 찾으면 제거할 인덱스 추가
                   filtersToRemove.push(j); // j는 중복된 필터의 인덱스
@@ -186,7 +186,8 @@ export default defineComponent({
             console.log('업데이트된 필터 모델:', updatedFilterModel);
 
           }else{
-            eventbus.SearchResultEvent.filterUpdate(filterModel.value[key].type, filterModel.value[key].filter);
+              eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+
           }
         });
       });
