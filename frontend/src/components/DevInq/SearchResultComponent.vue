@@ -60,6 +60,18 @@ export default defineComponent({
       closeOnApply: true,//"적용" 버튼을 클릭했을 때 필터 UI를 닫도록 설정합니다. 사용자가 필터를 적용한 후 UI가 자동으로 닫히게 됩니다.
     };
 
+    const numberFilterParams ={
+      filterOptions: ["equals", "greaterThanOrEqual", "lessThanOrEqual", "inRange"],
+      trimInput: true,
+      buttons: ["cancel", "reset", "apply"],//필터 UI에 표시할 버튼을 정의합니다. 여기서는 "취소", "초기화", "적용" 버튼이 표시됩니다.
+      localeText: {//버튼에 대한 로컬라이즈된 텍스트를 정의합니다.
+        cancel: '취소',
+        reset: '초기화',
+        apply: '적용',
+      },
+      closeOnApply: true,//"적용" 버튼을 클릭했을 때 필터 UI를 닫도록 설정합니다. 사용자가 필터를 적용한 후 UI가 자동으로 닫히게 됩니다.
+    };
+
     //열의 너비 자동 조절 전략을 설정합니다.
     //각 열의 셀 내용에 맞춰 열의 너비를 자동으로 조절하도록 설정합니다. 즉, 셀의 내용이 잘리지 않도록 열 크기를 조정합니다.
     const gridOptions = {
@@ -76,6 +88,10 @@ export default defineComponent({
         blank: '비어 있음',
         notBlank: '비어 있지 않음',
         empty: '하나를 선택',
+        //숫자필터 관련
+        greaterThanOrEqual: '이상',
+        lessThanOrEqual: '이하',
+        inRange: '범위 내',
       },
     };
 
@@ -91,7 +107,7 @@ export default defineComponent({
       // { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
       { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, checkboxSelection: true, headerCheckboxSelection: true },
       { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140 },
+      { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
       { headerName: '생년월일', field: "BRDT", minWidth: 140 },
       { headerName: '나이', field: "AGE", minWidth: 100 },
       { headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
