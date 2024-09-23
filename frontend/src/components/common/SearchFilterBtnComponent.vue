@@ -12,6 +12,10 @@ const filterTypeMap = {
   notEqual: '같지 않음',
   startsWith: '시작하는',
   endsWith: '끝나는',
+  //숫자필터 관련
+  greaterThanOrEqual: '이상',
+  lessThanOrEqual: '이하',
+  inRange: '범위 내',
 };
 
 // 필드 이름에 대한 한글 매핑
@@ -87,8 +91,8 @@ const removeButton = (index) => {
   const button = buttons.value[index];
   if (button) {
     eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
+    buttons.value.splice(index, 1);
   }
-  buttons.value.splice(index, 1);
 };
 
 // 이벤트 리스너 등록
