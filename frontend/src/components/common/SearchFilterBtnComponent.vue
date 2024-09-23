@@ -70,21 +70,22 @@ const resetButtons = () => {
   buttons.value.forEach(button => {
     eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
   });
-  buttons.value = [];
-}
+  buttons.value = []; // 모든 버튼 삭제
+};
 
+// 버튼 제거 함수
 const removeButton = (index) => {
   const button = buttons.value[index];
   if (button) {
-    eventbus.SearchResultEvent.removeFilter(button.type, button.filter); // 필터 제거 이벤트 발생
+    eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
   }
-  buttons.value.splice(index, 1); // 특정 인덱스의 버튼 삭제
+  buttons.value.splice(index, 1);
 };
 
 // 이벤트 리스너 등록
 onMounted(() => {
   eventbus.SearchResultEvent.add('filterUpdate', updateButtonData);
-  eventbus.SearchResultEvent.add('resetButtons', resetButtons);
+  eventbus.SearchResultEvent.add('resetButtons', resetButtons); // resetButtons 이벤트 등록
 });
 </script>
 

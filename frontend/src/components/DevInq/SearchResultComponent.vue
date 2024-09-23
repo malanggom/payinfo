@@ -280,7 +280,7 @@ export default defineComponent({
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
-      // eventbus.SearchResultEvent.filterUpdate('', '','');
+      eventbus.SearchResultEvent.removeFilter(null);
     };
 
     // 이벤트 등록

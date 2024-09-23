@@ -23,6 +23,7 @@ export default {
         },
         resetFilter(){
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
+            handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
         },
         filterUpdate(KeyName, type, filter) {
             handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
