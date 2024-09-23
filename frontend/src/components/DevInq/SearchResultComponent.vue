@@ -151,43 +151,49 @@ export default defineComponent({
       eventbus.SearchResultEvent.add('search', fetchData);
 
       params.api.addEventListener('filterChanged', () => {
-
         filterModel.value = getCurrentFilterModel();
         console.log(filterModel.value);
-        var i;
+
         Object.keys(filterModel.value).forEach(key => {
           const filterObject = filterModel.value[key];
           console.log(`필터 키: ${key}, 필터 객체:`, filterObject);
 
-          if(filterObject?.conditions) {
+          if (filterObject?.conditions) {
             const filtersToRemove = [];
 
-            for (i = 0; i < filterObject?.conditions.length; i++) {
-              for (let j = i+1;j<filterObject?.conditions.length;j++){
-                if (filterObject?.conditions[i].filter === filterObject?.conditions[j].filter
-                    && filterObject?.conditions[i].type === filterObject?.conditions[j].type) {
-                  console.log('동일한 필터입니다.');
-                  eventbus.SearchResultEvent.filterUpdate(filterObject?.conditions[i], filterObject?.conditions[i].type, filterObject?.conditions[i].filter);
+            for (let i = 0; i < filterObject?.conditions.length; i++) {
+              const currentCondition = filterObject.conditions[i];
+              const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+                  registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
+              );
 
-                  // 동일한 필터를 찾으면 제거할 인덱스 추가
-                  filtersToRemove.push(j); // j는 중복된 필터의 인덱스
-                }
+              if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
+                console.log('새로운 필터입니다.');
+                eventbus.SearchResultEvent.filterUpdate(currentCondition, currentCondition.type, currentCondition.filter);
+              } else {
+                console.log('이미 등록된 필터입니다.');
               }
             }
+
             // 중복된 필터 제거
             filtersToRemove.reverse().forEach(index => {
               filterObject.conditions.splice(index, 1); // 인덱스에 해당하는 필터 제거
               console.log(`인덱스 ${index}의 필터를 제거했습니다.`);
             });
+
             console.log(filterObject);
             // AG Grid에 필터 모델 업데이트
             const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
             params.api.setFilterModel(updatedFilterModel);
             console.log('업데이트된 필터 모델:', updatedFilterModel);
+          } else {
+            const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+                registeredFilter.filter === filterObject.filter && registeredFilter.type === filterObject.type
+            );
 
-          }else{
+            if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
               eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
-
+            }
           }
         });
       });

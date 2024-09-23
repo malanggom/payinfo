@@ -60,11 +60,20 @@ const fieldNameMap = {
   ETC: '기타',
 };
 
+// 버튼 등록 함수
 const updateButtonData = (keyName, type, filter) => {
-  const displayType = filterTypeMap[type] || type; // 타입을 매핑하여 한글로 변환
-  const displayKeyName = fieldNameMap[keyName] || keyName; // 필드 이름을 매핑하여 한글로 변환
-  buttons.value.push({ keyName: displayKeyName, type: displayType, filter });
-}
+  const displayType = filterTypeMap[type] || type;
+  const displayKeyName = fieldNameMap[keyName] || keyName;
+
+  // 중복 체크
+  const isAlreadyRegistered = buttons.value.some(button =>
+      button.keyName === displayKeyName && button.filter === filter && button.type === displayType
+  );
+
+  if (!isAlreadyRegistered) {
+    buttons.value.push({ keyName: displayKeyName, type: displayType, filter });
+  }
+};
 
 const resetButtons = () => {
   buttons.value.forEach(button => {
