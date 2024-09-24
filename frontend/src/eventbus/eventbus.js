@@ -26,6 +26,9 @@ export default {
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
             handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
         },
+        // resetButtons() {
+        //     handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
+        // },
         filterUpdate(KeyName, type, filter) {
             // 등록된 필터 추가
             handlers.registeredFilters.push({ KeyName, type, filter });

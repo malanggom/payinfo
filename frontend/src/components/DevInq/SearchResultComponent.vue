@@ -46,6 +46,11 @@ export default defineComponent({
       headerStyle: "headerColor" //헤더의 배경색을 설정하는 CSS 클래스입니다.
     });
 
+    // const resetFilters = () => {
+    //   gridApi.value.setFilterModel(null); // 필터 모델을 null로 설정하여 모든 필터 해제
+    //   eventbus.SearchResultEvent.resetButtons(); // SearchFilterBtnComponent에 필터 리셋 이벤트 전송
+    // };
+
     //AG Grid에서 사용할 텍스트 필터의 매개변수를 정의하는 객체
     const textFilterParams ={
       filterOptions: ["contains", "notContains"],//필터링 옵션을 정의합니다. 사용자가 선택할 수 있는 필터링 방법으로 "contains" (포함)와 "notContains" (포함되지 않음)를 제공합니다.
@@ -58,6 +63,7 @@ export default defineComponent({
         apply: '적용',
       },
       closeOnApply: true,//"적용" 버튼을 클릭했을 때 필터 UI를 닫도록 설정합니다. 사용자가 필터를 적용한 후 UI가 자동으로 닫히게 됩니다.
+      // onReset: resetFilters, //리셋 버튼 클릭 시 호출될 함수
     };
 
     const numberFilterParams ={

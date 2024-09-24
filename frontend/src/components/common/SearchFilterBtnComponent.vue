@@ -64,18 +64,20 @@ const fieldNameMap = {
   ETC: '기타',
 };
 
-// 버튼 등록 함수
 const updateButtonData = (keyName, type, filter) => {
   const displayType = filterTypeMap[type] || type;
   const displayKeyName = fieldNameMap[keyName] || keyName;
 
-  // 중복 체크
+  console.log('추가할 버튼:', { displayKeyName, displayType, filter }); // 버튼 추가 정보 로그
+
   const isAlreadyRegistered = buttons.value.some(button =>
       button.keyName === displayKeyName && button.filter === filter && button.type === displayType
   );
 
   if (!isAlreadyRegistered) {
     buttons.value.push({ keyName: displayKeyName, type: displayType, filter });
+  } else {
+    console.log('중복된 버튼:', { keyName: displayKeyName, type: displayType, filter });
   }
 };
 
@@ -86,12 +88,22 @@ const resetButtons = () => {
   buttons.value = []; // 모든 버튼 삭제
 };
 
-// 버튼 제거 함수
 const removeButton = (index) => {
   const button = buttons.value[index];
+
   if (button) {
+    console.log('제거할 버튼 정보:', button); // 버튼 정보 출력
+
+    // 필터 제거 요청
     eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
+
+    // buttons 배열에서 해당 버튼 제거
     buttons.value.splice(index, 1);
+
+    // 제거 후 상태 확인
+    console.log('남은 버튼들:', buttons.value); // 남은 버튼 확인
+  } else {
+    console.log('Invalid button index:', index);
   }
 };
 
