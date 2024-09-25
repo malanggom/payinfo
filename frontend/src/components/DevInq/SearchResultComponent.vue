@@ -180,22 +180,28 @@ export default defineComponent({
           const filterObject = filterModel.value[key];
           console.log(`필터 키: ${key}, 필터 객체:`, filterObject);
 
-          if (filterObject?.conditions) {
+          // 이미 추가된 필터는 검증하지 않도록 조건 변경
+          if (filterObject?.conditions && filterObject.conditions.length > 0) {
             const filtersToRemove = [];
 
-            for (let i = 0; i < filterObject?.conditions.length; i++) {
-              const currentCondition = filterObject.conditions[i];
-              const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-                  registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
-              );
+            const currentCondition = filterObject.conditions[0];
+            const currentCondition1 = filterObject.conditions[1];
 
-              if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
-                console.log('새로운 필터입니다.');
-                eventbus.SearchResultEvent.filterUpdate(currentCondition, currentCondition.type, currentCondition.filter);
-              } else {
-                console.log('이미 등록된 필터입니다.');
-              }
+            const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+                registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
+            );
+            const isFilterRegistered1 = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+                registeredFilter.filter === currentCondition1.filter && registeredFilter.type === currentCondition1.type
+            );
+
+            if (isFilterRegistered) {
+              if (!isFilterRegistered1) {
+                eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+              }else{
+                alert('이미 등록된 필터입니다.');
             }
+            }
+
 
             // 중복된 필터 제거
             filtersToRemove.reverse().forEach(index => {
@@ -283,8 +289,6 @@ export default defineComponent({
 
     // 셀의 값이 변경될 때 호출되는 함수
     const onCellValueChanged = async (event) => {
-      console.log(event.data)
-
       try {
         const response = await fetch('http://localhost:8080/api/updateData', {
           method: 'POST',
@@ -293,13 +297,9 @@ export default defineComponent({
           },
           body: JSON.stringify(event.data),
         });
-
         if (!response.ok) {
           throw new Error('Failed to update data');
         }
-
-        const result = await response.json();
-        console.log(result.message);
       } catch (error) {
         console.error('Error updating data:', error);
       }
