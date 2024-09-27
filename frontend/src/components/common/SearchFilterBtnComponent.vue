@@ -83,7 +83,7 @@ const updateButtonData = (keyName, type, filter) => {
 
 const resetButtons = () => {
   buttons.value.forEach(button => {
-    eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
+    eventbus.SearchResultEvent.removeFilter(button.keyName, button.type, button.filter);
   });
   buttons.value = []; // 모든 버튼 삭제
 };
@@ -95,7 +95,7 @@ const removeButton = (index) => {
     console.log('제거할 버튼 정보:', button); // 버튼 정보 출력
 
     // 필터 제거 요청
-    eventbus.SearchResultEvent.removeFilter(button.type, button.filter);
+    eventbus.SearchResultEvent.removeFilter(button.keyName, button.type, button.filter);
 
     // buttons 배열에서 해당 버튼 제거
     buttons.value.splice(index, 1);

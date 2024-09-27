@@ -37,8 +37,8 @@ export default {
         getRegisteredFilters() {
             return handlers.registeredFilters; // 등록된 필터 반환
         },
-        removeFilter(type, filter) {
-            handlers.filterUpdate.forEach(handler => handler(type, filter));
+        removeFilter(KeyName, type, filter) {
+            handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
             // 등록된 필터에서 제거하는 로직 추가 필요
             handlers.registeredFilters = handlers.registeredFilters.filter(registeredFilter =>
                 registeredFilter.type !== type || registeredFilter.filter !== filter
