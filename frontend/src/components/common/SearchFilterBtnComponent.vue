@@ -82,10 +82,11 @@ const updateButtonData = (keyName, type, filter) => {
 };
 
 const resetButtons = () => {
-  buttons.value.forEach(button => {
-    eventbus.SearchResultEvent.removeFilter(button.keyName, button.type, button.filter);
-  });
+  // buttons.value.forEach(button => {
+  //   eventbus.SearchResultEvent.removeFilter(button.keyName, button.type, button.filter);
+  // });
   buttons.value = []; // 모든 버튼 삭제
+  console.log('초기화');
 };
 
 const removeButton = (index) => {
@@ -94,14 +95,21 @@ const removeButton = (index) => {
   if (button) {
     console.log('제거할 버튼 정보:', button); // 버튼 정보 출력
 
-    // 필터 제거 요청
-    eventbus.SearchResultEvent.removeFilter(button.keyName, button.type, button.filter);
+    // 필드 이름 매핑을 통해 실제 필터 키로 변환
+    const actualKeyName = Object.keys(fieldNameMap).find(key => fieldNameMap[key] === button.keyName);
 
-    // buttons 배열에서 해당 버튼 제거
-    buttons.value.splice(index, 1);
+    if (actualKeyName) {
+      // 필터 제거 요청: actualKeyName을 사용하여 필터 제거
+      eventbus.SearchResultEvent.removeFilter(actualKeyName, button.type, button.filter); // 필터 제거 이벤트 발생
 
-    // 제거 후 상태 확인
-    console.log('남은 버튼들:', buttons.value); // 남은 버튼 확인
+      // buttons 배열에서 해당 버튼 제거
+      buttons.value.splice(index, 1);
+
+      // 제거 후 상태 확인
+      console.log('남은 버튼들:', buttons.value); // 남은 버튼 확인
+    } else {
+      console.log(`필터 키 '${button.keyName}'에 대한 실제 키를 찾을 수 없습니다.`);
+    }
   } else {
     console.log('Invalid button index:', index);
   }

@@ -2,6 +2,7 @@ let handlers = {
     deleteRow: [],
     search: [],
     reset: [],
+    removeFilter: [],
     filterUpdate: [],
     resetButtons: [],
     registeredFilters: [] // 등록된 필터를 저장할 배열 추가
@@ -37,12 +38,8 @@ export default {
         getRegisteredFilters() {
             return handlers.registeredFilters; // 등록된 필터 반환
         },
-        removeFilter(KeyName, type, filter) {
-            handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
-            // 등록된 필터에서 제거하는 로직 추가 필요
-            handlers.registeredFilters = handlers.registeredFilters.filter(registeredFilter =>
-                registeredFilter.type !== type || registeredFilter.filter !== filter
-            );
+        removeFilter(keyName) {
+            handlers.removeFilter.forEach(handler => handler(keyName));
         },
     }
 }
