@@ -41,5 +41,6 @@ export default {
         removeFilter(keyName) {
             handlers.removeFilter.forEach(handler => handler(keyName));
         },
+
     }
 }
