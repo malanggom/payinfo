@@ -171,6 +171,7 @@ export default defineComponent({
       gridApi.value = params.api;
 
       eventbus.SearchResultEvent.add('search', fetchData);
+      eventbus.SearchResultEvent.add('removeFilter', removeFilter);
 
       params.api.addEventListener('filterChanged', () => {
         filterModel.value = getCurrentFilterModel();
@@ -182,7 +183,7 @@ export default defineComponent({
 
           // 이미 추가된 필터는 검증하지 않도록 조건 변경
           if (filterObject?.conditions && filterObject.conditions.length > 0) {
-            const filtersToRemove = [];
+            // const filtersToRemove = [];
 
             const currentCondition = filterObject.conditions[0];
             const currentCondition1 = filterObject.conditions[1];
@@ -194,33 +195,43 @@ export default defineComponent({
                 registeredFilter.filter === currentCondition1.filter && registeredFilter.type === currentCondition1.type
             );
 
-            if (isFilterRegistered) {
-              if (!isFilterRegistered1) {
+            if (isFilterRegistered && !isFilterRegistered1) {
                 eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-              }else{
-                alert('이미 등록된 필터입니다.');
+                alert(currentCondition+' 는 이미 등록된 필터입니다.');
+
             }
+            if (!isFilterRegistered && isFilterRegistered1) {
+              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+              alert(currentCondition1+' 1는 이미 등록된 필터입니다.');
+            }
+            if (currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
+              alert(currentCondition+' 와 '+currentCondition1+' 의 필터값이 같습니다.');
+              eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+              // console.log(eventbus.getRegisteredFilters());
+              console.log(key, ',1 필터값: ',currentCondition1.type,',1 필터값: ',currentCondition1.filter);
+              console.log(key, ',필터값: ',currentCondition.type,',필터값: ',currentCondition.filter);
+              // // 중복된 필터 제거
+              // filtersToRemove.reverse().forEach(index => {
+              //   filterObject.conditions.splice(index, 1); // 인덱스에 해당하는 필터 제거
+              //   console.log(`인덱스 ${index}의 필터를 제거했습니다.`);
+              // });
             }
 
 
-            // 중복된 필터 제거
-            filtersToRemove.reverse().forEach(index => {
-              filterObject.conditions.splice(index, 1); // 인덱스에 해당하는 필터 제거
-              console.log(`인덱스 ${index}의 필터를 제거했습니다.`);
-            });
 
             console.log(filterObject);
             // AG Grid에 필터 모델 업데이트
             const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
             params.api.setFilterModel(updatedFilterModel);
             console.log('업데이트된 필터 모델:', updatedFilterModel);
-          } else {
+          } else {//필터 한개 등록 시
             const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
                 registeredFilter.filter === filterObject.filter && registeredFilter.type === filterObject.type
             );
 
             if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
               eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+
             }
           }
         });
@@ -308,9 +319,20 @@ export default defineComponent({
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
-      eventbus.SearchResultEvent.removeFilter(null);
+      // eventbus.SearchResultEvent.removeFilter(null);
     };
+    const removeFilter = (keyName) => {
+      const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
+      console.log('현재 필터 모델:', filterModel); // 필터 모델 출력
 
+      if (filterModel[keyName]) {
+        delete filterModel[keyName]; // 특정 필터 제거
+        gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
+        console.log(`필터 '${keyName}'이(가) 제거되었습니다.`);
+      } else {
+        console.log(`필터 '${keyName}'이(가) 적용되지 않았습니다.`);
+      }
+    };
     // 이벤트 등록
     eventbus.SearchResultEvent.add('reset', resetFilter);
     //--- 필터초기화 끝 ---//
@@ -351,6 +373,8 @@ export default defineComponent({
     //--- 선택된 행 삭제 끝 ---//
 
 
+
+
     return {
       columnDefs,
       gridApi,
@@ -362,6 +386,7 @@ export default defineComponent({
       onCellValueChanged,
       deleteRowBtnClick,
       resetFilter,
+      removeFilter,
       getCurrentFilterModel,
       textFilterParams,
     };
