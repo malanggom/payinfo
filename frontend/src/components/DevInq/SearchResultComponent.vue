@@ -71,11 +71,6 @@ export default defineComponent({
         apply: '적용',
       },
       closeOnApply: true,//"적용" 버튼을 클릭했을 때 필터 UI를 닫도록 설정합니다. 사용자가 필터를 적용한 후 UI가 자동으로 닫히게 됩니다.
-      onReset: () => {
-        // 리셋 버튼 클릭 시 호출되는 함수
-        alert('reset버튼누름');
-        // 추가적인 리셋 로직이 있다면 여기에 작성
-      },
     };
 
 
@@ -101,6 +96,7 @@ export default defineComponent({
         inRange: '범위 내',
       },
     };
+
     //columnDefs는 Vue의 반응형 객체로, AG Grid에서 사용할 열(column)의 정의 목록입니다. 각 열은 객체로 정의되어 있습니다.
     const columnDefs = ref([
       //headerName: 열의 헤더에 표시될 이름입니다.
@@ -112,7 +108,8 @@ export default defineComponent({
       //filterParams: 필터의 추가 설정을 위한 매개변수입니다.
       // { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
       { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200,filter: "agTextColumnFilter",
+        filterParams: { buttons: ["reset", "apply"] },},
       { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
       { headerName: '생년월일', field: "BRDT", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
       { headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
@@ -155,11 +152,10 @@ export default defineComponent({
       { headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       { headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
-
+    console.log('columnDefs.value : ',columnDefs.value);
     const rowSelection = ref("multiple");
     const rowData = ref([]);
     // const currentlyActiveFilterModel = ref([]);
-    const filterModel = ref([]);
 
     const getCurrentFilterModel = () => {
       if (gridApi.value) {
@@ -173,60 +169,80 @@ export default defineComponent({
 
       eventbus.SearchResultEvent.add('search', fetchData);
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
-      params.api.addEventListener('filterChanged', () => {
-        filterModel.value = getCurrentFilterModel();
-        console.log(filterModel.value);
+      params.api.addEventListener('filterChanged', onFilterChanged);
+    };
+    const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
 
-        Object.keys(filterModel.value).forEach(key => {
-          const filterObject = filterModel.value[key];
-          console.log(`필터 키: ${key}, 필터 객체:`, filterObject);
+    const filterModel = ref([]);
+    const onFilterChanged = async (params) => {
+      const filterModels = gridApi.value.getFilterModel();
+      const filterModelKeys = Object.keys(filterModels);
 
-          // 이미 추가된 필터는 검증하지 않도록 조건 변경
-          // if (filterObject?.conditions && filterObject.conditions.length > 0) {
-          if (filterObject?.conditions) {
-            // const filtersToRemove = [];
+      console.log('Current Filter Model:', filterModels);
+      console.log('filterModel : ', filterModelKeys);
 
-            const currentCondition = filterObject.conditions[0];
-            const currentCondition1 = filterObject.conditions[1];
+      // 현재 필터 모델에서 이전 필터 키와 비교하여 해제된 필터 찾기
+      previousFilterKeys.value.forEach((key) => {
+        if (!filterModelKeys.includes(key)) {
+          console.log(`${key} 필터가 해제되었습니다!`);
+          eventbus.SearchResultEvent.removeFilter(key); // 해제된 필터에 대한 버튼 삭제
+        }
+      });
 
-            // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-            //     registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
-            // );
-            // const isFilterRegistered1 = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-            //     registeredFilter.filter === currentCondition1.filter && registeredFilter.type === currentCondition1.type
-            // );
+      // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
+      previousFilterKeys.value = filterModelKeys;
 
-            if (currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
-              alert(currentCondition+' 와 '+currentCondition1+' 의 필터값이 같습니다.');
-              // console.log(eventbus.getRegisteredFilters());
-              console.log(key, ',1 필터값: ',currentCondition1.type,',1 필터값: ',currentCondition1.filter);
-              console.log(key, ',필터값: ',currentCondition.type,',필터값: ',currentCondition.filter);
+      filterModel.value = getCurrentFilterModel();
+      // console.log(filterModel.value);
 
-            }else{
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+      Object.keys(filterModel.value).forEach(key => {
+        const filterObject = filterModel.value[key];
+        // console.log(`필터 키: ${key}, 필터 객체:`, filterObject);
 
-            }
+        // 이미 추가된 필터는 검증하지 않도록 조건 변경
+        // if (filterObject?.conditions && filterObject.conditions.length > 0) {
+        if (filterObject?.conditions) {
+          // const filtersToRemove = [];
 
-            console.log(filterObject);
-            // AG Grid에 필터 모델 업데이트
-            const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
-            params.api.setFilterModel(updatedFilterModel);
-            console.log('업데이트된 필터 모델:', updatedFilterModel);
-          } else {//필터 한개 등록 시
-            // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-            //     registeredFilter.filter === filterObject.filter && registeredFilter.type === filterObject.type
-            // );
-            //
-            // if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
-              eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions[1];
 
-            // }
+          // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+          //     registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
+          // );
+          // const isFilterRegistered1 = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+          //     registeredFilter.filter === currentCondition1.filter && registeredFilter.type === currentCondition1.type
+          // );
+
+          if (currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
+            alert(currentCondition+' 와 '+currentCondition1+' 의 필터값이 같습니다.');
+            // console.log(eventbus.getRegisteredFilters());
+            console.log(key, ',1 필터값: ',currentCondition1.type,',1 필터값: ',currentCondition1.filter);
+            console.log(key, ',필터값: ',currentCondition.type,',필터값: ',currentCondition.filter);
+
+          }else{
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+
           }
-        });
+
+          console.log(filterObject);
+          // AG Grid에 필터 모델 업데이트
+          const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
+          params.api.setFilterModel(updatedFilterModel);
+          console.log('업데이트된 필터 모델:', updatedFilterModel);
+        } else {//필터 한개 등록 시
+          // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
+          //     registeredFilter.filter === filterObject.filter && registeredFilter.type === filterObject.type
+          // );
+          //
+          // if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
+          eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+
+          // }
+        }
       });
     };
-
 
     const fetchData = async () => {
       try {

@@ -114,11 +114,20 @@ const removeButton = (index) => {
     console.log('Invalid button index:', index);
   }
 };
+// 필터 버튼 삭제 핸들러
+const handleRemoveFilter = (keyName) => {
+  const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName]);
+  if (buttonIndex !== -1) {
+    buttons.value.splice(buttonIndex, 1);
+    console.log(`버튼 '${keyName}' 삭제됨`);
+  }
+};
 
 // 이벤트 리스너 등록
 onMounted(() => {
   eventbus.SearchResultEvent.add('filterUpdate', updateButtonData);
   eventbus.SearchResultEvent.add('resetButtons', resetButtons); // resetButtons 이벤트 등록
+  eventbus.SearchResultEvent.add('removeFilter', handleRemoveFilter); // 버튼 삭제 핸들러 등록
 });
 </script>
 
