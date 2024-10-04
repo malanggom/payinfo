@@ -207,13 +207,6 @@ export default defineComponent({
           const currentCondition = filterObject.conditions[0];
           const currentCondition1 = filterObject.conditions[1];
 
-          // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-          //     registeredFilter.filter === currentCondition.filter && registeredFilter.type === currentCondition.type
-          // );
-          // const isFilterRegistered1 = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-          //     registeredFilter.filter === currentCondition1.filter && registeredFilter.type === currentCondition1.type
-          // );
-
           if (currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
             alert(currentCondition+' 와 '+currentCondition1+' 의 필터값이 같습니다.');
             // console.log(eventbus.getRegisteredFilters());
@@ -231,15 +224,9 @@ export default defineComponent({
           const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
           params.api.setFilterModel(updatedFilterModel);
           console.log('업데이트된 필터 모델:', updatedFilterModel);
-        } else {//필터 한개 등록 시
-          // const isFilterRegistered = eventbus.SearchResultEvent.getRegisteredFilters().some(registeredFilter =>
-          //     registeredFilter.filter === filterObject.filter && registeredFilter.type === filterObject.type
-          // );
-          //
-          // if (!isFilterRegistered) { // 등록되지 않은 필터인 경우
+        } else {
           eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
 
-          // }
         }
       });
     };

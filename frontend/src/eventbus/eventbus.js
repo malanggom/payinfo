@@ -4,7 +4,7 @@ let handlers = {
     reset: [],
     removeFilter: [],
     filterUpdate: [],
-    resetButtons: [],
+    resetKorButton: [],
     registeredFilters: [] // 등록된 필터를 저장할 배열 추가
 };
 
@@ -25,18 +25,12 @@ export default {
         },
         resetFilter(){
             handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
-            handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
+            handlers.resetKorButton.forEach(handler => handler()); // resetKorButton 핸들러 호출
         },
-        // resetButtons() {
-        //     handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
-        // },
         filterUpdate(KeyName, type, filter) {
             // 등록된 필터 추가
             handlers.registeredFilters.push({ KeyName, type, filter });
             handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
-        },
-        getRegisteredFilters() {
-            return handlers.registeredFilters; // 등록된 필터 반환
         },
         removeFilter(keyName) {
             handlers.removeFilter.forEach(handler => handler(keyName));
