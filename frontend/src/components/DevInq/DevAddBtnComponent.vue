@@ -635,6 +635,7 @@ import { ref , onMounted } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
+
 const selectedGrade = ref('초급'); // 초기값
 const selectedJbps = ref('사원'); // 초기값
 const selectedJbttl = ref('PMO'); // 초기값
