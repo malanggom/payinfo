@@ -5,7 +5,8 @@ let handlers = {
     removeFilter: [],
     filterUpdate: [],
     resetButtons: [],
-    registeredFilters: [] // 등록된 필터를 저장할 배열 추가
+    registeredFilters: [], // 등록된 필터를 저장할 배열 추가
+    openModal: [] // 모달 열기 핸들러 추가
 };
 
 export { handlers }; // handlers를 export
@@ -40,6 +41,10 @@ export default {
         },
         removeFilter(keyName) {
             handlers.removeFilter.forEach(handler => handler(keyName));
+        },
+        // 모달 열기 이벤트 추가
+        openModal() {
+            handlers.openModal.forEach(handler => handler()); // openModal 핸들러 호출
         },
 
     }

@@ -1,5 +1,7 @@
 <template>
   <div class="ag-theme-quartz search-result pl10" style="width: 100%; height: 98%;">
+    <!-- DevAddBtnComponent 추가 -->
+    <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -16,7 +18,8 @@
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef} from "vue";
+import { defineComponent, ref, shallowRef } from "vue";
+import DevAddBtnComponent from './DevAddBtnComponent.vue'; // 경로에 맞게 수정하세요
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -27,6 +30,7 @@ export default defineComponent({
   //ag-grid-vue3패키지를 가져온 모듈 AgGridVue를 ag-grid-vue라는 이름으로 현재 컴포넌트에서 사용할 때 사용한다.
   components: {
     "ag-grid-vue": AgGridVue,
+    DevAddBtnComponent,
   },
   //이 함수는 Vue 3 컴포넌트의 생명 주기 중에 초기화되는 함수로, 컴포넌트가 생성될 때 실행됩니다.
   //이 함수는 컴포넌트의 반응형 상태 및 메소드를 정의하고 반환하여, 템플릿에서 사용할 수 있도록 합니다.
@@ -35,6 +39,7 @@ export default defineComponent({
     //shallowRef()는 객체의 내부 값을 추적하지 않고, 기본 값만 반응형으로 만드는 함수입니다. 주로 성능 최적화를 위해 사용됩니다.
     //이 경우, gridApi는 AG Grid API를 참조하기 위해 사용될 것입니다.
     const gridApi = shallowRef();
+
     //defaultColDef라는 변수를 정의하고 ref()를 사용하여 반응형 객체를 생성합니다.
     //ref()는 기본 타입의 값을 반응형으로 만들어 Vue의 반응형 시스템에서 관리할 수 있게 합니다.
     //AG Grid의 열(column) 정의의 기본 설정을 포함하는 객체
@@ -107,7 +112,8 @@ export default defineComponent({
       //filter: 이 열에서 사용할 필터링 방법을 지정합니다. 예를 들어, "agTextColumnFilter"는 텍스트 기반 필터를 사용합니다.
       //filterParams: 필터의 추가 설정을 위한 매개변수입니다.
       // { headerName: '개발자번호', field: "DEV_NO", minWidth: 170, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, cellClass: 'checkboxCentered'},
+      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200,filter: "agTextColumnFilter",
         filterParams: { buttons: ["reset", "apply"] },},
       { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
@@ -163,10 +169,53 @@ export default defineComponent({
       }
     };
 
-
     const onGridReady = async (params) => {
       gridApi.value = params.api;
+      // ag-paging-panel 클래스를 가진 요소를 찾습니다.
+      // Grid가 준비된 이후에 자식 요소를 추가합니다.
+      // ag-paging-panel 클래스를 가진 요소를 찾습니다.
+      const pagingPanel = document.querySelector('.ag-paging-panel');
+      if (pagingPanel) {
+        const addRows = document.createElement("span");
+        addRows.textContent = "개발자추가"; // span의 텍스트 설정
+        addRows.style.cursor = "pointer"; // 커서 스타일 설정
+        addRows.style.marginLeft = "10px"; // 여백 추가
 
+        // 클릭 이벤트 추가
+        addRows.onclick = () => {
+          eventbus.SearchResultEvent.openModal(); // 모달 열기 이벤트 호출
+        };
+
+        // 추가 버튼을 추가
+        pagingPanel.insertBefore(addRows, pagingPanel.firstChild); // 첫 번째 자식 앞에 삽입
+
+        const editRows = document.createElement("span");
+        editRows.textContent = "수정"; // span의 텍스트 설정
+        editRows.style.cursor = "pointer"; // 커서 스타일 설정
+        editRows.style.marginLeft = "10px"; // 여백 추가
+
+        // 클릭 이벤트 추가
+        editRows.onclick = () => {
+          console.log("수정 버튼 클릭됨");
+          // 수정 작업을 수행할 수 있습니다.
+        };
+
+        // 수정 버튼을 추가
+        pagingPanel.insertBefore(editRows, addRows.nextSibling); // 추가 버튼 뒤에 삽입
+
+        const deleteRows = document.createElement("span");
+        deleteRows.textContent = "삭제"; // span의 텍스트 설정
+        deleteRows.style.cursor = "pointer"; // 커서 스타일 설정
+        deleteRows.style.marginLeft = "10px"; // 여백 추가
+
+        // 클릭 이벤트 추가
+        deleteRows.onclick = () => {
+          eventbus.SearchResultEvent.deleteRowBtnClick(); // 이벤트 호출
+        };
+
+        // 삭제 버튼을 추가
+        pagingPanel.insertBefore(deleteRows, editRows.nextSibling); // 수정 버튼 뒤에 삽입
+      }
       eventbus.SearchResultEvent.add('search', fetchData);
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
       params.api.addEventListener('filterChanged', onFilterChanged);
@@ -410,8 +459,15 @@ export default defineComponent({
 }
 
 .headerColor{
-  background-color: #e8e8e8 !important;;
+  background-color: #e8e8e8 !important;
 }
+
+.checkboxCentered {
+  display: flex; /* Flexbox를 사용하여 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+}
+
 .pl10{
   padding-left: 10px;
 }

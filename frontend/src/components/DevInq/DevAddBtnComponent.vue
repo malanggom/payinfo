@@ -1,5 +1,5 @@
 <template>
-  <button class="btn devAddBtnStyle" @click="openModal">개발자추가</button>
+<!--  <button class="btn devAddBtnStyle" @click="openModal">개발자추가</button>-->
   <div class="modal fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
        aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -631,8 +631,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref , onMounted } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
+import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
 const selectedGrade = ref('초급'); // 초기값
 const selectedJbps = ref('사원'); // 초기값
@@ -794,6 +795,10 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+// 컴포넌트가 마운트될 때 이벤트 핸들러 추가
+onMounted(() => {
+  eventbus.SearchResultEvent.add('openModal', openModal); // 모달 열기 이벤트 등록
+});
 </script>
 
 <style scoped>
