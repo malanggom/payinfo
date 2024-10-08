@@ -169,6 +169,10 @@ export default defineComponent({
       }
     };
 
+    const openModal = () => {
+      eventbus.SearchResultEvent.openModal(); // 모달 열기 이벤트 호출
+    };
+
     const onGridReady = async (params) => {
       gridApi.value = params.api;
       // ag-paging-panel 클래스를 가진 요소를 찾습니다.
@@ -181,10 +185,8 @@ export default defineComponent({
         addRows.style.cursor = "pointer"; // 커서 스타일 설정
         addRows.style.marginLeft = "10px"; // 여백 추가
 
-        // 클릭 이벤트 추가
-        addRows.onclick = () => {
-          eventbus.SearchResultEvent.openModal(); // 모달 열기 이벤트 호출
-        };
+// 클릭 이벤트 추가
+        addRows.onclick = openModal; // 모달 열기
 
         // 추가 버튼을 추가
         pagingPanel.insertBefore(addRows, pagingPanel.firstChild); // 첫 번째 자식 앞에 삽입
@@ -221,6 +223,7 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
     const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
+    const previousFilter = ref([]);
 
     const filterModel = ref([]);
     const onFilterChanged = async (params) => {
@@ -240,42 +243,63 @@ export default defineComponent({
 
       // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
       previousFilterKeys.value = filterModelKeys;
+      previousFilter.value = filterModels;
 
       filterModel.value = getCurrentFilterModel();
       // console.log(filterModel.value);
 
       Object.keys(filterModel.value).forEach(key => {
         const filterObject = filterModel.value[key];
-        // console.log(`필터 키: ${key}, 필터 객체:`, filterObject);
 
         // 이미 추가된 필터는 검증하지 않도록 조건 변경
-        // if (filterObject?.conditions && filterObject.conditions.length > 0) {
-        if (filterObject?.conditions) {
-          // const filtersToRemove = [];
-
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
           const currentCondition = filterObject.conditions[0];
-          const currentCondition1 = filterObject.conditions[1];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
 
-          if (currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
-            alert(currentCondition+' 와 '+currentCondition1+' 의 필터값이 같습니다.');
-            // console.log(eventbus.getRegisteredFilters());
-            console.log(key, ',1 필터값: ',currentCondition1.type,',1 필터값: ',currentCondition1.filter);
-            console.log(key, ',필터값: ',currentCondition.type,',필터값: ',currentCondition.filter);
-
-          }else{
+          // 중복 필터 값 확인
+          if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
+            console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
+          } else {
             eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-
+            if (currentCondition1) {
+              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+            }
           }
 
-          console.log(filterObject);
           // AG Grid에 필터 모델 업데이트
           const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
           params.api.setFilterModel(updatedFilterModel);
           console.log('업데이트된 필터 모델:', updatedFilterModel);
         } else {
-          eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+          // 이전 필터와 현재 필터 비교
+          const matchingPreviousFilter = previousFilterKeys.value.find(prevKey => {
+            const prevFilter = filterModel.value[prevKey];
+            return prevKey === key &&
+                prevFilter?.conditions && // 조건이 존재하는지 확인
+                prevFilter.conditions[0]?.filter === filterObject?.filter &&
+                prevFilter.conditions[0]?.type !== filterObject?.type;
+          });
 
+          // 조건이 만족할 경우 필터 해제 및 버튼 삭제
+          if (matchingPreviousFilter) {
+            alert(`필터 '${matchingPreviousFilter}'이(가) 해제되었습니다.`);
+            eventbus.SearchResultEvent.removeFilter(matchingPreviousFilter); // 필터 해제 이벤트 호출
+
+            // 버튼 삭제
+            const buttonToRemove = document.querySelector(`.filter-button[data-filter-key="${matchingPreviousFilter}"]`);
+            if (buttonToRemove) {
+              buttonToRemove.remove(); // 해당 버튼 삭제
+            }
+          }
+
+          // 필터 교환 필요 여부 체크
+          if (previousFilterKeys.value.includes(key)) {
+            alert('필터교환필요');
+          }
+
+          eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
         }
       });
     };

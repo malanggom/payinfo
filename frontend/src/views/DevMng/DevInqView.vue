@@ -5,10 +5,10 @@ DevInqView.vue
 템플릿 시작
 ===========================================================================
 <template class="devinq">
-  <div class="component"><MenuNameComponent/></div>
-  <div class="component"><SearchFilterComponent/></div>
   <div class="component"><SearchBarComponent/></div>
+  <div class="component"><SearchFilterComponent/></div>
   <div class="search__result__component"><SearchResultComponent/></div>
+  <div class="search__result__component"><SearchPjHistoryComponent/></div>
 </template>
 ===========================================================================
 템플릿 종료
@@ -16,10 +16,10 @@ DevInqView.vue
 스크립트 시작
 ===========================================================================
 <script setup lang="js">
-  import MenuNameComponent from '@/components/DevInq/MenuNameComponent.vue'
   import SearchFilterComponent from "@/components/DevInq/SearchFilterArea.vue";
   import SearchBarComponent from "@/components/DevInq/SearchBarArea.vue";
   import SearchResultComponent from "@/components/DevInq/SearchResultComponent.vue";
+  import SearchPjHistoryComponent from "@/components/DevInq/SearchPjHistoryArea.vue";
 </script>
 ===========================================================================
 스크립트 종료

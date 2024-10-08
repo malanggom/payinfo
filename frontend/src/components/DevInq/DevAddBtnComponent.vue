@@ -631,7 +631,7 @@
 </template>
 
 <script setup>
-import { ref , onMounted } from 'vue';
+import { ref , onMounted , onUnmounted} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
@@ -770,35 +770,37 @@ const selectGiveDt = (giveDt) => {
   selectedGiveDt.value = giveDt;
   formData.value.GIVE_DT = giveDt;
 };
+
+// 모달 상태 관리
+const showModal = ref(false);
+
+const closeModal = () => {
+  showModal.value = false; // 모달 닫기
+};
+
 const submitForm = async () => {
-
   console.log(formData.value);
-
   try {
     const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
     alert(response.data.message); // 성공 메시지 표시
   } catch (error) {
-    // 에러 메시지 확인 및 출력
-    // console.error('Error response:', error.response);
     const errorMessage = error.response?.data?.message || error.message || '개발자 추가에 실패했습니다.';
     alert(`오류: ${errorMessage}`);
   }
 };
 
-// 모달 상태 관리
-const showModal = ref(false);
-
-const openModal = () => {
-  showModal.value = true;
-};
-
-const closeModal = () => {
-  showModal.value = false;
-};
-
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
+const openModalHandler = () => {
+  showModal.value = true; // 모달 열기
+};
+
 onMounted(() => {
-  eventbus.SearchResultEvent.add('openModal', openModal); // 모달 열기 이벤트 등록
+  eventbus.SearchResultEvent.add('openModal', openModalHandler); // 모달 열기 이벤트 등록
+});
+
+// 컴포넌트가 언마운트될 때 핸들러 제거
+onUnmounted(() => {
+  eventbus.SearchResultEvent.remove('openModal', openModalHandler); // 모달 열기 이벤트 제거
 });
 </script>
 

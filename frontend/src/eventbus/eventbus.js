@@ -5,7 +5,7 @@ let handlers = {
     removeFilter: [],
     filterUpdate: [],
     resetButtons: [],
-    registeredFilters: [], // 등록된 필터를 저장할 배열 추가
+    registeredFilters: [],
     openModal: []
 };
 
@@ -18,33 +18,33 @@ export default {
                 handlers[eventType].push(handler);
             }
         },
+        remove(eventType, handler) {
+            if (handlers[eventType]) {
+                handlers[eventType] = handlers[eventType].filter(h => h !== handler);
+            }
+        },
         deleteRowBtnClick() {
-            handlers.deleteRow.forEach(handler => handler()); // deleteRow 핸들러만 호출
+            handlers.deleteRow.forEach(handler => handler());
         },
         fetchData(type, filter) {
             handlers.search.forEach(handler => handler(type, filter));
         },
-        resetFilter(){
-            handlers.reset.forEach(handler => handler());// reset 핸들러만 호출
-            handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
+        resetFilter() {
+            handlers.reset.forEach(handler => handler());
+            handlers.resetButtons.forEach(handler => handler());
         },
-        // resetButtons() {
-        //     handlers.resetButtons.forEach(handler => handler()); // resetButtons 핸들러 호출
-        // },
         filterUpdate(KeyName, type, filter) {
-            // 등록된 필터 추가
             handlers.registeredFilters.push({ KeyName, type, filter });
             handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
         },
         getRegisteredFilters() {
-            return handlers.registeredFilters; // 등록된 필터 반환
+            return handlers.registeredFilters;
         },
         removeFilter(keyName) {
             handlers.removeFilter.forEach(handler => handler(keyName));
         },
-        openModal(){
+        openModal() {
             handlers.openModal.forEach(handler => handler());
         }
-
     }
 }
