@@ -223,35 +223,47 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
     const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
-    const previousFilter = ref([]);
-
-    const filterModel = ref([]);
+    const previousFilterModels = {}; // 현재 필터 모델을 이전 필터 모델로 업데이트
     const onFilterChanged = async (params) => {
-      const filterModels = gridApi.value.getFilterModel();
+      const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       const filterModelKeys = Object.keys(filterModels);
 
       console.log('Current Filter Model:', filterModels);
       console.log('filterModel : ', filterModelKeys);
 
-      // 현재 필터 모델에서 이전 필터 키와 비교하여 해제된 필터 찾기
-      previousFilterKeys.value.forEach((key) => {
-        if (!filterModelKeys.includes(key)) {
-          console.log(`${key} 필터가 해제되었습니다!`);
-          eventbus.SearchResultEvent.removeFilter(key); // 해제된 필터에 대한 버튼 삭제
+      // 이전 필터 모델 업데이트
+      const previousFilterModelsCopy = { ...previousFilterModels.value }; // 이전 필터 모델 복사
+
+      // 이전 필터 정보 확인 및 비교
+      previousFilterKeys.value.forEach(key => {
+        const prevFilterModel = previousFilterModelsCopy[key]; // 이전 필터 모델에서 해당 키의 모델 가져오기
+
+        if (prevFilterModel) {
+          const prevFilterType = prevFilterModel.filter; // 이전 필터의 타입
+          const prevFilterValue = prevFilterModel.filterValue; // 이전 필터의 값
+
+          const currentFilterModel = filterModels[key];
+          if (currentFilterModel) {
+            const currentFilterType = currentFilterModel.filter; // 현재 필터의 타입
+            const currentFilterValue = currentFilterModel.filterValue; // 현재 필터의 값
+
+            // 필터 타입이 다르고 값이 같은 경우
+            if (currentFilterType !== prevFilterType && currentFilterValue === prevFilterValue) {
+              console.log(`필드: ${key}, 타입: ${currentFilterType}, 값: ${currentFilterValue}`);
+            }
+          }
+        } else {
+          console.log(`필드 '${key}'에 대한 이전 필터가 설정되어 있지 않습니다.`);
         }
       });
 
-      // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
-      previousFilterKeys.value = filterModelKeys;
-      previousFilter.value = filterModels;
+      previousFilterModels.value = { ...filterModels }; // 이전 필터 모델 업데이트
+      previousFilterKeys.value = filterModelKeys; // 이전 필터 키 업데이트
 
-      filterModel.value = getCurrentFilterModel();
-      // console.log(filterModel.value);
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
 
-      Object.keys(filterModel.value).forEach(key => {
-        const filterObject = filterModel.value[key];
-
-        // 이미 추가된 필터는 검증하지 않도록 조건 변경
+        // 필터 객체의 조건이 존재하는지 확인
         if (filterObject?.conditions && filterObject.conditions.length > 0) {
           const currentCondition = filterObject.conditions[0];
           const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
@@ -269,13 +281,13 @@ export default defineComponent({
           }
 
           // AG Grid에 필터 모델 업데이트
-          const updatedFilterModel = { ...filterModel.value }; // 깊은 복사
+          const updatedFilterModel = { ...filterModels }; // 깊은 복사
           params.api.setFilterModel(updatedFilterModel);
           console.log('업데이트된 필터 모델:', updatedFilterModel);
         } else {
           // 이전 필터와 현재 필터 비교
           const matchingPreviousFilter = previousFilterKeys.value.find(prevKey => {
-            const prevFilter = filterModel.value[prevKey];
+            const prevFilter = previousFilterModels.value[prevKey];
             return prevKey === key &&
                 prevFilter?.conditions && // 조건이 존재하는지 확인
                 prevFilter.conditions[0]?.filter === filterObject?.filter &&
@@ -299,7 +311,7 @@ export default defineComponent({
             alert('필터교환필요');
           }
 
-          eventbus.SearchResultEvent.filterUpdate(key, filterModel.value[key].type, filterModel.value[key].filter);
+          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
         }
       });
     };
