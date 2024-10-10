@@ -175,7 +175,6 @@ export default defineComponent({
 
     const onGridReady = async (params) => {
       gridApi.value = params.api;
-      // ag-paging-panel 클래스를 가진 요소를 찾습니다.
       // Grid가 준비된 이후에 자식 요소를 추가합니다.
       // ag-paging-panel 클래스를 가진 요소를 찾습니다.
       const pagingPanel = document.querySelector('.ag-paging-panel');
@@ -185,7 +184,7 @@ export default defineComponent({
         addRows.style.cursor = "pointer"; // 커서 스타일 설정
         addRows.style.marginLeft = "10px"; // 여백 추가
 
-// 클릭 이벤트 추가
+        // 클릭 이벤트 추가
         addRows.onclick = openModal; // 모달 열기
 
         // 추가 버튼을 추가
@@ -222,11 +221,18 @@ export default defineComponent({
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
-    const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
-    const previousFilterModels = {}; // 현재 필터 모델을 이전 필터 모델로 업데이트
     const onFilterChanged = async (params) => {
+      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      const registeredFiltersKeyNames = registeredFilters.map(filter => filter.KeyName);
+      console.log('registeredFilters:',registeredFilters);
+      console.log('registeredFilterskey:',registeredFiltersKeyNames);
+      const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
+      const previousFilterModels = {}; // 현재 필터 모델을 이전 필터 모델로 업데이트
       const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       const filterModelKeys = Object.keys(filterModels);
+      // if(){
+      //
+      // }
 
       console.log('Current Filter Model:', filterModels);
       console.log('filterModel : ', filterModelKeys);
@@ -308,7 +314,7 @@ export default defineComponent({
 
           // 필터 교환 필요 여부 체크
           if (previousFilterKeys.value.includes(key)) {
-            alert('필터교환필요');
+            // alert('필터교환필요');
           }
 
           eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
