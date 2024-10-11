@@ -8,8 +8,7 @@ let handlers = {
     resetKorButton: [], // 초기화 이벤트 추가
     resetButtons: [],
     registeredFilters: [],
-    openModal: [],
-    removeButton: []
+    openModal: []
 };
 
 export { handlers }; // handlers를 export
@@ -34,9 +33,6 @@ export default {
         },
         resetFilter() {
             handlers.reset.forEach(handler => handler());
-            handlers.removeButton.forEach(handler => handler());
-        },
-        removeButton(){
             handlers.removeButton.forEach(handler => handler());
         },
         filterUpdate(KeyName, type, filter) {
