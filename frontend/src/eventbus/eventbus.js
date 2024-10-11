@@ -8,7 +8,8 @@ let handlers = {
     resetKorButton: [], // 초기화 이벤트 추가
     resetButtons: [],
     registeredFilters: [],
-    openModal: []
+    openModal: [],
+    removeButton: []
 };
 
 export { handlers }; // handlers를 export
@@ -33,7 +34,10 @@ export default {
         },
         resetFilter() {
             handlers.reset.forEach(handler => handler());
-            handlers.resetButtons.forEach(handler => handler());
+            handlers.removeButton.forEach(handler => handler());
+        },
+        removeButton(){
+            handlers.removeButton.forEach(handler => handler());
         },
         filterUpdate(KeyName, type, filter) {
             handlers.registeredFilters.push({ KeyName, type, filter });
@@ -45,13 +49,13 @@ export default {
         },
         removeFilter(keyName) {
             handlers.removeFilter.forEach(handler => handler(keyName));
-            handlers.resetKorButton.forEach(handler => handler());
+            handlers.resetKorButton.forEach(handler => handler(keyName));
         },
         openModal() {
             handlers.openModal.forEach(handler => handler());
         },
-        resetKorButton() { // 초기화 함수 추가
-            handlers.resetKorButton.forEach(handler => handler());
+        resetKorButton(keyName) { // 초기화 함수 추가
+            handlers.resetKorButton.forEach(handler => handler(keyName));
         }
     }
 }

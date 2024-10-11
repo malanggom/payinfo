@@ -399,6 +399,9 @@ export default defineComponent({
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
+      // 필터 버튼 삭제 요청
+      eventbus.SearchResultEvent.removeFilter('NM'); // NM 필터에 대한 버튼 삭제 요청
+      // 필요에 따라 다른 필터의 버튼도 삭제할 수 있습니다.
     };
     const removeFilter = (keyName) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
