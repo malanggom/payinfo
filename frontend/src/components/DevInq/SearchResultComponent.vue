@@ -221,51 +221,30 @@ export default defineComponent({
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
+
+    const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
+    const previousFilters = ref([]); // 이전 필터 모델 타입 저장
+
     const onFilterChanged = async (params) => {
-      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
-      const registeredFiltersKeyNames = registeredFilters.map(filter => filter.KeyName);
-      console.log('registeredFilters:',registeredFilters);
-      console.log('registeredFilterskey:',registeredFiltersKeyNames);
-      const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
-      const previousFilterModels = {}; // 현재 필터 모델을 이전 필터 모델로 업데이트
       const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       const filterModelKeys = Object.keys(filterModels);
-      // if(){
-      //
-      // }
 
-      console.log('Current Filter Model:', filterModels);
-      console.log('filterModel : ', filterModelKeys);
-
-      // 이전 필터 모델 업데이트
-      const previousFilterModelsCopy = { ...previousFilterModels.value }; // 이전 필터 모델 복사
-
-      // 이전 필터 정보 확인 및 비교
-      previousFilterKeys.value.forEach(key => {
-        const prevFilterModel = previousFilterModelsCopy[key]; // 이전 필터 모델에서 해당 키의 모델 가져오기
-
-        if (prevFilterModel) {
-          const prevFilterType = prevFilterModel.filter; // 이전 필터의 타입
-          const prevFilterValue = prevFilterModel.filterValue; // 이전 필터의 값
-
-          const currentFilterModel = filterModels[key];
-          if (currentFilterModel) {
-            const currentFilterType = currentFilterModel.filter; // 현재 필터의 타입
-            const currentFilterValue = currentFilterModel.filterValue; // 현재 필터의 값
-
-            // 필터 타입이 다르고 값이 같은 경우
-            if (currentFilterType !== prevFilterType && currentFilterValue === prevFilterValue) {
-              console.log(`필드: ${key}, 타입: ${currentFilterType}, 값: ${currentFilterValue}`);
-            }
-          }
-        } else {
-          console.log(`필드 '${key}'에 대한 이전 필터가 설정되어 있지 않습니다.`);
+      // 이전 필터 키와 비교하여 해제된 필터 찾기
+      previousFilterKeys.value.forEach((key) => {
+        // 현재 필터 모델에서 해당 키가 없고, 이전 필터가 존재하는 경우
+        if (!filterModelKeys.includes(key)) {
+          const previousFilter = previousFilters.value[key]; // 이전 필터 가져오기
+          console.log(`${key} 필터가 해제되었습니다!`,previousFilter.type, previousFilter.filter);
+          eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter); // 해제된 필터에 대한 버튼 삭제
         }
       });
 
-      previousFilterModels.value = { ...filterModels }; // 이전 필터 모델 업데이트
-      previousFilterKeys.value = filterModelKeys; // 이전 필터 키 업데이트
+      // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
+      previousFilterKeys.value = filterModelKeys;
+      // 현재 필터 모델을 이전 필터 모델로 업데이트
+      previousFilters.value = filterModels;
 
+      // 필터 모델 처리
       Object.keys(filterModels).forEach(key => {
         const filterObject = filterModels[key];
 
@@ -290,36 +269,54 @@ export default defineComponent({
           const updatedFilterModel = { ...filterModels }; // 깊은 복사
           params.api.setFilterModel(updatedFilterModel);
           console.log('업데이트된 필터 모델:', updatedFilterModel);
-        } else {
-          // 이전 필터와 현재 필터 비교
-          const matchingPreviousFilter = previousFilterKeys.value.find(prevKey => {
-            const prevFilter = previousFilterModels.value[prevKey];
-            return prevKey === key &&
-                prevFilter?.conditions && // 조건이 존재하는지 확인
-                prevFilter.conditions[0]?.filter === filterObject?.filter &&
-                prevFilter.conditions[0]?.type !== filterObject?.type;
-          });
-
-          // 조건이 만족할 경우 필터 해제 및 버튼 삭제
-          if (matchingPreviousFilter) {
-            alert(`필터 '${matchingPreviousFilter}'이(가) 해제되었습니다.`);
-            eventbus.SearchResultEvent.removeFilter(matchingPreviousFilter); // 필터 해제 이벤트 호출
-
-            // 버튼 삭제
-            const buttonToRemove = document.querySelector(`.filter-button[data-filter-key="${matchingPreviousFilter}"]`);
-            if (buttonToRemove) {
-              buttonToRemove.remove(); // 해당 버튼 삭제
-            }
-          }
-
-          // 필터 교환 필요 여부 체크
-          if (previousFilterKeys.value.includes(key)) {
-            // alert('필터교환필요');
-          }
-
+          } else {
           eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
         }
       });
+      // registeredFilters 확인 및 NM 필터 삭제
+      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      registeredFilters.forEach(filter => {
+        if (filter.KeyName === 'NM' && filter.type !== filterModels['NM']?.type) {
+          eventbus.SearchResultEvent.removeFilter('NM'); // NM 필터 삭제
+        }
+      });
+
+      // registeredFilters에서 KeyName을 추출
+      const registeredFiltersKeyNames = registeredFilters.map(filter => {
+        console.log('Current filter:', filter); // 각 필터 객체 로그
+        return filter.KeyName; // KeyName 반환
+      });
+
+      console.log('All Key Names:', registeredFiltersKeyNames); // 전체 KeyName 확인
+
+      // Set을 사용하여 중복 제거
+      const uniqueKeyNames = [...new Set(registeredFiltersKeyNames)];
+      console.log('Unique Key Names:', uniqueKeyNames); // 중복 제거된 KeyName 확인
+
+      // Individual KeyName 출력
+      registeredFilters.forEach(filter => {
+        console.log('Individual KeyName:', filter.KeyName); // 각 KeyName 출력
+      });
+
+      // 키가 같고 필터 타입이 다르고 값이 같은 경우
+
+      // filterModels와 registeredFilters 비교
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+
+        // 필터 객체의 조건이 존재하는지 확인
+
+          // registeredFilters에서 현재 필터를 찾는다
+          const matchingFilter = registeredFilters.find(filter => filter.KeyName === key);
+
+          // 조건이 일치하는 경우 알림 발생
+          if (matchingFilter && matchingFilter.type !== filterObject?.type && matchingFilter.filter === filterObject?.filter) {
+            eventbus.SearchResultEvent.removeFilter(key,matchingFilter.type, matchingFilter.filter);
+          }
+
+      });
+
+
     };
 
     const fetchData = async () => {
@@ -402,7 +399,6 @@ export default defineComponent({
     //--- 필터초기화 시작 ---//
     const resetFilter = () => {
       gridApi.value.setFilterModel(null);
-      // eventbus.SearchResultEvent.removeFilter(null);
     };
     const removeFilter = (keyName) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
