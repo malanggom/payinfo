@@ -1,13 +1,24 @@
 <script setup>
-
-import SearchFilterBtnComponent from "@/components/common/SearchFilterBtnComponent.vue";
-import SearchFilterResetBtnComponent from "@/components/common/SearchFilterResetBtnComponent.vue";
+import SearchPjHistoryComponent from "@/components/DevInq/SearchPjHistoryComponent.vue";
 </script>
 
 <template>
-  <SearchFilterBtnComponent class="mgLR10"/>
-  <SearchFilterResetBtnComponent class="mgLR10"/>
+  <div class="search__pjhistory__area" style="width: 100%; height: 100%;">
+    <div class="search__pjhistory__component" style="width: 100%; height: 100%;">
+      <SearchPjHistoryComponent class=""/>
+    </div>
+  </div>
 </template>
 
-<style scoped>
+<style>
+
+.search__pjhistory__area{
+  display: flex;
+  justify-content: center;
+  background: none;
+}
+
+.search__pjhistory__component{
+}
+
 </style>
