@@ -105,6 +105,81 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
+app.get('/api/pjHistory/data', async (req, res) => {
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute('SELECT * FROM C##SYSON.DEV_PJ_HSTR');
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No data found' });
+        }
+
+        const data = result.rows.map(row => {
+            return {
+                DEV_NO: row[0],              // DEV_NO
+                NM: row[1],                   // NM
+                PJ_INP_STTS: row[2],          // PJ_INP_STTS
+                CTRT_NMTM: row[3],            // CTRT_NMTM
+                BRDT: row[4],                 // BRDT
+                GNDR: row[5],                 // GNDR
+                JBPS: row[6],                 // JBPS
+                GRD: row[7],                  // GRD
+                T_CR_PER: row[8],             // T_CR_PER
+                RGN: row[9],                  // RGN
+                MBL_TELNO: row[10],           // MBL_TELNO
+                EML: row[11],                 // EML
+                CONTT_MTHD: row[12],          // CONTT_MTHD
+                NTRV_DMND_DT: row[13],        // NTRV_DMND_DT
+                INP_PSBLTY_DT: row[14],     // INP_PSBLTY_DT
+                OGDP_CO: row[15],             // OGDP_CO
+                SN: row[16],                  // SN
+                WHTAX_YN: row[17],            // WHTAX_YN
+                BZMN_YN: row[18],             // BZMN_YN
+                KDS_EMP_YN: row[19],          // KDS_EMP_YN
+                CTRT_CO_EMP_YN: row[20],      // CTRT_CO_EMP_YN
+                CLCT_PICKUP_DT: row[21],      // CLCT_PICKUP_DT
+                GIVE_DT: row[22],             // GIVE_DT
+                BANK: row[23],                // BANK
+                ACTNO: row[24],               // ACTNO
+                DEPT: row[25],                // DEPT
+                MM_DMND_UNTPRC: row[26],      // MM_DMND_UNTPRC
+                ADDR: row[27],                // ADDR
+                JBTTL: row[28],               // JBTTL
+                BRKR: row[29],                // BRKR
+                KAKAO_NICK: row[30],          // KAKAO_NICK
+                CTRT_HSTRY_YN: row[31],       // CTRT_HSTRY_YN
+                MS: row[32],                  // MS
+                MDL: row[33],
+                OS: row[34],
+                LANG: row[35],
+                DB: row[36],
+                TOOL: row[37],
+                FRMW: row[38],
+                LBRR: row[39],
+                CMNCT: row[40],
+                ETC: row[41],
+                AGE: row[42],
+                ACBG: row[43],
+            };
+        });
+
+        res.json({ result: { row: data } });
+    } catch (err) {
+        console.error("Database connection error: ", err);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
 // POST 요청을 처리할 엔드포인트 추가
 app.post('/api/addDeveloper', async (req, res) => {
     let connection;
