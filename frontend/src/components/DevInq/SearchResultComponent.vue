@@ -225,7 +225,10 @@ export default defineComponent({
     const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
     const previousFilters = ref([]); // 이전 필터 모델 타입 저장
 
+
     const onFilterChanged = async (params) => {
+      const grf = eventbus.SearchResultEvent.getRegisteredFilters(); // 함수 호출
+      console.log("Registered Filters:", grf); // 로그 출력
       const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       const filterModelKeys = Object.keys(filterModels);
 
