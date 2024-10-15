@@ -41,7 +41,7 @@ export default {
         },
         filterUpdate(KeyName, type, filter) {
             handlers.registeredFilters.push({ KeyName, type, filter });
-            console.log('After filterUpdate:', handlers.registeredFilters); // 추가된 후 상태 출력
+            // console.log('After filterUpdate:', handlers.registeredFilters); // 추가된 후 상태 출력
             handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
         },
         getRegisteredFilters() {

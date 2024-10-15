@@ -86,6 +86,9 @@ const resetKorButton = (keyName) => {
   const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName]);
   if (buttonIndex !== -1) {
     buttons.value.splice(buttonIndex, 1);
+    console.log(`버튼 '${keyName}'이(가) 삭제되었습니다.`);
+  } else {
+    console.log(`버튼 '${keyName}'을(를) 찾을 수 없습니다.`);
   }
 };
 

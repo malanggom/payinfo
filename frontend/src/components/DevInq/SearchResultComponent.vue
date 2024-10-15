@@ -158,167 +158,8 @@ export default defineComponent({
       { headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       { headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
-    console.log('columnDefs.value : ',columnDefs.value);
     const rowSelection = ref("multiple");
     const rowData = ref([]);
-    // const currentlyActiveFilterModel = ref([]);
-
-    const getCurrentFilterModel = () => {
-      if (gridApi.value) {
-        return gridApi.value.getFilterModel(); // filterModel을 반환
-      }
-    };
-
-    const openModal = () => {
-      eventbus.SearchResultEvent.openModal(); // 모달 열기 이벤트 호출
-    };
-
-    const onGridReady = async (params) => {
-      gridApi.value = params.api;
-      // Grid가 준비된 이후에 자식 요소를 추가합니다.
-      // ag-paging-panel 클래스를 가진 요소를 찾습니다.
-      const pagingPanel = document.querySelector('.ag-paging-panel');
-      if (pagingPanel) {
-        const addRows = document.createElement("span");
-        addRows.textContent = "개발자추가"; // span의 텍스트 설정
-        addRows.style.cursor = "pointer"; // 커서 스타일 설정
-        addRows.style.marginLeft = "10px"; // 여백 추가
-
-        // 클릭 이벤트 추가
-        addRows.onclick = openModal; // 모달 열기
-
-        // 추가 버튼을 추가
-        pagingPanel.insertBefore(addRows, pagingPanel.firstChild); // 첫 번째 자식 앞에 삽입
-
-        const editRows = document.createElement("span");
-        editRows.textContent = "수정"; // span의 텍스트 설정
-        editRows.style.cursor = "pointer"; // 커서 스타일 설정
-        editRows.style.marginLeft = "10px"; // 여백 추가
-
-        // 클릭 이벤트 추가
-        editRows.onclick = () => {
-          console.log("수정 버튼 클릭됨");
-          // 수정 작업을 수행할 수 있습니다.
-        };
-
-        // 수정 버튼을 추가
-        pagingPanel.insertBefore(editRows, addRows.nextSibling); // 추가 버튼 뒤에 삽입
-
-        const deleteRows = document.createElement("span");
-        deleteRows.textContent = "삭제"; // span의 텍스트 설정
-        deleteRows.style.cursor = "pointer"; // 커서 스타일 설정
-        deleteRows.style.marginLeft = "10px"; // 여백 추가
-
-        // 클릭 이벤트 추가
-        deleteRows.onclick = () => {
-          eventbus.SearchResultEvent.deleteRowBtnClick(); // 이벤트 호출
-        };
-
-        // 삭제 버튼을 추가
-        pagingPanel.insertBefore(deleteRows, editRows.nextSibling); // 수정 버튼 뒤에 삽입
-      }
-      eventbus.SearchResultEvent.add('search', fetchData);
-      eventbus.SearchResultEvent.add('removeFilter', removeFilter);
-      params.api.addEventListener('filterChanged', onFilterChanged);
-    };
-
-    const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
-    const previousFilters = ref([]); // 이전 필터 모델 타입 저장
-
-
-    const onFilterChanged = async (params) => {
-      const grf = eventbus.SearchResultEvent.getRegisteredFilters(); // 함수 호출
-      console.log("Registered Filters:", grf); // 로그 출력
-      const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
-      const filterModelKeys = Object.keys(filterModels);
-
-      // 이전 필터 키와 비교하여 해제된 필터 찾기
-      previousFilterKeys.value.forEach((key) => {
-        // 현재 필터 모델에서 해당 키가 없고, 이전 필터가 존재하는 경우
-        if (!filterModelKeys.includes(key)) {
-          const previousFilter = previousFilters.value[key]; // 이전 필터 가져오기
-          console.log(`${key} 필터가 해제되었습니다!`,previousFilter.type, previousFilter.filter);
-          eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter); // 해제된 필터에 대한 버튼 삭제
-        }
-      });
-
-      // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
-      previousFilterKeys.value = filterModelKeys;
-      // 현재 필터 모델을 이전 필터 모델로 업데이트
-      previousFilters.value = filterModels;
-
-      // 필터 모델 처리
-      Object.keys(filterModels).forEach(key => {
-        const filterObject = filterModels[key];
-
-        // 필터 객체의 조건이 존재하는지 확인
-        if (filterObject?.conditions && filterObject.conditions.length > 0) {
-          const currentCondition = filterObject.conditions[0];
-          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-
-          // 중복 필터 값 확인
-          if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
-            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-            console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
-            console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
-          } else {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-          // AG Grid에 필터 모델 업데이트
-          const updatedFilterModel = { ...filterModels }; // 깊은 복사
-          params.api.setFilterModel(updatedFilterModel);
-          console.log('업데이트된 필터 모델:', updatedFilterModel);
-          } else {
-          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-        }
-      });
-      // registeredFilters 확인 및 NM 필터 삭제
-      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
-      registeredFilters.forEach(filter => {
-        if (filter.KeyName === 'NM' && filter.type !== filterModels['NM']?.type) {
-          eventbus.SearchResultEvent.removeFilter('NM'); // NM 필터 삭제
-        }
-      });
-
-      // registeredFilters에서 KeyName을 추출
-      const registeredFiltersKeyNames = registeredFilters.map(filter => {
-        console.log('Current filter:', filter); // 각 필터 객체 로그
-        return filter.KeyName; // KeyName 반환
-      });
-
-      console.log('All Key Names:', registeredFiltersKeyNames); // 전체 KeyName 확인
-
-      // Set을 사용하여 중복 제거
-      const uniqueKeyNames = [...new Set(registeredFiltersKeyNames)];
-      console.log('Unique Key Names:', uniqueKeyNames); // 중복 제거된 KeyName 확인
-
-      // Individual KeyName 출력
-      registeredFilters.forEach(filter => {
-        console.log('Individual KeyName:', filter.KeyName); // 각 KeyName 출력
-      });
-
-      // 키가 같고 필터 타입이 다르고 값이 같은 경우
-
-      // filterModels와 registeredFilters 비교
-      Object.keys(filterModels).forEach(key => {
-        const filterObject = filterModels[key];
-
-        // 필터 객체의 조건이 존재하는지 확인
-
-          // registeredFilters에서 현재 필터를 찾는다
-          const matchingFilter = registeredFilters.find(filter => filter.KeyName === key);
-
-          // 조건이 일치하는 경우 알림 발생
-          if (matchingFilter && matchingFilter.type !== filterObject?.type && matchingFilter.filter === filterObject?.filter) {
-            eventbus.SearchResultEvent.removeFilter(key,matchingFilter.type, matchingFilter.filter);
-          }
-
-      });
-
-
-    };
 
     const fetchData = async () => {
       try {
@@ -379,6 +220,173 @@ export default defineComponent({
       }
     };
 
+    const openModal = () => {
+      eventbus.SearchResultEvent.openModal(); // 모달 열기 이벤트 호출
+    };
+
+    const onGridReady = async (params) => {
+      gridApi.value = params.api;
+      // Grid가 준비된 이후에 자식 요소를 추가합니다.
+      // ag-paging-panel 클래스를 가진 요소를 찾습니다.
+      const pagingPanel = document.querySelector('.ag-paging-panel');
+      if (pagingPanel) {
+        const addRows = document.createElement("span");
+        addRows.textContent = "개발자추가"; // span의 텍스트 설정
+        addRows.style.cursor = "pointer"; // 커서 스타일 설정
+        addRows.style.marginLeft = "10px"; // 여백 추가
+
+        // 클릭 이벤트 추가
+        addRows.onclick = openModal; // 모달 열기
+
+        // 추가 버튼을 추가
+        pagingPanel.insertBefore(addRows, pagingPanel.firstChild); // 첫 번째 자식 앞에 삽입
+
+        const editRows = document.createElement("span");
+        editRows.textContent = "수정"; // span의 텍스트 설정
+        editRows.style.cursor = "pointer"; // 커서 스타일 설정
+        editRows.style.marginLeft = "10px"; // 여백 추가
+
+        // 클릭 이벤트 추가
+        editRows.onclick = () => {
+          console.log("수정 버튼 클릭됨");
+          // 수정 작업을 수행할 수 있습니다.
+        };
+
+        // 수정 버튼을 추가
+        pagingPanel.insertBefore(editRows, addRows.nextSibling); // 추가 버튼 뒤에 삽입
+
+        const deleteRows = document.createElement("span");
+        deleteRows.textContent = "삭제"; // span의 텍스트 설정
+        deleteRows.style.cursor = "pointer"; // 커서 스타일 설정
+        deleteRows.style.marginLeft = "10px"; // 여백 추가
+
+        // 클릭 이벤트 추가
+        deleteRows.onclick = () => {
+          eventbus.SearchResultEvent.deleteRowBtnClick(); // 이벤트 호출
+        };
+
+        // 삭제 버튼을 추가
+        pagingPanel.insertBefore(deleteRows, editRows.nextSibling); // 수정 버튼 뒤에 삽입
+      }
+      eventbus.SearchResultEvent.add('search', fetchData);
+      eventbus.SearchResultEvent.add('removeFilter', removeFilter);
+      eventbus.SearchResultEvent.add('reset', resetFilter);
+      eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
+      params.api.addEventListener('filterChanged', onFilterChanged);
+    };
+
+    const previousFilterKeys = ref([]); // 이전 필터 모델 키 저장
+    const previousFilters = ref([]); // 이전 필터 모델 타입 저장
+
+    const onFilterChanged = async (params) => {
+      const grf = eventbus.SearchResultEvent.getRegisteredFilters(); // 함수 호출
+      console.log('grf',grf);
+      const filterModels = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
+      const filterModelKeys = Object.keys(filterModels);
+      console.log("filterModels:", filterModels); // 로그 출력
+      console.log("filterModelKeys:", filterModelKeys); // 로그 출력
+      console.log('previousFilters:',previousFilters);
+      // grf가 빈 배열인지 확인
+      if (grf.length > 0) {
+        // 이전 필터 키와 비교하여 해제된 필터 찾기
+        previousFilterKeys.value.forEach((key) => {
+          // 현재 필터 모델에서 해당 키가 없고, 이전 필터가 존재하는 경우
+          if (!filterModelKeys.includes(key)) {
+            const previousFilter = previousFilters.value[key]; // 이전 필터 가져오기
+            console.log(`${key} 필터가 해제되었습니다!`,previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter); // 해제된 필터에 대한 버튼 삭제
+          }
+          else{
+            console.log('아무나');
+          }
+        });
+      }else{
+        console.log('아무');
+
+        // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
+        previousFilterKeys.value = filterModelKeys;
+        // 현재 필터 모델을 이전 필터 모델로 업데이트
+        previousFilters.value = filterModels;
+
+
+      }
+      // 필터 모델 처리
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+
+        // 필터 객체의 조건이 존재하는지 확인
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+
+          // 중복 필터 값 확인
+          if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
+            console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
+          } else {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          // AG Grid에 필터 모델 업데이트
+          const updatedFilterModel = { ...filterModels }; // 깊은 복사
+          params.api.setFilterModel(updatedFilterModel);
+          console.log('업데이트된 필터 모델:', updatedFilterModel);
+        } else {
+          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        }
+      });
+      // registeredFilters 확인 및 NM 필터 삭제
+      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      registeredFilters.forEach(filter => {
+        if (filter.KeyName === 'NM' && filter.type !== filterModels['NM']?.type) {
+          eventbus.SearchResultEvent.removeFilter('NM'); // NM 필터 삭제
+        }
+      });
+
+      // registeredFilters에서 KeyName을 추출
+      const registeredFiltersKeyNames = registeredFilters.map(filter => {
+        console.log('Current filter:', filter); // 각 필터 객체 로그
+        return filter.KeyName; // KeyName 반환
+      });
+
+      console.log('All Key Names:', registeredFiltersKeyNames); // 전체 KeyName 확인
+
+      // Set을 사용하여 중복 제거
+      const uniqueKeyNames = [...new Set(registeredFiltersKeyNames)];
+      console.log('Unique Key Names:', uniqueKeyNames); // 중복 제거된 KeyName 확인
+
+      // Individual KeyName 출력
+      registeredFilters.forEach(filter => {
+        console.log('Individual KeyName:', filter.KeyName); // 각 KeyName 출력
+      });
+
+      // 키가 같고 필터 타입이 다르고 값이 같은 경우
+
+      // filterModels와 registeredFilters 비교
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+
+        // 필터 객체의 조건이 존재하는지 확인
+
+        // registeredFilters에서 현재 필터를 찾는다
+        const matchingFilter = registeredFilters.find(filter => filter.KeyName === key);
+
+        // 조건이 일치하는 경우 알림 발생
+        if (matchingFilter && matchingFilter.type !== filterObject?.type && matchingFilter.filter === filterObject?.filter) {
+          eventbus.SearchResultEvent.removeFilter(key,matchingFilter.type, matchingFilter.filter);
+        }
+
+      });
+
+
+
+
+    };
+
+
+
     // 셀의 값이 변경될 때 호출되는 함수
     const onCellValueChanged = async (event) => {
       try {
@@ -397,27 +405,38 @@ export default defineComponent({
       }
     };
 
-    //--- 필터초기화 시작 ---//
     const resetFilter = () => {
+      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
       gridApi.value.setFilterModel(null);
-      // 필터 버튼 삭제 요청
-      eventbus.SearchResultEvent.removeFilter('NM'); // NM 필터에 대한 버튼 삭제 요청
-      // 필요에 따라 다른 필터의 버튼도 삭제할 수 있습니다.
+      console.log("필터 모델이 초기화되었습니다.");
+
+      // 등록된 필터의 버튼을 삭제합니다.
+      registeredFilters.forEach(filter => {
+        console.log(`필터 버튼 삭제 요청: ${filter.KeyName}`);
+        eventbus.SearchResultEvent.removeFilter(filter.KeyName); // 각 필터의 버튼 삭제 요청
+      });
+
+      // resetKorButton 이벤트 호출
+      registeredFilters.forEach(filter => {
+        eventbus.SearchResultEvent.resetKorButton(filter.KeyName);
+      });
+
+      console.log("모든 필터가 초기화되고 버튼이 삭제되었습니다.");
     };
-    const removeFilter = (keyName) => {
+
+    const removeFilter = (KeyName) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       console.log('현재 필터 모델:', filterModel); // 필터 모델 출력
 
-      if (filterModel[keyName]) {
-        delete filterModel[keyName]; // 특정 필터 제거
+      if (filterModel[KeyName]) {
+        delete filterModel[KeyName]; // 특정 필터 제거
         gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
-        console.log(`필터 '${keyName}'이(가) 제거되었습니다.`);
+        console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
       } else {
-        console.log(`필터 '${keyName}'이(가) 적용되지 않았습니다.`);
+        console.log(`필터 '${KeyName}'이(가) 적용되지 않았습니다.`);
       }
     };
-    // 이벤트 등록
-    eventbus.SearchResultEvent.add('reset', resetFilter);
+
     //--- 필터초기화 끝 ---//
     //--- 선택된 행 삭제 시작 ---//
     const deleteRowBtnClick = async () => {
@@ -452,7 +471,7 @@ export default defineComponent({
       }
     };
     // 이벤트 등록
-    eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
+    // 이벤트 등록
     //--- 선택된 행 삭제 끝 ---//
 
 
@@ -470,7 +489,6 @@ export default defineComponent({
       deleteRowBtnClick,
       resetFilter,
       removeFilter,
-      getCurrentFilterModel,
       textFilterParams,
     };
   },
