@@ -285,83 +285,26 @@ export default defineComponent({
       const filterModelKeys = Object.keys(filterModels);
       console.log("filterModels:", filterModels); // 로그 출력
       console.log("filterModelKeys:", filterModelKeys); // 로그 출력
-      console.log('previousFilters:',previousFilters);
       // grf가 빈 배열인지 확인
       if (grf.length > 0) {
         // 이전 필터 키와 비교하여 해제된 필터 찾기
         previousFilterKeys.value.forEach((key) => {
           // 현재 필터 모델에서 해당 키가 없고, 이전 필터가 존재하는 경우
           const previousFilter = previousFilters.value[key]; // 이전 필터 가져오기
-          if (!filterModelKeys.includes(key) && !filterModelKeys.includes(previousFilter.type) && !filterModelKeys.includes(previousFilter.filter)) {
-            console.log(`${key} 필터가 해제되었습니다!`,previousFilter.type, previousFilter.filter);
+
+          // filterModels에서 이전 필터의 type과 filter를 사용하여 비교
+          const currentFilterModel = filterModels[key]; // 현재 필터 모델 가져오기
+          const isFilterRemoved = filterModelKeys.includes(key) &&
+              (currentFilterModel?.type !== previousFilter.type ||
+                  currentFilterModel?.filter === previousFilter.filter);
+
+          if (isFilterRemoved) {
+            console.log(`${key} 필터가 해제되었습니다!`, previousFilter.type, previousFilter.filter);
             eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter); // 해제된 필터에 대한 버튼 삭제
-          }
-          else{
-            console.log('아무나');
-
-          }
-        });
-        // 필터 모델 처리
-        Object.keys(filterModels).forEach(key => {
-          const filterObject = filterModels[key];
-
-          // 필터 객체의 조건이 존재하는지 확인
-          if (filterObject?.conditions && filterObject.conditions.length > 0) {
-            const currentCondition = filterObject.conditions[0];
-            const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-
-            // 중복 필터 값 확인
-            if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-              console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
-              console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
-            } else {
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            // AG Grid에 필터 모델 업데이트
-            const updatedFilterModel = { ...filterModels }; // 깊은 복사
-            params.api.setFilterModel(updatedFilterModel);
-            console.log('업데이트된 필터 모델:', updatedFilterModel);
+            eventbus.SearchResultEvent.filterUpdate(key, currentFilterModel?.type, currentFilterModel?.filter); // 해제된 필터에 대한 버튼 삭제
           } else {
-            eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+            console.log('아무나');
           }
-        });
-
-        // registeredFilters에서 KeyName을 추출
-        const registeredFiltersKeyNames = grf.map(filter => {
-          console.log('Current filter:', filter); // 각 필터 객체 로그
-          return filter.KeyName; // KeyName 반환
-        });
-
-        console.log('All Key Names:', registeredFiltersKeyNames); // 전체 KeyName 확인
-
-        // Set을 사용하여 중복 제거
-        const uniqueKeyNames = [...new Set(registeredFiltersKeyNames)];
-        console.log('Unique Key Names:', uniqueKeyNames); // 중복 제거된 KeyName 확인
-
-        // Individual KeyName 출력
-        grf.forEach(filter => {
-          console.log('Individual KeyName:', filter.KeyName); // 각 KeyName 출력
-        });
-
-        // 키가 같고 필터 타입이 다르고 값이 같은 경우
-
-        // filterModels와 registeredFilters 비교
-        Object.keys(filterModels).forEach(key => {
-          const filterObject = filterModels[key];
-
-          // 필터 객체의 조건이 존재하는지 확인
-
-          // registeredFilters에서 현재 필터를 찾는다
-          const matchingFilter = grf.find(filter => filter.KeyName === key);
-
-          // 조건이 일치하는 경우 알림 발생
-          if (matchingFilter && matchingFilter.type !== filterObject?.type && matchingFilter.filter === filterObject?.filter) {
-            eventbus.SearchResultEvent.removeFilter(key,matchingFilter.type, matchingFilter.filter);
-          }
-
         });
       }else{
         console.log('아무');
@@ -371,16 +314,54 @@ export default defineComponent({
         // 현재 필터 모델을 이전 필터 모델로 업데이트
         previousFilters.value = filterModels;
 
-        // 여기서 key를 가져오려면 Object.keys(filterModels)로 키를 가져와야 함
-        Object.keys(filterModels).forEach(key => {
-          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-        });
-      }
 
+      }
+      // 필터 모델 처리
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+
+        // 필터 객체의 조건이 존재하는지 확인
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+
+          // 중복 필터 값 확인
+          if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
+            console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
+          } else {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          // AG Grid에 필터 모델 업데이트
+          const updatedFilterModel = { ...filterModels }; // 깊은 복사
+          params.api.setFilterModel(updatedFilterModel);
+          console.log('업데이트된 필터 모델:', updatedFilterModel);
+        } else {
+          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        }
+      });
+
+      // registeredFilters에서 KeyName을 추출
+      const registeredFiltersKeyNames = grf.map(filter => {
+        console.log('Current filter:', filter); // 각 필터 객체 로그
+        return filter.KeyName; // KeyName 반환
+      });
+
+      console.log('All Key Names:', registeredFiltersKeyNames); // 전체 KeyName 확인
+
+      // Set을 사용하여 중복 제거
+      const uniqueKeyNames = [...new Set(registeredFiltersKeyNames)];
+      console.log('Unique Key Names:', uniqueKeyNames); // 중복 제거된 KeyName 확인
+
+      // Individual KeyName 출력
+      grf.forEach(filter => {
+        console.log('Individual KeyName:', filter.KeyName); // 각 KeyName 출력
+      });
 
     };
-
-
 
     // 셀의 값이 변경될 때 호출되는 함수
     const onCellValueChanged = async (event) => {
@@ -419,14 +400,21 @@ export default defineComponent({
       console.log("모든 필터가 초기화되고 버튼이 삭제되었습니다.");
     };
 
-    const removeFilter = (KeyName) => {
+    const removeFilter = (KeyName, filterType, filterValue) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       console.log('현재 필터 모델:', filterModel); // 필터 모델 출력
 
       if (filterModel[KeyName]) {
-        delete filterModel[KeyName]; // 특정 필터 제거
-        gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
-        console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
+        // 필터를 제거하기 전에 type과 filter를 확인
+        const currentFilter = filterModel[KeyName];
+
+        if (currentFilter.type === filterType && currentFilter.filter === filterValue) {
+          delete filterModel[KeyName]; // 특정 필터 제거
+          gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
+          console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
+        } else {
+          console.log(`필터 '${KeyName}'의 type 또는 filter가 일치하지 않습니다.`);
+        }
       } else {
         console.log(`필터 '${KeyName}'이(가) 적용되지 않았습니다.`);
       }

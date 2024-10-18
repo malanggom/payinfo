@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import eventbus from '@/eventbus/eventbus';
 
 // 필터 타입에 대한 한글 매핑
@@ -76,7 +76,7 @@ const updateButtonData = (keyName, type, filter) => {
 
   //중복되지 않는 경우 필터를 버튼으로 추가한다. 중복되는 경우는 생략, 이미 필터값 검증 후 필터 중복 시 updateButtonData 실행되지 않음
   if (!isAlreadyRegistered) {
-    buttons.value.push({ keyName: displayKeyName, type: displayType, filter });
+    buttons.value.push({keyName: displayKeyName, type: displayType, filter});
   }
 };
 
