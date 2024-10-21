@@ -1,4 +1,3 @@
-// eventbus.js
 let handlers = {
     deleteRow: [],
     search: [],
@@ -36,7 +35,7 @@ export default {
             handlers.reset.forEach(handler => handler());
             handlers.removeButton.forEach(handler => handler());
         },
-        removeButton(){
+        removeButton() {
             handlers.removeButton.forEach(handler => handler());
         },
         filterUpdate(KeyName, type, filter) {
@@ -49,13 +48,16 @@ export default {
         },
         removeFilter(keyName, type, filter) {
             handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
-            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
+            handlers.resetKorButton.forEach(handler => handler(keyName));
         },
         openModal() {
             handlers.openModal.forEach(handler => handler());
         },
-        resetKorButton(keyName, type, filter) { // 초기화 함수 추가
-            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
+        resetKorButton(keyName) { // 초기화 함수 추가
+            handlers.resetKorButton.forEach(handler => handler(keyName));
+        },
+        removeRegisteredFilter(keyName, type, filter) {
+            console.log('keyName, type, filter',keyName, type, filter);
         }
     }
 }
