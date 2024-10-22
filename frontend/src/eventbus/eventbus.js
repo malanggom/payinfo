@@ -48,13 +48,13 @@ export default {
         },
         removeFilter(keyName, type, filter) {
             handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
-            handlers.resetKorButton.forEach(handler => handler(keyName));
+            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
         },
         openModal() {
             handlers.openModal.forEach(handler => handler());
         },
-        resetKorButton(keyName) { // 초기화 함수 추가
-            handlers.resetKorButton.forEach(handler => handler(keyName));
+        resetKorButton(keyName, type, filter) { // 초기화 함수 추가
+            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
         },
         removeRegisteredFilter(keyName, type, filter) {
             console.log('keyName, type, filter',keyName, type, filter);

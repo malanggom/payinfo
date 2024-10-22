@@ -81,9 +81,9 @@ const updateButtonData = (keyName, type, filter) => {
 };
 
 //초기화 버튼
-const resetKorButton = (keyName) => {
+const resetKorButton = (keyName, type, filter) => {
   //findIndex() 메서드는 배열에서 주어진 조건을 만족하는 첫 번째 요소의 인덱스를 반환, 조건을 만족하는 요소가 없으면 -1을 반환합니다.
-  const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName]);
+  const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName] && button.type=== fieldNameMap[type] && button.filter=== fieldNameMap[filter]);
   if (buttonIndex !== -1) {
     buttons.value.splice(buttonIndex, 1);
     console.log(`버튼 '${keyName}'이(가) 삭제되었습니다.`);
