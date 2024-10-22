@@ -376,15 +376,36 @@ export default defineComponent({
       console.log("모든 필터가 초기화되고 버튼이 삭제되었습니다.");
     };
 
+    const filterTypeMap = {
+      contains: '포함',
+      notContains: '포함하지 않음',
+      equals: '같음',
+      notEqual: '같지 않음',
+      startsWith: '시작하는',
+      endsWith: '끝나는',
+      greaterThanOrEqual: '이상',
+      lessThanOrEqual: '이하',
+      inRange: '범위 내',
+    };
+
     const removeFilter = (KeyName, filterType, filterValue) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
-      console.log('현재 필터 모델:', filterModel); // 필터 모델 출력
+      console.log('현재 필터 모델:', filterModel[KeyName]); // 필터 모델 출력
 
       if (filterModel[KeyName]) {
         // 필터를 제거하기 전에 type과 filter를 확인
         const currentFilter = filterModel[KeyName];
 
-        if (currentFilter.type === filterType && currentFilter.filter === filterValue) {
+        // 필터 타입을 매핑하여 비교
+        const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
+        const targetFilterType = filterTypeMap[filterType] || filterType;
+
+        console.log('currentFilter.type', currentFilterType);
+        console.log('filterType', targetFilterType);
+        console.log('currentFilter.filter', currentFilter.filter);
+        console.log('filterValue', filterValue);
+
+        if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
           delete filterModel[KeyName]; // 특정 필터 제거
           gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
           console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
