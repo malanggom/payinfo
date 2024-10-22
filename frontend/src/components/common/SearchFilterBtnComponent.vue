@@ -103,6 +103,9 @@ const removeButton = (index) => {
 
   // 필터 제거
   eventbus.SearchResultEvent.removeFilter(actualKeyName, button.type, button.filter);
+  console.log('actualKeyName',actualKeyName)
+  console.log('button.type',button.type)
+  console.log('button.filter',button.filter)
 
   //buttons 배열에서 해당 버튼 제거
   //splice() 메서드는 배열의 특정 위치에서 요소를 추가하거나 제거하는 데 사용됩니다.

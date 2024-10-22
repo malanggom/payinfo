@@ -328,9 +328,8 @@ export default defineComponent({
               console.log('key, previousFilter.type, previousFilter.filter해제',key, previousFilter.type, previousFilter.filter)
         }
         if(filterModelKeys.includes(key) && previousFilter.type !==currentFilterModel.type && previousFilter.filter ===currentFilterModel.filter){
+          console.log('토글')
           eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-        }else{
-          eventbus.SearchResultEvent.removeFilter(key);
         }
       });
       // 현재 필터 모델 키를 이전 필터 모델 키로 업데이트
