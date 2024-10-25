@@ -293,71 +293,24 @@ export default defineComponent({
 
       console.log("filterModels:", filterModels); // 로그 출력
       console.log("filterModelKeys:", filterModelKeys); // 로그 출력
-
       // 필터 모델 처리
       Object.keys(filterModels).forEach(key => {
         const filterObject = filterModels[key];
-        // grf 배열에서 key가 이미 있는지 확인
-        console.log(`${key}의 type, filter`,filterObject);
-        // grf 배열에서 key, type, filter가 모두 일치하는지 확인
-        // 첫 번째 조건을 가져옵니다.
-        const existsInGrf = grf.some(item => {
-          return (
-              item.KeyName === key &&
-              item.type === filterObject.type && // 현재 조건의 type
-              item.filter === filterObject.filter // 현재 조건의 filter
-          );
-        });
-        // const existsInGrfType = filterObject.filterType; // 필터 타입
-        // const existsInGrf = grf.some(item => item.type === );
-        // const existsInGrf = grf.some(item => item.filter === key);
-
-        // 이미 grf에 존재하는 key인 경우, 다음 키로 넘어감
-        if (existsInGrf) {
-          console.log(`${key}는 이미 grf에 존재하므로 건너뜁니다.`);
-          return; // 현재 반복을 종료하고 다음 반복으로 넘어감
-        }
-        console.log(key, '필터모델 키 루프');
-        console.log(filterObject, '필터모델 오브젝트');
-
-        let grfFiltersCondition = false; // let으로 변경
-
-        // grf 배열의 모든 요소를 순회
-        for (let i = 0; i < grf.length; i++) {
-          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-            if (grf[i].KeyName === key &&
-                grf[i].type === filterObject.conditions[j].type &&
-                grf[i].filter === filterObject.conditions[j].filter) {
-              grfFiltersCondition = true; // 중복 조건 발견
-              break; // 조건이 일치하면 inner loop 종료
-            }
-          }
-        }
 
         // 필터 객체의 조건이 존재하는지 확인
         if (filterObject?.conditions && filterObject.conditions.length > 0) {
           const currentCondition = filterObject.conditions[0];
           const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
 
-          // 필터에 여러 조건이 중복되는지 확인
-          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
-          if (duplicateConditionsFilters) {
+          // 중복 필터 값 확인
+          if (currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type) {
             alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
             console.log(key, ', 1 필터값: ', currentCondition1.type, ', 1 필터값: ', currentCondition1.filter);
             console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
-          }
-
-          // 필터에 여러 조건이 중복이 되지 않으면서 현재 필터에 아무것도 등록되지 않은 상태
-          if (grfFiltersCondition === true) {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-          // 필터에 여러 조건이 중복이 되지 않으면서 현재 필터에 아무것도 등록되지 않은 상태
-          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
+          } else {
             eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
             eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
           }
-
         } else {
           eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
         }
@@ -458,10 +411,6 @@ export default defineComponent({
           console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
         } else {
           console.log(`필터 '${KeyName}'의 type 또는 filter가 일치하지 않습니다.`);
-        }
-        if (currentFilterType === undefined && currentFilter.filter === undefined) {
-
-          console.log(`undifined`);
         }
       } else {
         console.log(`필터 '${KeyName}'이(가) 적용되지 않았습니다.`);
