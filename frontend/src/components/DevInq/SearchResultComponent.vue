@@ -39,6 +39,7 @@ export default defineComponent({
     //shallowRef()는 객체의 내부 값을 추적하지 않고, 기본 값만 반응형으로 만드는 함수입니다. 주로 성능 최적화를 위해 사용됩니다.
     //이 경우, gridApi는 AG Grid API를 참조하기 위해 사용될 것입니다.
     const gridApi = shallowRef();
+    const searchPerformed = ref(false); // 검색 수행 여부 플래그 추가
 
     //defaultColDef라는 변수를 정의하고 ref()를 사용하여 반응형 객체를 생성합니다.
     //ref()는 기본 타입의 값을 반응형으로 만들어 Vue의 반응형 시스템에서 관리할 수 있게 합니다.
@@ -214,6 +215,8 @@ export default defineComponent({
         }));
         rowData.value = translatedData;
         gridApi.value.refreshCells();
+        // 검색이 성공적으로 수행되면 플래그를 true로 설정
+        searchPerformed.value = true; // 검색 수행 완료
       } catch (error) {
         console.error('데이터 로드 오류:', error);
         rowData.value = [];
@@ -293,10 +296,20 @@ export default defineComponent({
 
       console.log("filterModels:", filterModels); // 로그 출력
       console.log("filterModelKeys:", filterModelKeys); // 로그 출력
-
+      // 검색 여부 확인
+      if (!searchPerformed.value) {
+        alert("검색을 먼저 수행해 주세요.");
+        gridApi.value.setFilterModel(null);
+        // 필터 모델에서 모든 필터 제거
+        filterModelKeys.forEach(key => {
+          eventbus.SearchResultEvent.removeFilter(key, filterModels[key].type, filterModels[key].filter);
+        });
+        return; // 검색이 수행되지 않았다면 종료
+      }
       // 필터 모델 처리
       Object.keys(filterModels).forEach(key => {
         const filterObject = filterModels[key];
+        if(filterObject)
         // grf 배열에서 key가 이미 있는지 확인
         console.log(`${key}의 type, filter`,filterObject);
         // grf 배열에서 key, type, filter가 모두 일치하는지 확인
@@ -347,7 +360,7 @@ export default defineComponent({
             console.log(key, ', 필터값: ', currentCondition.type, ', 필터값: ', currentCondition.filter);
           }
 
-          // 필터에 여러 조건이 중복이 되지 않으면서 현재 필터에 아무것도 등록되지 않은 상태
+          // 필터에 여러 조건이 중복이 되지 않으면서 현재 필터에 하나의 값이 등록된 상태
           if (grfFiltersCondition === true) {
             eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
           }
@@ -407,7 +420,13 @@ export default defineComponent({
     const resetFilter = () => {
       const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
       gridApi.value.setFilterModel(null);
-      console.log("필터 모델이 초기화되었습니다.");
+      console.log('현재필터길이',registeredFilters.length);
+      if(searchPerformed.value && registeredFilters.length === 0){
+        alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+      }else{
+        alert("검색을 먼저 수행해 주세요.");
+      }
+
 
       // 등록된 필터의 버튼을 삭제합니다.
       registeredFilters.forEach(filter => {

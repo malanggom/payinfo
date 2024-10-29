@@ -47,6 +47,9 @@ export default {
             return handlers.registeredFilters;
         },
         removeFilter(keyName, type, filter) {
+            handlers.registeredFilters = handlers.registeredFilters.filter(
+                handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
+            );
             handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
             handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
         },
