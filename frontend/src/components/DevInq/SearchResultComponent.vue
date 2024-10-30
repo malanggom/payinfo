@@ -423,7 +423,8 @@ export default defineComponent({
       console.log('현재필터길이',registeredFilters.length);
       if(searchPerformed.value && registeredFilters.length === 0){
         alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
-      }else{
+      }
+      if(!searchPerformed.value){
         alert("검색을 먼저 수행해 주세요.");
       }
 
