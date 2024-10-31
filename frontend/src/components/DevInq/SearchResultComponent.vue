@@ -435,6 +435,11 @@ export default defineComponent({
         eventbus.SearchResultEvent.removeFilter(filter.KeyName); // 각 필터의 버튼 삭제 요청
       });
 
+      // grf에서 모든 필터 제거
+      registeredFilters.forEach(filter => {
+        eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
+      });
+
       // resetKorButton 이벤트 호출
       registeredFilters.forEach(filter => {
         eventbus.SearchResultEvent.resetKorButton(filter.KeyName);
@@ -458,11 +463,30 @@ export default defineComponent({
     const removeFilter = (KeyName, filterType, filterValue) => {
       const filterModel = gridApi.value.getFilterModel(); // 현재 필터 모델 가져오기
       console.log('현재 필터 모델:', filterModel[KeyName]); // 필터 모델 출력
-
+      // Object.keys(filterModel).forEach(key => {
+      //   const filterObject = filterModel[key];
+      //     if (filterObject?.conditions && filterObject.conditions.length > 0) {
+      //       const currentCondition = filterObject.conditions[0];
+      //       const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
       if (filterModel[KeyName]) {
         // 필터를 제거하기 전에 type과 filter를 확인
         const currentFilter = filterModel[KeyName];
-
+        if (currentFilter?.conditions){
+          const currentCondition = currentFilter.conditions[0];
+          const currentCondition1 = currentFilter.conditions.length > 1 ? currentFilter.conditions[1] : null;
+          console.log('currentCondition',currentCondition);
+          console.log('currentCondition1',currentCondition1);
+          // 필터 버튼과 필터를 제거
+          // eventbus.SearchResultEvent.removeFilter(KeyName, currentCondition.type, currentCondition.filter);
+          delete filterModel[KeyName]; // 특정 필터 제거
+          gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
+          console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
+          // grf에서 해당 필터 제거
+          eventbus.SearchResultEvent.removeFilter(KeyName, currentCondition.type, currentCondition.filter);
+          eventbus.SearchResultEvent.removeFilter(KeyName, currentCondition1.type, currentCondition1.filter);
+          return;
+        }
+        console.log('currentFilter',currentFilter);
         // 필터 타입을 매핑하여 비교
         const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
         const targetFilterType = filterTypeMap[filterType] || filterType;
@@ -476,6 +500,8 @@ export default defineComponent({
           delete filterModel[KeyName]; // 특정 필터 제거
           gridApi.value.setFilterModel(filterModel); // 업데이트된 필터 모델 설정
           console.log(`필터 '${KeyName}'이(가) 제거되었습니다.`);
+          // grf에서 해당 필터 제거
+          eventbus.SearchResultEvent.removeFilter(KeyName, currentFilter.type, currentFilter.filter);
         } else {
           console.log(`필터 '${KeyName}'의 type 또는 filter가 일치하지 않습니다.`);
         }
