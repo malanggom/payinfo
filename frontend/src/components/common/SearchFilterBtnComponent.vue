@@ -60,6 +60,7 @@ const fieldNameMap = {
   LBRR: '라이브러리',
   CMNCT: '통신',
   ETC: '기타',
+  ACBG: '학력',
 };
 
 const buttons = ref([]);
