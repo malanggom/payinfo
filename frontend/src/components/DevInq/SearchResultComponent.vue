@@ -103,6 +103,18 @@ export default defineComponent({
       },
     };
 
+    const filterTypeMap = {
+      contains: '포함',
+      notContains: '포함하지 않음',
+      equals: '같음',
+      notEqual: '같지 않음',
+      startsWith: '시작하는',
+      endsWith: '끝나는',
+      greaterThanOrEqual: '이상',
+      lessThanOrEqual: '이하',
+      inRange: '범위 내',
+    };
+
     //columnDefs는 Vue의 반응형 객체로, AG Grid에서 사용할 열(column)의 정의 목록입니다. 각 열은 객체로 정의되어 있습니다.
     const columnDefs = ref([
       //headerName: 열의 헤더에 표시될 이름입니다.
@@ -425,43 +437,29 @@ export default defineComponent({
       const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
       gridApi.value.setFilterModel(null);
       console.log('현재필터길이',registeredFilters.length);
-      if(searchPerformed.value && registeredFilters.length === 0){
-        alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+      if(registeredFilters.length === 0){
+        if(searchPerformed.value){
+          alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+        }
+        if(!searchPerformed.value){
+          alert("검색을 먼저 수행해 주세요.");
+        }
+      }else{
+        // 등록된 필터의 버튼을 삭제합니다.
+        registeredFilters.forEach(filter => {
+          eventbus.SearchResultEvent.removeFilter(filter.KeyName); // 각 필터의 버튼 삭제 요청
+        });
+
+        // grf에서 모든 필터 제거
+        registeredFilters.forEach(filter => {
+          eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
+        });
+
+        // resetKorButton 이벤트 호출
+        registeredFilters.forEach(filter => {
+          eventbus.SearchResultEvent.resetKorButton(filter.KeyName);
+        });
       }
-      if(!searchPerformed.value){
-        alert("검색을 먼저 수행해 주세요.");
-      }
-
-
-      // 등록된 필터의 버튼을 삭제합니다.
-      registeredFilters.forEach(filter => {
-        console.log(`필터 버튼 삭제 요청: ${filter.KeyName}`);
-        eventbus.SearchResultEvent.removeFilter(filter.KeyName); // 각 필터의 버튼 삭제 요청
-      });
-
-      // grf에서 모든 필터 제거
-      registeredFilters.forEach(filter => {
-        eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
-      });
-
-      // resetKorButton 이벤트 호출
-      registeredFilters.forEach(filter => {
-        eventbus.SearchResultEvent.resetKorButton(filter.KeyName);
-      });
-
-      console.log("모든 필터가 초기화되고 버튼이 삭제되었습니다.");
-    };
-
-    const filterTypeMap = {
-      contains: '포함',
-      notContains: '포함하지 않음',
-      equals: '같음',
-      notEqual: '같지 않음',
-      startsWith: '시작하는',
-      endsWith: '끝나는',
-      greaterThanOrEqual: '이상',
-      lessThanOrEqual: '이하',
-      inRange: '범위 내',
     };
 
     const removeFilter = (KeyName, filterType, filterValue) => {
