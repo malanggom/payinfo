@@ -64,6 +64,7 @@ const fieldNameMap = {
 };
 
 const buttons = ref([]);
+const activeFilters = ref([]); // 활성화된 필터를 추적하는 상태 변수
 
 const updateButtonData = (keyName, type, filter) => {
   //filterTypeMap은 필터 타입을 한글로 매핑한 객체입니다. || type는 만약 filterTypeMap[type]가 undefined일 경우, 원래의 타입(type)을 그대로 사용하도록 합니다. 즉, 매핑된 값이 없으면 기본 타입을 사용합니다.
@@ -78,19 +79,14 @@ const updateButtonData = (keyName, type, filter) => {
   //중복되지 않는 경우 필터를 버튼으로 추가한다. 중복되는 경우는 생략, 이미 필터값 검증 후 필터 중복 시 updateButtonData 실행되지 않음
   if (!isAlreadyRegistered) {
     buttons.value.push({keyName: displayKeyName, type: displayType, filter});
+    activeFilters.value.push({ keyName, type, filter }); // 활성화된 필터 추가
   }
 };
 
 //초기화 버튼
-const resetKorButton = (keyName, type, filter) => {
+const resetKorButton = () => {
   //findIndex() 메서드는 배열에서 주어진 조건을 만족하는 첫 번째 요소의 인덱스를 반환, 조건을 만족하는 요소가 없으면 -1을 반환합니다.
-  const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName] && button.type=== fieldNameMap[type] && button.filter=== fieldNameMap[filter]);
-  if (buttonIndex !== -1) {
-    buttons.value.splice(buttonIndex, 1);
-    console.log(`버튼 '${keyName}'이(가) 삭제되었습니다.`);
-  } else {
-    console.log(`버튼 '${keyName}'을(를) 찾을 수 없습니다.`);
-  }
+  buttons.value = [];
 };
 
 //buttons의 생성된 개수만큼 (button, index) index가 생성되고, 버튼의 x버튼을 누르면 실행되는 removeButton으로 index가 전달된다.
@@ -104,24 +100,40 @@ const removeButton = (index) => {
 
   // 필터 제거
   eventbus.SearchResultEvent.removeFilter(actualKeyName, button.type, button.filter);
-  console.log('actualKeyName',actualKeyName)
-  console.log('button.type',button.type)
-  console.log('button.filter',button.filter)
 
   //buttons 배열에서 해당 버튼 제거
   //splice() 메서드는 배열의 특정 위치에서 요소를 추가하거나 제거하는 데 사용됩니다.
   //첫 번째 인자인 index는 배열에서 제거할 요소의 위치를 지정합니다.
   //두 번째 인자인 1은 제거할 요소의 개수를 나타냅니다.
   buttons.value.splice(index, 1);
+  console.log(`버튼 '${button.keyName}'이(가) 삭제되었습니다.`);
 };
 
 //필터 버튼 삭제 핸들러
 //keyName은 removeFilter(key)이벤트가 발생할 때, 해당 키가 handleRemoveFilter 함수에 인자로 전달되어 버튼 삭제 로직이 실행됩니다.
-const handleRemoveFilter = (keyName) => {
-  //findIndex() 메서드는 배열에서 주어진 조건을 만족하는 첫 번째 요소의 인덱스를 반환, 조건을 만족하는 요소가 없으면 -1을 반환합니다.
-  const buttonIndex = buttons.value.findIndex(button => button.keyName === fieldNameMap[keyName]);
-  if (buttonIndex !== -1) {
-    buttons.value.splice(buttonIndex, 1);
+
+// 필터 버튼 삭제 핸들러
+// 필터 버튼 삭제 핸들러
+const handleRemoveFilter = (keyName, type, filter) => {
+  // 삭제할 버튼을 찾기 위해 filter 메서드 사용
+  const buttonsToRemove = buttons.value.filter(button =>
+      button.keyName === fieldNameMap[keyName] &&
+      button.type === filterTypeMap[type] && // 필터 타입을 한글로 변환
+      button.filter === filter
+  );
+
+  // 삭제할 버튼이 존재하는 경우
+  if (buttonsToRemove.length >= 0) {
+    // 삭제할 버튼의 인덱스를 순회하며 삭제
+    buttonsToRemove.forEach(button => {
+      const buttonIndex = buttons.value.findIndex(b =>
+          b.keyName === button.keyName &&
+          b.type === button.type &&
+          b.filter === button.filter
+      );
+
+        buttons.value.splice(buttonIndex, 1);
+    });
   }
 };
 
@@ -130,6 +142,7 @@ onMounted(() => {
   eventbus.SearchResultEvent.add('filterUpdate', updateButtonData);
   eventbus.SearchResultEvent.add('resetKorButton', resetKorButton); // resetKorButton 이벤트 등록
   eventbus.SearchResultEvent.add('removeFilter', handleRemoveFilter); // 버튼 삭제 핸들러 등록
+  eventbus.SearchResultEvent.add('removeButton', handleRemoveFilter); // 버튼 삭제 요청 처리
 });
 </script>
 

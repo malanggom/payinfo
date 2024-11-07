@@ -8,7 +8,8 @@ let handlers = {
     resetButtons: [],
     registeredFilters: [],
     openModal: [],
-    removeButton: []
+    removeButton: [],
+    activeFilters: [] // 활성 필터 목록 추가
 };
 
 export { handlers }; // handlers를 export
@@ -35,8 +36,8 @@ export default {
             handlers.reset.forEach(handler => handler());
             handlers.removeButton.forEach(handler => handler());
         },
-        removeButton() {
-            handlers.removeButton.forEach(handler => handler());
+        removeButton(KeyName, type, filter) {
+            handlers.removeButton.forEach(handler => handler(KeyName, type, filter));
         },
         filterUpdate(KeyName, type, filter) {
             handlers.registeredFilters.push({ KeyName, type, filter });
@@ -51,13 +52,19 @@ export default {
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
             handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
-            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
+            // handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
+        },
+        removeActiveFilter(keyName, type, filter) {
+            handlers.activeFilters = handlers.activeFilters.filter(
+                activeFilter => !(activeFilter.keyName === keyName && activeFilter.type === type && activeFilter.filter === filter)
+            );
+            console.log(`활성 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
         openModal() {
             handlers.openModal.forEach(handler => handler());
         },
-        resetKorButton(keyName, type, filter) { // 초기화 함수 추가
-            handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
+        resetKorButton() { // 초기화 함수 추가
+            handlers.resetKorButton.forEach(handler => handler());
         },
         removeRegisteredFilter(keyName, type, filter) {
             console.log('keyName, type, filter',keyName, type, filter);
