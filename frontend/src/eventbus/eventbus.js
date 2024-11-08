@@ -48,11 +48,12 @@ export default {
             return handlers.registeredFilters;
         },
         removeFilter(keyName, type, filter) {
+            console.log(`removeFilter 호출됨: KeyName=${keyName}, type=${type}, filter=${filter}`);
             handlers.registeredFilters = handlers.registeredFilters.filter(
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
+            console.log('등록된 필터 상태:', handlers.registeredFilters); // 상태 확인 로그
             handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
-            // handlers.resetKorButton.forEach(handler => handler(keyName, type, filter));
         },
         removeActiveFilter(keyName, type, filter) {
             handlers.activeFilters = handlers.activeFilters.filter(
@@ -67,7 +68,15 @@ export default {
             handlers.resetKorButton.forEach(handler => handler());
         },
         removeRegisteredFilter(keyName, type, filter) {
-            console.log('keyName, type, filter',keyName, type, filter);
-        }
+            handlers.registeredFilters = handlers.registeredFilters.filter(
+                handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
+            );
+            console.log(`등록된 필터 '${keyName}'이(가) 제거되었습니다.`);
+        },
+        // 등록된 필터 업데이트 메서드 추가
+        updateRegisteredFilters(updatedFilters) {
+            handlers.registeredFilters = updatedFilters;
+            console.log('등록된 필터가 업데이트되었습니다:', handlers.registeredFilters);
+        },
     }
 }

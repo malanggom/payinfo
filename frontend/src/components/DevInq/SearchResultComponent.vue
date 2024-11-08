@@ -390,7 +390,28 @@ export default defineComponent({
           const currentFilterModel = filterModels[key]; // 현재 필터 모델 가져오기
           console.log('previousFilter', previousFilter);
           console.log('currentFilterModel', currentFilterModel);
+          if(currentFilterModel === undefined) {
+            // currentFilterModel이 undefined인 경우
+            console.log(`필터 '${key}'이(가) 해제되었습니다.`);
 
+            // 이전 필터가 존재하는 경우에만 처리
+            if (previousFilter) {
+              // conditions가 배열인지 확인
+              if (Array.isArray(previousFilter.conditions)) {
+                previousFilter.conditions.forEach(condition => {
+                  // 각 조건에 대해 필터 제거
+                  eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
+                  eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
+                  eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+                });
+              } else {
+                // 단일 조건인 경우
+                eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+                eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+              }
+            }
+          }
           if (currentFilterModel !== undefined) {
             if (!filterModelKeys.includes(key)) {
               // 필터 해제 요청
@@ -410,14 +431,6 @@ export default defineComponent({
               // 버튼 삭제 요청
               eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter); // 버튼 삭제 요청
             }
-          } else {
-            console.log('undefined');
-            // currentFilterModel이 undefined인 경우도 필터 해제
-            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-
-            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-
           }
         });
 
@@ -512,7 +525,8 @@ export default defineComponent({
 
             // 조건이 삭제된 경우에만 이벤트를 발생시킴
             if (previousConditions.length !== currentFilter.conditions.length) {
-              eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
+              eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);// grf에서 해당 필터 제거// 로그 추가
+              console.log('필터 제거 후 grf 상태:', eventbus.SearchResultEvent.getRegisteredFilters()); // 상태 확인
             }
           } else {
             console.log(`조건이 변경되지 않아 필터 모델 업데이트 생략.`);
