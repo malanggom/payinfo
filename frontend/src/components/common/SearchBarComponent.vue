@@ -12,5 +12,6 @@
   .searchBox{
     border-radius: 20px;
     border: 1px solid #b4c7dd;
+    height: 40px;
   }
 </style>
