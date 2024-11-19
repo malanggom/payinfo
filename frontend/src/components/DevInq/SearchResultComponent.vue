@@ -1,7 +1,5 @@
 <template>
-<!--  ag-theme-quartz는 AG Grid의 테마 중 하나로, 그리드를 좀 더 세련되고 현대적인 스타일로 꾸며주는 CSS 클래스-->
   <div class="ag-theme-quartz pl10" style="width: 100%; height: 98%;">
-    <!-- DevAddBtnComponent 추가 -->
     <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"

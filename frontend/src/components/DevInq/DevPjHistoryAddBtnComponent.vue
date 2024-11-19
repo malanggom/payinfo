@@ -1,4 +1,5 @@
 <template>
+<!--  <button class="btn devAddBtnStyle" @click="openModal">개발자추가</button>-->
   <div class="modal fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
        aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -780,26 +781,27 @@ const closeModal = () => {
 const submitForm = async () => {
   console.log(formData.value);
   try {
-    const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
-    alert(response.data.message); // 성공 메시지 표시
+    const response = await axios.post('http://localhost:8080/api/addDevPjHistory', formData.value);
+    alert(`성공: ${response.data.message}`);
   } catch (error) {
-    const errorMessage = error.response?.data?.message || error.message || '개발자 추가에 실패했습니다.';
+    const errorMessage = error.response?.data?.message || error.message || '프로젝트 추가에 실패했습니다.';
     alert(`오류: ${errorMessage}`);
   }
 };
 
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
-const openModalHandler = () => {
+const pjOpenModal = () => {
   showModal.value = true; // 모달 열기
+  console.log("모달 열림 상태:", showModal.value); // 상태 확인 로그
 };
 
 onMounted(() => {
-  eventbus.SearchResultEvent.add('openModal', openModalHandler); // 모달 열기 이벤트 등록
+  eventbus.SearchPjHistoryResultEvent.add('pjOpenModal', pjOpenModal); // 모달 열기 이벤트 등록
 });
 
 // 컴포넌트가 언마운트될 때 핸들러 제거
 onUnmounted(() => {
-  eventbus.SearchResultEvent.remove('openModal', openModalHandler); // 모달 열기 이벤트 제거
+  eventbus.SearchPjHistoryResultEvent.remove('pjOpenModal', pjOpenModal); // 모달 열기 이벤트 제거
 });
 </script>
 
