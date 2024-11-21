@@ -28,11 +28,7 @@ app.get('/', (req, res) => {
     res.send('서버에 접근하셨습니다!');
 });
 
-app.get('/api/', (req, res) => {
-    res.json({ message: 'API is working!' });
-});
-
-app.get('/api/data', async (req, res) => {
+app.get('/api/getDevData', async (req, res) => {
     let connection;
 
     try {
@@ -45,39 +41,39 @@ app.get('/api/data', async (req, res) => {
 
         const data = result.rows.map(row => {
             return {
-                DEV_NO: row[0],              // DEV_NO
-                NM: row[1],                   // NM
-                PJ_INP_STTS: row[2],          // PJ_INP_STTS
-                CTRT_NMTM: row[3],            // CTRT_NMTM
-                BRDT: row[4],                 // BRDT
-                GNDR: row[5],                 // GNDR
-                JBPS: row[6],                 // JBPS
-                GRD: row[7],                  // GRD
-                T_CR_PER: row[8],             // T_CR_PER
-                RGN: row[9],                  // RGN
-                MBL_TELNO: row[10],           // MBL_TELNO
-                EML: row[11],                 // EML
-                CONTT_MTHD: row[12],          // CONTT_MTHD
-                NTRV_DMND_DT: row[13],        // NTRV_DMND_DT
-                INP_PSBLTY_DT: row[14],     // INP_PSBLTY_DT
-                OGDP_CO: row[15],             // OGDP_CO
-                SN: row[16],                  // SN
-                WHTAX_YN: row[17],            // WHTAX_YN
-                BZMN_YN: row[18],             // BZMN_YN
-                KDS_EMP_YN: row[19],          // KDS_EMP_YN
-                CTRT_CO_EMP_YN: row[20],      // CTRT_CO_EMP_YN
-                CLCT_PICKUP_DT: row[21],      // CLCT_PICKUP_DT
-                GIVE_DT: row[22],             // GIVE_DT
-                BANK: row[23],                // BANK
-                ACTNO: row[24],               // ACTNO
-                DEPT: row[25],                // DEPT
-                MM_DMND_UNTPRC: row[26],      // MM_DMND_UNTPRC
-                ADDR: row[27],                // ADDR
-                JBTTL: row[28],               // JBTTL
-                BRKR: row[29],                // BRKR
-                KAKAO_NICK: row[30],          // KAKAO_NICK
-                CTRT_HSTRY_YN: row[31],       // CTRT_HSTRY_YN
-                MS: row[32],                  // MS
+                DEV_NO: row[0],
+                NM: row[1],
+                PJ_INP_STTS: row[2],
+                CTRT_NMTM: row[3],
+                BRDT: row[4],
+                GNDR: row[5],
+                JBPS: row[6],
+                GRD: row[7],
+                T_CR_PER: row[8],
+                RGN: row[9],
+                MBL_TELNO: row[10],
+                EML: row[11],
+                CONTT_MTHD: row[12],
+                NTRV_DMND_DT: row[13],
+                INP_PSBLTY_DT: row[14],
+                OGDP_CO: row[15],
+                SN: row[16],
+                WHTAX_YN: row[17],
+                BZMN_YN: row[18],
+                KDS_EMP_YN: row[19],
+                CTRT_CO_EMP_YN: row[20],
+                CLCT_PICKUP_DT: row[21],
+                GIVE_DT: row[22],
+                BANK: row[23],
+                ACTNO: row[24],
+                DEPT: row[25],
+                MM_DMND_UNTPRC: row[26],
+                ADDR: row[27],
+                JBTTL: row[28],
+                BRKR: row[29],
+                KAKAO_NICK: row[30],
+                CTRT_HSTRY_YN: row[31],
+                MS: row[32],
                 MDL: row[33],
                 OS: row[34],
                 LANG: row[35],
@@ -94,8 +90,8 @@ app.get('/api/data', async (req, res) => {
 
         res.json({ result: { row: data } });
     } catch (err) {
-        console.error("Database connection error: ", err);
-        res.status(500).json({ error: 'Database error', details: err.message });
+        console.error("데이터베이스 연결에러: ", err);
+        res.status(500).json({ error: '데이터베이스 연결에러 메시지', details: err.message });
     } finally {
         if (connection) {
             try {
@@ -107,7 +103,7 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-app.get('/api/pjHistory/data', async (req, res) => {
+app.get('/api/getPjHistData', async (req, res) => {
     let connection;
 
     try {
@@ -390,7 +386,7 @@ app.post('/api/addDevPjHistory', async (req, res) => {
 });
 
 // UPDATE 쿼리
-app.post('/api/updateData', async (req, res) => {
+app.post('/api/updateDevData', async (req, res) => {
     const {
         NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
         T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
@@ -574,7 +570,7 @@ app.post('/api/update/PjDevHistoryData', async (req, res) => {
     }
 });
 
-app.delete('/api/deleteData', async (req, res) => {
+app.delete('/api/deleteDevData', async (req, res) => {
     const { devNoList } = req.body;
     console.log(devNoList);
 
@@ -611,7 +607,7 @@ app.delete('/api/deleteData', async (req, res) => {
     }
 });
 
-app.delete('/api/delete/PjDevHistoryData', async (req, res) => {
+app.delete('/api/deletePjDevHistData', async (req, res) => {
     const { devNoList, pjNo } = req.body; // PJ_NO 추가
     console.log(devNoList, pjNo);
 
