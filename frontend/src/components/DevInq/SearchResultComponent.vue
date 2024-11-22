@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef } from "vue";
+import {defineComponent, ref, shallowRef} from "vue";
 import DevAddBtnComponent from './DevAddBtnComponent.vue';
-import { AgGridVue } from "ag-grid-vue3";
+import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
 
 export default defineComponent({
@@ -39,7 +39,7 @@ export default defineComponent({
       headerStyle: "headerColor"
     });
 
-    const textFilterParams ={
+    const textFilterParams = {
       filterOptions: ["contains", "notContains"],
       caseSensitive: false,
       trimInput: true,
@@ -52,7 +52,7 @@ export default defineComponent({
       closeOnApply: true,
     };
 
-    const numberFilterParams ={
+    const numberFilterParams = {
       filterOptions: ["equals", "greaterThanOrEqual", "lessThanOrEqual", "inRange"],
       trimInput: true,
       buttons: ["cancel", "reset", "apply"],
@@ -98,50 +98,164 @@ export default defineComponent({
     };
 
     const columnDefs = ref([
-      { headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, cellClass: 'checkboxCentered'},
-      { headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 200,filter: "agTextColumnFilter", filterParams: { buttons: ["reset", "apply"] },},
-      { headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
-      { headerName: '생년월일', field: "BRDT", minWidth: 140, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
-      { headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
-      { headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '성별', field: "GNDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '총경력기간', field: "T_CR_PER", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '지역', field: "RGN", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '이메일', field: "EML", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '컨택방법', field: "CONTT_MTHD", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '인터뷰요청일', field: "NTRV_DMND_DT", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '투입가능일', field: "INP_PSBLTY_DT", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '소속회사', field: "OGDP_CO", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '일련번호', field: "SN", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '3.3%여부', field: "WHTAX_YN", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '사업자여부', field: "BZMN_YN", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '자사정규직여부', field: "KDS_EMP_YN", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", minWidth: 210, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '대금수령날짜', field: "CLCT_PICKUP_DT", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '지급일자', field: "GIVE_DT", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계좌번호', field: "ACTNO", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '부서', field: "DEPT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '월요청단가', field: "MM_DMND_UNTPRC", minWidth: 170, filter: "agNumberColumnFilter",filterParams: numberFilterParams},
-      { headerName: '주소', field: "ADDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '직책', field: "JBTTL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '소개자', field: "BRKR", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '카카오톡닉네임', field: "KAKAO_NICK", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '병역', field: "MS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '운영체제', field: "OS", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '데이터베이스', field: "DB", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '툴', field: "TOOL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '프레임워크', field: "FRMW", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '라이브러리', field: "LBRR", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      { headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, cellClass: 'checkboxCentered'},
+      {headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '이력서', field: 'resumeIcon', minWidth: 120,
+        cellRenderer: (params) => {
+          return `<img src="${params.data.resumeImage}" style="padding-top: 0.4px;cursor: pointer; width: 18.4px; height: 18.4px;" onclick="downloadResume('${params.data.RESM}')"/>`;
+        },
+      },
+      {
+        headerName: '프로젝트투입상태',
+        field: "PJ_INP_STTS",
+        minWidth: 200,
+        filter: "agTextColumnFilter",
+        filterParams: {buttons: ["reset", "apply"]},
+      },
+      {
+        headerName: '계약횟수',
+        field: "CTRT_NMTM",
+        minWidth: 140,
+        filter: "agNumberColumnFilter",
+        filterParams: numberFilterParams
+      },
+      {
+        headerName: '생년월일',
+        field: "BRDT",
+        minWidth: 140,
+        filter: "agNumberColumnFilter",
+        filterParams: numberFilterParams
+      },
+      {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
+      {headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '성별', field: "GNDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '총경력기간',
+        field: "T_CR_PER",
+        minWidth: 170,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '지역', field: "RGN", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '휴대전화번호',
+        field: "MBL_TELNO",
+        minWidth: 190,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '이메일', field: "EML", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '컨택방법',
+        field: "CONTT_MTHD",
+        minWidth: 140,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '인터뷰요청일',
+        field: "NTRV_DMND_DT",
+        minWidth: 190,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '투입가능일',
+        field: "INP_PSBLTY_DT",
+        minWidth: 170,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '소속회사',
+        field: "OGDP_CO",
+        minWidth: 140,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '일련번호', field: "SN", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '3.3%여부',
+        field: "WHTAX_YN",
+        minWidth: 170,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '사업자여부',
+        field: "BZMN_YN",
+        minWidth: 170,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '자사정규직여부',
+        field: "KDS_EMP_YN",
+        minWidth: 190,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '계약회사정규직여부',
+        field: "CTRT_CO_EMP_YN",
+        minWidth: 210,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '대금수령날짜',
+        field: "CLCT_PICKUP_DT",
+        minWidth: 190,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '지급일자',
+        field: "GIVE_DT",
+        minWidth: 140,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '계좌번호', field: "ACTNO", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '부서', field: "DEPT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '월요청단가',
+        field: "MM_DMND_UNTPRC",
+        minWidth: 170,
+        filter: "agNumberColumnFilter",
+        filterParams: numberFilterParams
+      },
+      {headerName: '주소', field: "ADDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '직책', field: "JBTTL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '소개자', field: "BRKR", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
+        headerName: '카카오톡닉네임',
+        field: "KAKAO_NICK",
+        minWidth: 190,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {
+        headerName: '계약이력존재여부',
+        field: "CTRT_HSTRY_YN",
+        minWidth: 200,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '병역', field: "MS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '운영체제', field: "OS", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '데이터베이스', field: "DB", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '툴', field: "TOOL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '프레임워크', field: "FRMW", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '라이브러리', field: "LBRR", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
 
     const rowSelection = ref("multiple");
@@ -155,6 +269,7 @@ export default defineComponent({
         const translatedData = data.result.row.map(item => ({
           DEV_NO: item.DEV_NO,
           NM: item.NM,
+          resumeImage: '/downloadResume.png', // 이미지 URL 추가 (아이콘 이미지 경로)
           PJ_INP_STTS: item.PJ_INP_STTS,
           CTRT_NMTM: item.CTRT_NMTM,
           BRDT: item.BRDT,
@@ -215,18 +330,46 @@ export default defineComponent({
       gridApi.value = params.api;
       const pagingPanel = document.querySelector('.ag-paging-panel');
       if (pagingPanel) {
+        const directlyAddRows = document.createElement("span");
+        directlyAddRows.textContent = "개발자직접추가";
+        directlyAddRows.style.cursor = "pointer";
+        directlyAddRows.style.marginLeft = "10px";
+        directlyAddRows.onclick = () => {
+          if (!searchPerformed.value) {
+            alert("검색을 먼저 수행해 주세요.");
+            gridApi.value.setFilterModel(null);
+          } else {
+            //개발자직접추가 코드
+          }
+        }
+        pagingPanel.insertBefore(directlyAddRows, pagingPanel.firstChild);
+
         const addRows = document.createElement("span");
         addRows.textContent = "개발자추가";
         addRows.style.cursor = "pointer";
         addRows.style.marginLeft = "10px";
-        addRows.onclick = openModal;
-        pagingPanel.insertBefore(addRows, pagingPanel.firstChild);
+        addRows.onclick = () => {
+          if (!searchPerformed.value) {
+            alert("검색을 먼저 수행해 주세요.");
+            gridApi.value.setFilterModel(null);
+          } else {
+            openModal();
+          }
+        }
+        pagingPanel.insertBefore(addRows, directlyAddRows.nextSibling);
 
         const editRows = document.createElement("span");
         editRows.textContent = "수정"; // span의 텍스트 설정
         editRows.style.cursor = "pointer"; // 커서 스타일 설정
         editRows.style.marginLeft = "10px"; // 여백 추가
-        editRows.onclick = () => {};
+        editRows.onclick = () => {
+          if (!searchPerformed.value) {
+            alert("검색을 먼저 수행해 주세요.");
+            gridApi.value.setFilterModel(null);
+          } else {
+            //수정코드
+          }
+        }
         pagingPanel.insertBefore(editRows, addRows.nextSibling);
 
         const deleteRows = document.createElement("span");
@@ -234,8 +377,13 @@ export default defineComponent({
         deleteRows.style.cursor = "pointer";
         deleteRows.style.marginLeft = "10px";
         deleteRows.onclick = () => {
-          eventbus.SearchResultEvent.deleteRowBtnClick();
-        };
+          if (!searchPerformed.value) {
+            alert("검색을 먼저 수행해 주세요.");
+            gridApi.value.setFilterModel(null);
+          } else {
+            eventbus.SearchResultEvent.deleteRowBtnClick();
+          }
+        }
         pagingPanel.insertBefore(deleteRows, editRows.nextSibling);
       }
       eventbus.SearchResultEvent.add('search', fetchData);
@@ -245,227 +393,240 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
 
-    const previousFilterKeys = ref([]);
-    const previousFilters = ref([]);
+  const previousFilterKeys = ref([]);
+  const previousFilters = ref([]);
 
-    const onFilterChanged = async () => {
-      if (!searchPerformed.value) {
-        alert("검색을 먼저 수행해 주세요.");
-        gridApi.value.setFilterModel(null);
-      }else {
-        const grf = eventbus.SearchResultEvent.getRegisteredFilters();
-        const filterModels = gridApi.value.getFilterModel();
-        const filterModelKeys = Object.keys(filterModels);
-
-        Object.keys(filterModels).forEach(key => {
-          const filterObject = filterModels[key];
-          const existsInGrf = grf.some(item => {
-            return (
-                item.KeyName === key &&
-                item.type === filterObject.type &&
-                item.filter === filterObject.filter
-            );
-          });
-
-          let grfFiltersCondition = false;
-          let grfFiltersConditionCheck = true;
-          if (existsInGrf) {
-            return;
-          }
-          for (let i = 0; i < grf.length; i++) {
-            for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-              if (grf[i].KeyName === key &&
-                  grf[i].type === filterObject.conditions[j].type &&
-                  grf[i].filter === filterObject.conditions[j].filter) {
-                grfFiltersCondition = true;
-                break;
-              }
-            }
-          }
-
-          if (filterObject?.conditions && filterObject.conditions.length > 0) {
-            const currentCondition = filterObject.conditions[0];
-            const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-            const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
-
-            if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-              eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
-
-            }
-            if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-              eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (grfFiltersCondition === true) {
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-          } else {
-            eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-          }
-        });
-
-        previousFilterKeys.value.forEach((key) => {
-          const previousFilter = previousFilters.value[key];
-          const currentFilterModel = filterModels[key];
-
-          if(currentFilterModel === undefined) {
-            if (previousFilter) {
-              if (Array.isArray(previousFilter.conditions)) {
-                previousFilter.conditions.forEach(condition => {
-                  eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
-                  eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                  eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
-                });
-              } else {
-                eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-              }
-            }
-          }
-          if (currentFilterModel !== undefined) {
-            if (!filterModelKeys.includes(key)) {
-              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-            }
-
-            if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
-              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-            }
-          }
-        });
-        previousFilterKeys.value = filterModelKeys;
-        previousFilters.value = filterModels;
-      }
-    };
-
-    const onCellValueChanged = async (event) => {
-      try {
-        const response = await fetch('http://localhost:8080/api/updateDevData', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(event.data),
-        });
-        if (!response.ok) {
-          throw new Error('Failed to update data');
-        }
-      } catch (error) {
-        console.error('개발자 데이터 수정에러:', error);
-      }
-    };
-
-    const resetFilter = () => {
-      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+  const onFilterChanged = async () => {
+    if (!searchPerformed.value) {
+      alert("검색을 먼저 수행해 주세요.");
       gridApi.value.setFilterModel(null);
-      if(registeredFilters.length === 0){
-        if(searchPerformed.value){
-          alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
-        }
-        if(!searchPerformed.value){
-          alert("검색을 먼저 수행해 주세요.");
-        }
-      }else{
-        registeredFilters.forEach(filter => {
-          eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
-          eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
+    } else {
+      const grf = eventbus.SearchResultEvent.getRegisteredFilters();
+      const filterModels = gridApi.value.getFilterModel();
+      const filterModelKeys = Object.keys(filterModels);
+
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+        const existsInGrf = grf.some(item => {
+          return (
+              item.KeyName === key &&
+              item.type === filterObject.type &&
+              item.filter === filterObject.filter
+          );
         });
-        eventbus.SearchResultEvent.resetKorButton();
-      }
-    };
 
-    const removeFilter = (KeyName, filterType, filterValue) => {
-      const filterModel = gridApi.value.getFilterModel();
-
-      if (filterModel[KeyName]) {
-        const currentFilter = filterModel[KeyName];
-        let adjustedFilterType;
-
-        if (Array.isArray(currentFilter.conditions)) {
-          const previousConditions = currentFilter.conditions.slice();
-
-          currentFilter.conditions = currentFilter.conditions.filter(condition => {
-
-            adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
-
-            const shouldKeep = !(adjustedFilterType === filterTypeMap[condition.type] && condition.filter === filterValue);
-            console.log(`조건 유지 여부: ${shouldKeep}`);
-
-            return shouldKeep;
-          });
-
-          if (currentFilter.conditions.length === 0) {
-            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
-          }
-          if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
-            gridApi.value.setFilterModel(filterModel);
-            if (previousConditions.length !== currentFilter.conditions.length) {
-              eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
+        let grfFiltersCondition = false;
+        let grfFiltersConditionCheck = true;
+        if (existsInGrf) {
+          return;
+        }
+        for (let i = 0; i < grf.length; i++) {
+          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
+            if (grf[i].KeyName === key &&
+                grf[i].type === filterObject.conditions[j].type &&
+                grf[i].filter === filterObject.conditions[j].filter) {
+              grfFiltersCondition = true;
+              break;
             }
+          }
+        }
+
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
+
+          if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+
+          }
+          if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
+            eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (grfFiltersCondition === true) {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
           }
         } else {
-          const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
-          const targetFilterType = filterTypeMap[filterType] || filterType;
+          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        }
+      });
 
-          if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
-            delete filterModel[KeyName];
-            gridApi.value.setFilterModel(filterModel);
-            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+      previousFilterKeys.value.forEach((key) => {
+        const previousFilter = previousFilters.value[key];
+        const currentFilterModel = filterModels[key];
+
+        if (currentFilterModel === undefined) {
+          if (previousFilter) {
+            if (Array.isArray(previousFilter.conditions)) {
+              previousFilter.conditions.forEach(condition => {
+                eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
+                eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
+                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+              });
+            } else {
+              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+            }
           }
         }
+        if (currentFilterModel !== undefined) {
+          if (!filterModelKeys.includes(key)) {
+            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+          }
+
+          if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
+            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+          }
+        }
+      });
+      previousFilterKeys.value = filterModelKeys;
+      previousFilters.value = filterModels;
+    }
+  };
+
+  const onCellValueChanged = async (event) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/updateDevData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event.data),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update data');
       }
-    };
+    } catch (error) {
+      console.error('개발자 데이터 수정에러:', error);
+    }
+  };
 
-    const deleteRowBtnClick = async () => {
-      const selectedNodes = gridApi.value.getSelectedNodes();
-      const selectedData = selectedNodes.map(node => node.data);
-      const devNoList = selectedData.map(row => row.DEV_NO);
+  const resetFilter = () => {
+    const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+    gridApi.value.setFilterModel(null);
+    if (registeredFilters.length === 0) {
+      if (searchPerformed.value) {
+        alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+      }
+      if (!searchPerformed.value) {
+        alert("검색을 먼저 수행해 주세요.");
+      }
+    } else {
+      registeredFilters.forEach(filter => {
+        eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
+        eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
+      });
+      eventbus.SearchResultEvent.resetKorButton();
+    }
+  };
 
-      try {
-        const response = await fetch('http://localhost:8080/api/deleteDevData', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ devNoList }),
+  const removeFilter = (KeyName, filterType, filterValue) => {
+    const filterModel = gridApi.value.getFilterModel();
+
+    if (filterModel[KeyName]) {
+      const currentFilter = filterModel[KeyName];
+      let adjustedFilterType;
+
+      if (Array.isArray(currentFilter.conditions)) {
+        const previousConditions = currentFilter.conditions.slice();
+
+        currentFilter.conditions = currentFilter.conditions.filter(condition => {
+
+          adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
+
+          const shouldKeep = !(adjustedFilterType === filterTypeMap[condition.type] && condition.filter === filterValue);
+          console.log(`조건 유지 여부: ${shouldKeep}`);
+
+          return shouldKeep;
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to delete data');
+        if (currentFilter.conditions.length === 0) {
+          eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
         }
-        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
-      } catch (error) {
-        alert("삭제할 개발자를 선택해주세요.");
-      }
-    };
+        if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
+          gridApi.value.setFilterModel(filterModel);
+          if (previousConditions.length !== currentFilter.conditions.length) {
+            eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
+          }
+        }
+      } else {
+        const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
+        const targetFilterType = filterTypeMap[filterType] || filterType;
 
-    return {
-      columnDefs,
-      gridApi,
-      defaultColDef,
-      rowSelection,
-      rowData,
-      gridOptions,
-      onGridReady,
-      onCellValueChanged,
-      deleteRowBtnClick,
-      resetFilter,
-      removeFilter,
-      textFilterParams,
-    };
-  },
-});
+        if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
+          delete filterModel[KeyName];
+          gridApi.value.setFilterModel(filterModel);
+          eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+        }
+      }
+    }
+  };
+
+  const deleteRowBtnClick = async () => {
+    const selectedNodes = gridApi.value.getSelectedNodes();
+    const selectedData = selectedNodes.map(node => node.data);
+    const devNoList = selectedData.map(row => row.DEV_NO);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/deleteDevData', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({devNoList}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete data');
+      }
+      rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+    } catch (error) {
+      alert("삭제할 개발자를 선택해주세요.");
+    }
+  };
+
+  const downloadResume = (resumeId) => {
+    console.log('다운로드 이미지클릭');
+    const url = `http://localhost:8080/api/downloadResume/${resumeId}`; // 실제 API 엔드포인트로 변경
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', resumeId); // 파일 이름 설정
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return {
+    columnDefs,
+    gridApi,
+    defaultColDef,
+    rowSelection,
+    rowData,
+    gridOptions,
+    onGridReady,
+    onCellValueChanged,
+    deleteRowBtnClick,
+    resetFilter,
+    removeFilter,
+    textFilterParams,
+    downloadResume,
+  };
+},
+})
+;
 </script>
 
 <style>
@@ -478,7 +639,7 @@ export default defineComponent({
   }
 }
 
-.headerColor{
+.headerColor {
   background-color: #e8e8e8 !important;
 }
 
@@ -488,7 +649,17 @@ export default defineComponent({
   align-items: center; /* 세로 중앙 정렬 */
 }
 
-.pl10{
+.pl10 {
   padding-left: 10px;
+}
+
+.fas {
+  font-size: 16px; /* 아이콘 크기 조정 */
+  color: blue; /* 아이콘 색상 조정 */
+}
+
+.fa-download {
+  font-size: 16px; /* 아이콘 크기 조정 */
+  color: blue; /* 아이콘 색상 조정 */
 }
 </style>

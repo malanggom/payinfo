@@ -570,6 +570,23 @@ app.post('/api/update/PjDevHistoryData', async (req, res) => {
     }
 });
 
+// 이력서 파일이 저장된 디렉토리
+const RESUME_DIR = path.join(__dirname, 'resumes'); // 이력서 파일이 저장된 경로
+
+app.post('/api/downloadResume/:resumeId', (req, res) => {
+    const resumeId = req.params.resumeId; // URL에서 resumeId 추출
+    const filePath = path.join(RESUME_DIR, resumeId); // 이력서 파일 경로
+
+    // 파일 전송
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error('File download error:', err);
+            res.status(500).send('File download failed');
+        }
+    });
+});
+
+
 app.delete('/api/deleteDevData', async (req, res) => {
     const { devNoList } = req.body;
     console.log(devNoList);
