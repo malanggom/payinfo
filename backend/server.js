@@ -4,6 +4,7 @@
 const express = require('express');
 const oracledb = require('oracledb');
 const cors = require('cors');
+const path = require('path'); // 이 부분이 필요함
 const app = express();
 const port = 8080;
 

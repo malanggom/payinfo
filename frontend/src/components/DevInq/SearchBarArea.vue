@@ -1,4 +1,5 @@
 <script setup>
+import SearchBarNameComponent from "@/components/common/SearchBarNameComponent.vue";
 import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 
@@ -8,7 +9,13 @@ import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
   <div class="search__conditions__area" style="width: 100%; height: 100%;">
     <div class="search__conditions__component" style="width: 100%; height: 100%;">
       <div>
-        <div></div>
+        <div class="searchBarName">
+          <SearchBarNameComponent class="mgLR10"/>
+        </div>
+      </div>
+      <div>
+        <div>
+        </div>
       </div>
       <div class="flex">
         <SearchBarComponent class="mgLR10"/>
@@ -20,6 +27,10 @@ import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 
 <style>
 
+.searchBarName{
+  display:flex;
+  flex-direction: row;
+}
 .flex{
   display:flex;
   flex-direction: row;
@@ -42,6 +53,6 @@ import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
   margin-left: 10px;
   background-color: white;
   display: grid;
-  grid-template-rows: 1fr 50px;
+  grid-template-rows: 25px 1fr 50px;
 }
 </style>

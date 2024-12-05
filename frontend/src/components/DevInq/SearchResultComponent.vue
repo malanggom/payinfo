@@ -339,10 +339,81 @@ export default defineComponent({
             alert("검색을 먼저 수행해 주세요.");
             gridApi.value.setFilterModel(null);
           } else {
-            //개발자직접추가 코드
+            // 새로운 행 추가
+            const newRow = {
+              DEV_NO: '', // 기본값 설정
+              NM: '',
+              resumeImage: '/downloadResume.png', // 이미지 URL 추가
+              PJ_INP_STTS: '',
+              CTRT_NMTM: '',
+              BRDT: '',
+              GNDR: '',
+              JBPS: '',
+              GRD: '',
+              T_CR_PER: '',
+              RGN: '',
+              MBL_TELNO: '',
+              EML: '',
+              CONTT_MTHD: '',
+              NTRV_DMND_DT: '',
+              INP_PSBLTY_DT: '',
+              OGDP_CO: '',
+              SN: '',
+              WHTAX_YN: '',
+              BZMN_YN: '',
+              KDS_EMP_YN: '',
+              CTRT_CO_EMP_YN: '',
+              CLCT_PICKUP_DT: '',
+              GIVE_DT: '',
+              BANK: '',
+              ACTNO: '',
+              DEPT: '',
+              MM_DMND_UNTPRC: '',
+              ADDR: '',
+              JBTTL: '',
+              BRKR: '',
+              KAKAO_NICK: '',
+              CTRT_HSTRY_YN: '',
+              MS: '',
+              MDL: '',
+              OS: '',
+              LANG: '',
+              DB: '',
+              TOOL: '',
+              FRMW: '',
+              LBRR: '',
+              CMNCT: '',
+              ETC: '',
+              AGE: '',
+              ACBG: '',
+            };
+            // 현재 데이터 가져오기
+            const currentData = [];
+            gridApi.value.forEachNode(node => currentData.push(node.data));
+
+            // 새로운 행을 배열의 첫 번째 요소로 추가
+            const updatedData = [newRow, ...currentData]; // 새로운 행을 맨 위에 추가
+
+            // 전체 데이터를 다시 설정 (기존 데이터는 유지)
+            gridApi.value.applyTransaction({ remove: currentData }); // 기존 데이터 제거
+            gridApi.value.applyTransaction({ add: updatedData }); // 업데이트된 데이터 추가
           }
         }
         pagingPanel.insertBefore(directlyAddRows, pagingPanel.firstChild);
+
+        const saveDirectlyAddRows = document.createElement("span");
+        saveDirectlyAddRows.textContent = "저장";
+        saveDirectlyAddRows.style.cursor = "pointer";
+        saveDirectlyAddRows.style.marginLeft = "10px";
+        saveDirectlyAddRows.onclick = () => {
+          if (!searchPerformed.value) {
+            alert("검색을 먼저 수행해 주세요.");
+            gridApi.value.setFilterModel(null);
+          } else {
+            //저장하는 코드
+          }
+        }
+        pagingPanel.insertBefore(saveDirectlyAddRows, directlyAddRows.nextSibling);
 
         const addRows = document.createElement("span");
         addRows.textContent = "개발자추가";
@@ -356,7 +427,7 @@ export default defineComponent({
             openModal();
           }
         }
-        pagingPanel.insertBefore(addRows, directlyAddRows.nextSibling);
+        pagingPanel.insertBefore(addRows, saveDirectlyAddRows.nextSibling);
 
         const editRows = document.createElement("span");
         editRows.textContent = "수정"; // span의 텍스트 설정
@@ -597,17 +668,18 @@ export default defineComponent({
       alert("삭제할 개발자를 선택해주세요.");
     }
   };
+    /* global downloadResume */
 
-  const downloadResume = (resumeId) => {
-    console.log('다운로드 이미지클릭');
-    const url = `http://localhost:8080/api/downloadResume/${resumeId}`; // 실제 API 엔드포인트로 변경
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', resumeId); // 파일 이름 설정
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    window.downloadResume = (resumeId) => {
+      console.log('다운로드 이미지 클릭');
+      const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', resumeId);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
 
   return {
     columnDefs,
