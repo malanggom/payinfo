@@ -94,7 +94,7 @@
                 </div>
 
                 <!-- 생년월일 드롭다운 레이블 -->
-                <div class="label-wrap col-10 justify-content-between">
+                <div class="label-date-wrap col-10">
                   <div class="label col-5">
                     <label for="brdt" class="col-form-label">생년월일</label>
                   </div>
@@ -105,14 +105,14 @@
                   </div>
                 </div>
 
-                <div class="mb-2 col-12 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
-                    <!-- 생년월일 -->
-                    <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 생년월일을 col-5로 설정 -->
+                <!-- 생년월일 입력란 -->
+                <div class="date-wrap col-12">
+                  <div class="col-10 date">
+                    <div class="form-group col-5 d-flex flex-column align-items-center mb-0">
                       <input
                           type="date"
                           id="brdt"
-                          class="ps-4 form-control input-radius text-center"
+                          class="form-control date-default text-center"
                           style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
@@ -136,16 +136,18 @@
                     </div>
                   </div>
                 </div>
+
                 <!-- 나이 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
                     <label for="age" class="col-form-label">나이</label> <!-- 레이블 -->
                   </div>
                 </div>
+
                 <!-- 나이 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="mb-2 input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="age" class="form-control div_flex_center w-100 input text-center"
+                    <input type="text" id="age" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.AGE"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -296,17 +298,17 @@
                 <div class="mb-2 dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="whtaxbzmnYn" class="btn btn-outline-primary dropdown-toggle w-100 input" type="button"
+                      <button id="whtaxbzmnYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="ps-3 flex-grow-1 text-center">{{ selectedWhtaxbzmn || '3.3%' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedWhtaxbzmn || '3.3%' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectWhtax('3.3%')">3.3%</button>
+                          <button class="dropdown-item" type="button" @click="selectWhtax('3.3%')">3.3%</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectBzmn('사업자')">사업자</button>
+                          <button class="dropdown-item" type="button" @click="selectBzmn('사업자')">사업자</button>
                         </li>
                       </ul>
                     </div>
@@ -319,7 +321,7 @@
                     <label for="rgn" class="col-form-label">지역</label>
                   </div>
                   <div class="col-5 label">
-                    <label for="sn" class="col-form-label">상세주소</label>
+                    <label for="addr" class="col-form-label">상세주소</label>
                   </div>
                 </div>
 
@@ -350,11 +352,11 @@
                   </div>
                 </div>
 
-                <div class="col-12 input-wrap">
-                  <div class="col-10 input">
-                    <!-- 인터뷰요청일 -->
-                    <div class="form-group col-auto d-flex flex-column align-items-center w-100 mb-0"> <!-- 오른쪽 여백 추가 및 세로 정렬 -->
-                      <input type="date" id="ntrvDmndDt" class="ps-4 form-control input-radius text-center" style="text-align: center;"
+                <!-- 인터뷰요청일 -->
+                <div class="col-12 date-wrap">
+                  <div class="col-10 date">
+                    <div class="form-group col-auto date-default-wrap">
+                      <input type="date" id="ntrvDmndDt" class="date-default form-control text-center" style="text-align: center;"
                              aria-describedby="passwordHelpInline" v-model="formData.NTRV_DMND_DT"> <!-- 입력란 -->
                     </div>
                   </div>
@@ -367,26 +369,27 @@
                   </div>
                 </div>
 
-                <div class="col-12 input-wrap">
-                  <div class="col-10 input">
-                    <!-- 투입가능일 -->
-                    <div class="form-group col-auto d-flex flex-column align-items-center w-100 mb-0"> <!-- 오른쪽 여백 추가 및 세로 정렬 -->
-                      <input type="date" id="inpPsbltyDt" class="ps-4 form-control input-radius text-center" style="text-align: center;"
+                <!-- 투입가능일 -->
+                <div class="col-12 date-wrap">
+                  <div class="col-10 date">
+                    <div class="form-group col-auto date-default-wrap">
+                      <input type="date" id="inpPsbltyDt" class="date-default form-control text-center" style="text-align: center;"
                              aria-describedby="passwordHelpInline" v-model="formData.INP_PSBLTY_DT"> <!-- 입력란 -->
                     </div>
                   </div>
                 </div>
 
                 <!-- 월요청단가 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="mmDmndUntprc" class="col-form-label">월 요청단가</label> <!-- 레이블 -->
                   </div>
                 </div>
+
                 <!-- 월요청단가 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="mb-2 input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="mmDmndUntprc" class="form-control div_flex_center w-100 input-radius"
+                    <input type="text" id="mmDmndUntprc" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -437,86 +440,86 @@
                 </div>
 
                 <!-- 등급 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
-                    <label for="grd" class="col-form-label">등급</label>
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
+                    <label for="grd" class="col-form-label">등급</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 등급 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="mb-2 dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="grd" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="grd" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedGrade || 'N/A' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedGrade || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('초급')">초급</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('초상급')">초상급</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('중급')">중급</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('중상급')">중상급</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('고급')">고급</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGrade('특급')">특급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('N/A')">N/A</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('초급')">초급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('초상급')">초상급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('중급')">중급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('중상급')">중상급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('고급')">고급</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectGrade('특급')">특급</button></li>
                       </ul>
                     </div>
                   </div>
                 </div>
 
                 <!-- 직위 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
-                    <label for="jbps" class="col-form-label">직위</label>
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
+                    <label for="jbps" class="col-form-label">직위</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 직위 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="mb-2 dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="jbps" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="jbps" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedJbps || 'N/A' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedJbps || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('사원')">사원</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('주임')">주임</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('대리')">대리</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('과장')">과장</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('차장')">차장</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('부장')">부장</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbps('이사')">이사</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('N/A')">N/A</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('사원')">사원</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('주임')">주임</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('대리')">대리</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('과장')">과장</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('차장')">차장</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('부장')">부장</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbps('이사')">이사</button></li>
                       </ul>
                     </div>
                   </div>
                 </div>
 
                 <!-- 직책 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
-                    <label for="jbttl" class="col-form-label">직책</label>
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
+                    <label for="jbttl" class="col-form-label">직책</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 직책 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="mb-2 dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="jbttl" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="jbttl" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedJbttl || 'N/A' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedJbttl || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbttl('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbttl('PL')">PL</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbttl('PMO')">PMO</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbttl('PM')">PM</button></li>
-                        <li><button class="dropdown-item d-flex justify-content-center" type="button" @click="selectJbttl('DBA')">DBA</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PL')">PL</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PMO')">PMO</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PM')">PM</button></li>
+                        <li><button class="dropdown-item" type="button" @click="selectJbttl('DBA')">DBA</button></li>
                       </ul>
                     </div>
                   </div>
@@ -1278,10 +1281,42 @@ onUnmounted(() => {
   align-items: center;
 }
 
+.date{
+  display : flex;
+  justify-content : space-between;
+  align-items: center;
+}
+
+.date-wrap{
+  margin-bottom: 2px;
+  display : flex;
+  justify-content : center;
+}
+
+.date-default{
+  border-radius: 20px;
+  padding-left: 28px;
+  padding-right: 8px;
+}
+
+.date-default-wrap {
+  width: 100%;
+  margin-bottom: 0px;
+  display : flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .label-wrap{
   margin-bottom: 2px;
   display : flex;
   justify-content : center;
+}
+
+.label-date-wrap{
+  margin-bottom: 2px;
+  display : flex;
+  justify-content : space-between;
 }
 
 .label-w100{
