@@ -76,17 +76,17 @@
                 <div class="mb-2 dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <div class="dropdown">
-                      <button id="genderDropdown" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="genderDropdown" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="ps-3 flex-grow-1 text-center">{{ selectedGndr || '남' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedGndr || '남' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGndr('남')">남</button>
+                          <button class="dropdown-item" type="button" @click="selectGndr('남')">남</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGndr('여')">여</button>
+                          <button class="dropdown-item" type="button" @click="selectGndr('여')">여</button>
                         </li>
                       </ul>
                     </div>
@@ -149,6 +149,7 @@
                            aria-describedby="passwordHelpInline" v-model="formData.AGE"> <!-- 입력란 -->
                   </div>
                 </div>
+
                 <!-- 학력 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -160,28 +161,29 @@
                 <div class="mb-2 dropdown-wrap"> <!-- 드롭다운을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="acbgDropdown" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="acbgDropdown" class="btn btn-outline-primary dropdown-toggle w-100" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="ps-3 flex-grow-1 text-center">{{ selectedAcbg || '고졸' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedAcbg || '고졸' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectAcbg('고졸')">고졸</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('고졸')">고졸</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectAcbg('대학교')">대학교</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('대학교')">대학교</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectAcbg('대학원')">대학원</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('대학원')">대학원</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectAcbg('기타')">기타</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('기타')">기타</button>
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
+
                 <!-- 병역 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -193,32 +195,32 @@
                 <div class="mb-2 dropdown-wrap"> <!-- 드롭다운을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="msDropdown" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="msDropdown" class="btn btn-outline-primary dropdown-toggle w-100" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="ps-3 flex-grow-1 text-center">{{ selectedMs || 'N/A' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedMs || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('N/A')">N/A</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('N/A')">N/A</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('현역')">현역</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('현역')">현역</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('예비역')">예비역</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('예비역')">예비역</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('보충역')">보충역</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('보충역')">보충역</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('병역준비역 및 전시근로역')">병역준비역 및 전시근로역</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('병역준비역 및 전시근로역')">병역준비역 및 전시근로역</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('면제')">면제</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('면제')">면제</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectMs('공익')">공익</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('공익')">공익</button>
                         </li>
                       </ul>
                     </div>
@@ -1319,7 +1321,6 @@ onUnmounted(() => {
   align-items: center;
 }
 
-
 .btn{
   height: 45px;
   width: 70px;
@@ -1358,8 +1359,15 @@ onUnmounted(() => {
 }
 
 .dropdown-menu {
-  max-height: 114px;
   overflow-y: scroll;
+  padding-left: 18px;
+}
+
+.dropdown-item {
+  padding-left: 0px;
+  padding-right: 0px;
+  display: flex;
+  justify-content: center;
 }
 
 .label_nowrap {
@@ -1434,9 +1442,16 @@ onUnmounted(() => {
 }
 
 .dropdown-toggle {
+  width: 100%;
+  border-radius: 20px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  width: 100%; /* 버튼 전체 너비 */
+}
+
+.dropdown-default{
+  flex-grow: 1;
+  padding-left: 14px;
 }
 
 /* caret 화살표를 오른쪽으로 정렬 */
