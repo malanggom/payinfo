@@ -565,29 +565,31 @@
                   </div>
                 </div>
               </div>
+
               <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+
                 <!-- 계약이력존재여부 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label">
                     <label for="CtrtHstryYn" class="col-form-label">계약이력존재여부</label>
                   </div>
                 </div>
 
                 <!-- 계약이력존재여부 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
                       <button id="CtrtHstryYn" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ formData.CTRT_HSTRY_YN || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="flex-grow-1 text-center">{{ selectedCtrtHstryYn || 'N' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('Y')">예</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('Y')">Y</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('N')">아니오</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('N')">N</button>
                         </li>
                       </ul>
                     </div>
@@ -595,8 +597,8 @@
                 </div>
 
                 <!-- 자사정규직여부 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label">
                     <label for="kdsEmpYn" class="col-form-label">자사정규직여부</label>
                   </div>
                 </div>
@@ -623,8 +625,8 @@
                 </div>
 
                 <!-- 계약회사정규직여부 드롭다운 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label">
                     <label for="CrtrCoEmpYn" class="col-form-label">계약회사정규직여부</label>
                   </div>
                 </div>
@@ -1093,7 +1095,7 @@ const selectedPjInpStts = ref('구직중');
 const selectedClctPickupDt = ref(0);
 const selectedGiveDt = ref(0);
 const selectedGndr = ref('남'); // 기본값 설정
-
+const selectedCtrtHstryYn = ref('N'); // 기본값 설정
 const selectedAcbg = ref('고졸');
 const selectedWhtaxbzmn = ref('3.3%');
 const selectedYear = ref(0);
@@ -1134,7 +1136,7 @@ const formData = ref({
   JBTTL: selectedJbttl.value, // 초기화
   BRKR: "",
   KAKAO_NICK: "",
-  CTRT_HSTRY_YN: "",
+  CTRT_HSTRY_YN: selectedCtrtHstryYn.value,
   MS: selectedMs.value, // 초기화
   MDL: "",
   OS: "",
@@ -1149,6 +1151,11 @@ const formData = ref({
   ACBG: "",
 });
 
+// 학력 선택
+const selectCtrtHstryYn = (ctrtHstryYn) => {
+  selectedCtrtHstryYn.value = ctrtHstryYn;
+  formData.value.CTRT_HSTRY_YN = ctrtHstryYn;
+};
 
 // 성별 선택
 const selectGndr = (gndr) => {
