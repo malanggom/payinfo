@@ -363,13 +363,6 @@
                           v-model="formattedInterviewDate"
                           @change="updateInterviewDate"
                       />
-                      <div
-                          class="date-text"
-                          style="cursor: pointer; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;"
-                          @click="openDatePicker('ntrvDmndDt')"
-                      >
-                        {{ formattedInterviewDate }}
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -412,7 +405,7 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="mmDmndUntprc"  style="padding-left: 40px; padding-right: 40px;"
                              class="form-control flex-all-center w-100 input text-center"
-                             aria-describedby="passwordHelpInline">
+                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC">
                       <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
                     </div>
                   </div>
@@ -579,17 +572,17 @@
                 <div class="dropdown-wrap">
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="CtrtHstryYn" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="CtrtHstryYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedCtrtHstryYn || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedCtrtHstryYn || 'N' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('Y')">Y</button>
+                          <button class="dropdown-item" type="button" @click="selectCtrtHstryYn('Y')">Y</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCtrtHstryYn('N')">N</button>
+                          <button class="dropdown-item" type="button" @click="selectCtrtHstryYn('N')">N</button>
                         </li>
                       </ul>
                     </div>
@@ -604,20 +597,20 @@
                 </div>
 
                 <!-- 자사정규직여부 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="kdsEmpYn" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="kdsEmpYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ formData.KDS_EMP_YN || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedKdsEmpYn || 'N' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectKdsEmpYn('Y')">예</button>
+                          <button class="dropdown-item" type="button" @click="selectKdsEmpYn('Y')">Y</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectKdsEmpYn('N')">아니오</button>
+                          <button class="dropdown-item" type="button" @click="selectKdsEmpYn('N')">N</button>
                         </li>
                       </ul>
                     </div>
@@ -632,53 +625,57 @@
                 </div>
 
                 <!-- 계약회사정규직여부 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="CrtrCoEmpYn" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="CrtrCoEmpYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ formData.CTRT_CO_EMP_YN || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedCtrtCoEmpYn || 'N' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCrtrCoEmpYn('Y')">예</button>
+                          <button class="dropdown-item" type="button" @click="selectCtrtCoEmpYn('Y')">Y</button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectCrtrCoEmpYn('N')">아니오</button>
+                          <button class="dropdown-item" type="button" @click="selectCtrtCoEmpYn('N')">N</button>
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
                 <!-- 계약횟수 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label">
                     <label for="ctrtNmtm" class="col-form-label">자사와의 계약횟수</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 계약횟수 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="ctrtNmtm" class="form-control div_flex_center w-100 input-radius"
-                           aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM"> <!-- 입력란 -->
+                <div class="input-wrap">
+                  <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                    <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                      <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center"
+                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" style="padding-left: 40px; padding-right: 40px;"> <!-- 입력란 -->
+                      <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
+                    </div>
                   </div>
                 </div>
+
                 <!-- 컨텍방법 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="conttMthd" class="col-form-label">컨텍방법</label>
                   </div>
                 </div>
 
                 <!-- 컨텍방법 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
                       <button id="conttMthd" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedConttMthd || '선택하세요' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedConttMthd || '잡코리아지원' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
@@ -697,19 +694,19 @@
                 </div>
 
                 <!-- 프로젝트투입상태 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label">
                     <label for="pjInpStts" class="col-form-label">프로젝트투입상태</label>
                   </div>
                 </div>
 
                 <!-- 프로젝트투입상태 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
                       <button id="pjInpStts" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="flex-grow-1 text-center">{{ selectedPjInpStts || '선택하세요' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedPjInpStts || '구직중' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
@@ -741,32 +738,33 @@
                     </div>
                   </div>
                 </div>
+
                 <!-- 소속회사 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="ogdpCo" class="col-form-label">소속회사</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 소속회사 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="ogdpCo" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 부서 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="dept" class="col-form-label">부서</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 부서 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="dept" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="dept" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.DEPT"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -790,136 +788,136 @@
 
               <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 기종 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Mdl" class="col-form-label">기종</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 기종 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Mdl" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Mdl" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.MDL"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 운영체제 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Os" class="col-form-label">운영체제</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 운영체제 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Os" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Os" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.OS"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 언어 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Lang" class="col-form-label">언어</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 언어 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Lang" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Lang" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.LANG"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 데이터베이스 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Db" class="col-form-label">데이터베이스</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 데이터베이스 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Db" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Db" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.DB"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 툴 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Tool" class="col-form-label">툴</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 툴 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Tool" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Tool" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.TOOL"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 프레임워크 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Frmw" class="col-form-label">프레임워크</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 프레임워크 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Frmw" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Frmw" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.FRMW"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 라이브러리 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Lbrr" class="col-form-label">라이브러리</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 라이브러리 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Lbrr" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Lbrr" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.LBRR"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 통신 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Cmnct" class="col-form-label">통신</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 통신 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Cmnct" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Cmnct" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.CMNCT"> <!-- 입력란 -->
                   </div>
                 </div>
 
                 <!-- 기타 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="Etc" class="col-form-label">기타</label> <!-- 레이블 -->
                   </div>
                 </div>
 
                 <!-- 기타 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="Etc" class="form-control div_flex_center w-100 input-radius"
+                <div class="input-wrap">
+                  <div class="col-10">
+                    <input type="text" id="Etc" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.ETC"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -944,8 +942,8 @@
 
               <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 대금수령날짜 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="clctPickupDt" class="col-form-label">대금수령날짜</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -957,10 +955,10 @@
                       <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
                         <button id="clctPickupDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="flex-grow-1 text-center">{{ selectedClctPickupDt || 'N/A' }}</span> <!-- 기본값 설정 -->
+                          <span class="dropdown-default-text text-center">{{ selectedClctPickupDt || 'N/A' }}</span> <!-- 기본값 설정 -->
                           <span class="caret"></span> <!-- 화살표 -->
                         </button>
-                        <ul class="dropdown-menu" style="width: 100%;">
+                        <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
                             <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('N/A')">N/A</button>
                           </li>
@@ -990,8 +988,8 @@
                 </div>
 
                 <!-- 지급일자 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="giveDt" class="col-form-label">지급일자</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -1003,10 +1001,10 @@
                       <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
                         <button id="giveDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="flex-grow-1 text-center">{{ selectedGiveDt || 'N/A' }}</span> <!-- 기본값 설정 -->
+                          <span class="dropdown-default-text text-center">{{ selectedGiveDt || 'N/A' }}</span> <!-- 기본값 설정 -->
                           <span class="caret"></span> <!-- 화살표 -->
                         </button>
-                        <ul class="dropdown-menu" style="width: 100%;">
+                        <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
                             <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('N/A')">N/A</button>
                           </li>
@@ -1033,8 +1031,8 @@
                 </div>
 
                 <!-- 은행 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="bank" class="col-form-label">은행</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -1048,8 +1046,8 @@
                 </div>
 
                 <!-- 계좌번호 레이블 -->
-                <div class="d-flex col-10 justify-content-center"> <!-- col-10으로 설정하고 가운데 정렬 -->
-                  <div class="d-flex justify-content-start w-100"> <!-- 내부 요소를 왼쪽 정렬 -->
+                <div class="label-wrap col-10">
+                  <div class="label-w100">
                     <label for="actNo" class="col-form-label">계좌번호</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -1096,6 +1094,8 @@ const selectedClctPickupDt = ref(0);
 const selectedGiveDt = ref(0);
 const selectedGndr = ref('남'); // 기본값 설정
 const selectedCtrtHstryYn = ref('N'); // 기본값 설정
+const selectedCtrtCoEmpYn = ref('N'); // 기본값 설정
+const selectedKdsEmpYn = ref('N'); // 기본값 설정
 const selectedAcbg = ref('고졸');
 const selectedWhtaxbzmn = ref('3.3%');
 const selectedYear = ref(0);
@@ -1124,8 +1124,8 @@ const formData = ref({
   SN: "",
   WHTAX_YN: "",
   BZMN_YN: "",
-  KDS_EMP_YN: "",
-  CTRT_CO_EMP_YN: "",
+  KDS_EMP_YN: selectedKdsEmpYn.value,
+  CTRT_CO_EMP_YN: selectedCtrtCoEmpYn.value,
   CLCT_PICKUP_DT: selectedClctPickupDt.value, // 초기화
   GIVE_DT: selectedGiveDt.value, // 초기화
   BANK: "",
@@ -1150,11 +1150,20 @@ const formData = ref({
   AGE: "",
   ACBG: "",
 });
-
 // 학력 선택
 const selectCtrtHstryYn = (ctrtHstryYn) => {
   selectedCtrtHstryYn.value = ctrtHstryYn;
   formData.value.CTRT_HSTRY_YN = ctrtHstryYn;
+};
+
+const selectKdsEmpYn = (kdsEmpYn) => {
+  selectedKdsEmpYn.value = kdsEmpYn;
+  formData.value.KDS_EMP_YN = kdsEmpYn;
+};
+
+const selectCtrtCoEmpYn = (ctrtCoEmpYn) => {
+  selectedCtrtCoEmpYn.value = ctrtCoEmpYn;
+  formData.value.CTRT_CO_EMP_YN = ctrtCoEmpYn;
 };
 
 // 성별 선택
@@ -1250,10 +1259,15 @@ const selectGiveDt = (giveDt) => {
 
 // 생년월일 업데이트
 const updateBirthDate = () => {
-  if (formData.value.BRDT) {
-    const dateParts = formData.value.BRDT.split('-');
-    formData.value.BRDT = dateParts.join(''); // YYYYMMDD 형식으로 변환
+  if (formData.value.BRDT && formData.value.BRDT.length === 6) {
+    const year = `20${formData.value.BRDT.slice(0, 2)}`; // YY를 YYYY로 변환
+    const month = formData.value.BRDT.slice(2, 4);
+    const day = formData.value.BRDT.slice(4, 6);
+    // 입력란에 YYYY-MM-DD 형식으로 저장
+    formData.value.displayBRDT = `${year}-${month}-${day}`;
     console.log('변환된 생년월일:', formData.value.BRDT);
+  } else {
+    console.error('잘못된 날짜 형식:', formData.value.BRDT);
   }
   console.log('현재 formData:', formData.value); // formData의 현재 상태 출력
 };
@@ -1261,14 +1275,19 @@ const updateBirthDate = () => {
 // 생년월일을 YYYY-MM-DD 형식으로 유지하기 위해 computed 속성 사용
 const formattedBirthDate = computed({
   get: () => {
-    if (formData.value.BRDT) {
-      return `${formData.value.BRDT.slice(0, 4)}-${formData.value.BRDT.slice(4, 6)}-${formData.value.BRDT.slice(6, 8)}`;
-    }
-    return '';
+    return formData.value.displayBRDT || ''; // displayBRDT에서 가져옴
   },
   set: (value) => {
-    formData.value.BRDT = value.replace(/-/g, ''); // YYYY-MM-DD에서 YYYYMMDD로 변환
-    updateBirthDate(); // 생년월일 업데이트
+    const dateParts = value.split('-');
+    if (dateParts.length === 3) {
+      const year = dateParts[0].slice(2); // 연도의 뒤 두 자리
+      const month = dateParts[1];
+      const day = dateParts[2];
+      formData.value.BRDT = `${year}${month}${day}`; // YYMMDD 형식으로 저장
+      updateBirthDate(); // 생년월일 업데이트
+    } else {
+      console.error('잘못된 날짜 형식:', value);
+    }
   }
 });
 
@@ -1343,11 +1362,11 @@ const openModalHandler = () => {
   showModal.value = true; // 모달 열기
 };
 
-const openDatePicker = (inputId) => {
-  const inputElement = document.getElementById(inputId);
-  inputElement.focus(); // 입력란에 포커스
-  inputElement.click(); // 클릭 이벤트 트리거
-};
+// const openDatePicker = (inputId) => {
+//   const inputElement = document.getElementById(inputId);
+//   inputElement.focus(); // 입력란에 포커스
+//   inputElement.click(); // 클릭 이벤트 트리거
+// };
 
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
 onMounted(() => {
@@ -1489,6 +1508,11 @@ onUnmounted(() => {
   padding-left: 18px;
 }
 
+.dropdown-menu-text {
+  overflow-y: scroll;
+  padding-left: 34px;
+}
+
 .dropdown-item {
   padding-left: 0px;
   padding-right: 0px;
@@ -1578,6 +1602,11 @@ onUnmounted(() => {
 .dropdown-default{
   flex-grow: 1;
   padding-left: 14px;
+}
+
+.dropdown-default-text{
+  flex-grow: 1;
+  padding-left: 34px;
 }
 
 /* caret 화살표를 오른쪽으로 정렬 */
