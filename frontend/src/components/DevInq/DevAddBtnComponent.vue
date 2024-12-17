@@ -16,7 +16,7 @@
             <div class="b_line pb-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
                 <div class="col-10 d-flex align-items-center form-status-bg" > <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid #ced4da;">
+                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid dimgray;">
                     <div>개인정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -112,7 +112,7 @@
                       <input
                           type="date"
                           id="brdt"
-                          class="form-control date-default text-center"
+                          class="form-control input date-default text-center"
                           style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
@@ -124,7 +124,7 @@
                       <span style="margin: 0;">-</span> <!-- 구분 기호 -->
                     </div>
                     <!-- 일련번호 -->
-                    <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 일련번호를 col-5로 설정 -->
+                    <div class="form-group col-5 d-flex flex-column align-items-center input mb-0"> <!-- 일련번호를 col-5로 설정 -->
                       <input
                           placeholder="7자리 입력"
                           type="text"
@@ -240,7 +240,7 @@
                 <div class="input-wrap">
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
-                      <input type="text" id="mblTelno" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="mblTelno" class="form-control input text-center"
                              v-model="phoneParts[0]"> <!-- 입력란 -->
                     </div>
                     <!-- 구분 기호 -->
@@ -248,7 +248,7 @@
                       <span style="margin: 0;">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
-                      <input type="text" id="mblTelno2" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="mblTelno2" class="form-control input text-center"
                              v-model="phoneParts[1]"> <!-- 입력란 -->
                     </div>
                     <!-- 구분 기호 -->
@@ -256,7 +256,7 @@
                       <span style="margin: 0;">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 세 번째 입력란 -->
-                      <input type="text" id="mblTelno3" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="mblTelno3" class="form-control input text-center"
                              v-model="phoneParts[2]"> <!-- 입력란 -->
                     </div>
                   </div>
@@ -273,7 +273,7 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
-                      <input type="text" id="eml" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="eml" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="emailParts[0]"> <!-- 입력란 -->
                     </div>
                     <!-- 구분 기호 -->
@@ -281,7 +281,7 @@
                       <span style="margin: 0;">@</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
-                      <input type="text" id="eml2" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="eml2" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="emailParts[1]"> <!-- 입력란 -->
                     </div>
                   </div>
@@ -330,7 +330,7 @@
                   <div class="col-10 label">
                     <div class="form-group col-5 flex-column flex-all-center mb-0"> <!-- 오른쪽 여백 추가 및 세로 정렬 -->
 
-                      <input type="text" id="rgn" class="form-control input-radius text-center" style="text-align: center;"
+                      <input type="text" id="rgn" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.RGN"> <!-- 입력란 -->
                     </div>
                     <div class="col-2 flex-all-center">
@@ -339,7 +339,7 @@
                     <!-- 상세주소 -->
                     <div class="form-group col-5 flex-column flex-all-center mb-0">
 
-                      <input type="text" id="addr" class="form-control input-radius text-center"
+                      <input type="text" id="addr" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.ADDR"> <!-- 입력란 -->
                     </div>
                   </div>
@@ -357,7 +357,7 @@
                       <input
                           type="date"
                           id="ntrvDmndDt"
-                          class="date-default form-control text-center"
+                          class="date-default input form-control text-center"
                           style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedInterviewDate"
@@ -381,7 +381,7 @@
                       <input
                         type="date"
                         id="inpPsbltyDt"
-                        class="date-default form-control text-center"
+                        class="date-default input form-control text-center"
                         style="padding-left: 28px; padding-right: 8px;"
                         aria-describedby="passwordHelpInline"
                         v-model="formattedPossibilityDate"
@@ -419,7 +419,7 @@
                 </div>
 
                 <!-- 총경력기간 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center">
+                <div class="dropdown-wrap">
                   <div class="d-flex col-10">
                     <div class="dropdown d-flex col-5">
                       <button id="tCrPer" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
@@ -549,7 +549,7 @@
             <div class="b_line pb-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
                 <div class="col-10 d-flex align-items-center form-status-bg" > <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid #ced4da;">
+                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid dimgray;">
                     <div>계약상태</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -776,7 +776,7 @@
             <div class="b_line pb-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
                 <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid #ced4da;">
+                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;">
                     <div>보유스킬</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -930,17 +930,18 @@
             <div class="">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
                 <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid #ced4da;">
+                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;" @click="togglePaymentInputStatus">
                     <div>지급정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
-                      <div class="form-status-button me-2">입력중</div>
+                      <div class="form-status-button me-2">{{ paymentInputStatus }}</div>
                       <div class="me-1">&#9660;</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <!-- 지급정보 내용 -->
+              <div v-if="isVisible" class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 대금수령날짜 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -949,8 +950,8 @@
                 </div>
 
                 <!-- 대금수령날짜 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 드롭다운을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
+                <div class="input-wrap">
+                  <div class="col-10">
                     <div class="d-flex align-items-center">
                       <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
                         <button id="clctPickupDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
@@ -995,8 +996,8 @@
                 </div>
 
                 <!-- 지급일자 드롭다운 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 드롭다운을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
+                <div class="input-wrap">
+                  <div class="col-10">
                     <div class="d-flex align-items-center">
                       <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
                         <button id="giveDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
@@ -1038,9 +1039,9 @@
                 </div>
 
                 <!-- 은행 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="bank" class="form-control div_flex_center w-100 input-radius"
+                    <input type="text" id="bank" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.BANK"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -1053,9 +1054,9 @@
                 </div>
 
                 <!-- 계좌번호 입력란 -->
-                <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
+                <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="actNo" class="form-control div_flex_center w-100 input-radius"
+                    <input type="text" id="actNo" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.ACTNO"> <!-- 입력란 -->
                   </div>
                 </div>
@@ -1076,7 +1077,28 @@
   <!-- 모달 배경 -->
   <div v-if="showModal" class="modal-backdrop fade show"></div>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      isVisible: true,
+      paymentInputStatus: '입력중', // 초기 상태
+    };
+  },
+  methods: {
+    togglePaymentInputStatus() {
+      this.isVisible = !this.isVisible; // 토글 기능
+      this.paymentInputStatus = this.isVisible ? '입력중' : '입력완료'; // 상태 업데이트
+    },
+    selectClctPickupDt(value) {
+      this.selectedClctPickupDt = value; // 선택된 값 저장
+    },
+    selectGiveDt(value) {
+      this.selectedGiveDt = value; // 선택된 값 저장
+    }
+  }
+};
+</script>
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
@@ -1084,20 +1106,21 @@ import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
 
 // 초기 선택 값들
+const selectedGndr = ref('남'); // 기본값 설정
+const selectedAcbg = ref('고졸');
+const selectedMs = ref('현역');
+const selectedWhtaxbzmn = ref('3.3%');
 const selectedGrade = ref('초급');
 const selectedJbps = ref('사원');
 const selectedJbttl = ref('PMO');
-const selectedMs = ref('현역');
-const selectedConttMthd = ref('잡코리아지원');
-const selectedPjInpStts = ref('구직중');
-const selectedClctPickupDt = ref(0);
-const selectedGiveDt = ref(0);
-const selectedGndr = ref('남'); // 기본값 설정
 const selectedCtrtHstryYn = ref('N'); // 기본값 설정
 const selectedCtrtCoEmpYn = ref('N'); // 기본값 설정
 const selectedKdsEmpYn = ref('N'); // 기본값 설정
-const selectedAcbg = ref('고졸');
-const selectedWhtaxbzmn = ref('3.3%');
+const selectedConttMthd = ref('잡코리아지원');
+const selectedPjInpStts = ref('구직중');
+const selectedClctPickupDt = ref('N/A');
+const selectedGiveDt = ref('N/A');
+
 const selectedYear = ref(0);
 const selectedMonth = ref(0);
 const years = Array.from({ length: 36 }, (_, i) => i);
@@ -1464,6 +1487,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid dimgray;
 }
 
 .btn{
@@ -1499,10 +1523,6 @@ onUnmounted(() => {
   z-index: 1040; /* 모달보다 위에 위치하도록 설정 */
 }
 
-.nm-input {
-  width: 200px;
-}
-
 .dropdown-menu {
   overflow-y: scroll;
   padding-left: 18px;
@@ -1520,39 +1540,16 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.label_nowrap {
-  white-space: nowrap;
-}
-
-.div_flex_center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .modal-footer{
   border: none;
 }
 
 .t_line {
-  border-top: 1px solid #D3D3D3; /* 두께와 색상을 설정 */
+  border-top: 1px solid dimgray; /* 두께와 색상을 설정 */
 }
 
 .b_line {
-  border-bottom: 1px solid #D3D3D3; /* 두께와 색상을 설정 */
-}
-
-.pr-1 {
-  padding-right: 10px;
-}
-
-.pr-2 {
-  padding-right: 20px;
-}
-
-.plr-1 {
-  padding-left: 10px;
-  padding-right: 10px;
+  border-bottom: 1px solid dimgray; /* 두께와 색상을 설정 */
 }
 
 .devAddBtnStyle{
@@ -1576,13 +1573,13 @@ onUnmounted(() => {
 
 .form-status{
   border-radius: 25px;
-  border: 1px solid lightgray;
+  border: 1px solid dimgray;
   height: 50px;
   align-items: center;
 }
 
 .form-status-button{
-  border: 1px solid lightgray;
+  border: 1px solid dimgray;
   border-radius: 20px;
   width : 100px;
   height: 32px;
