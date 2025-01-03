@@ -36,7 +36,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="name" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.NM">
+                           aria-describedby="passwordHelpInline" v-model="formData.NM" required>
                   </div>
                 </div>
                 <!-- 소개자 레이블 -->
@@ -927,14 +927,29 @@
 
 
 
-            <div class="">
-              <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
+            <div>
+              <div class="mb-2 d-flex justify-content-center">
+                <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;" @click="togglePaymentInputStatus">
                     <div>지급정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
-                      <div class="form-status-button me-2">{{ paymentInputStatus }}</div>
-                      <div class="me-1">&#9660;</div>
+                      <div
+                          class="form-status-button"
+                          :style="{
+                          backgroundColor: paymentInputStatus === '입력완료' ? '#007bff' : 'white',
+                          color: paymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
+                        }"
+                      >
+                        {{ paymentInputStatus }}
+                      </div>
+                      <div
+                          class="form-status-toggle-button"
+                          :style="{
+                transform: isToggled || paymentInputStatus === '입력완료' ? 'scaleY(-1)' : 'none',
+                transition: 'transform 0.3s ease' // 부드러운 전환 효과 추가
+              }"
+                          @click.stop="toggleToggleState"
+                      >&#9650;</div>
                     </div>
                   </div>
                 </div>
@@ -953,11 +968,11 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <div class="d-flex align-items-center">
-                      <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
+                      <div class="dropdown flex-grow-1">
                         <button id="clctPickupDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="dropdown-default-text text-center">{{ selectedClctPickupDt || 'N/A' }}</span> <!-- 기본값 설정 -->
-                          <span class="caret"></span> <!-- 화살표 -->
+                          <span class="dropdown-default-text text-center">{{ selectedClctPickupDt || 'N/A' }}</span>
+                          <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
@@ -983,7 +998,7 @@
                           </li>
                         </ul>
                       </div>
-                      <span class="col-auto ms-2">일</span> <!-- "일"을 드롭다운 옆에 추가 -->
+                      <span class="col-auto ms-2">일</span>
                     </div>
                   </div>
                 </div>
@@ -999,11 +1014,11 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <div class="d-flex align-items-center">
-                      <div class="dropdown flex-grow-1"> <!-- 드롭다운을 flex-grow로 설정 -->
+                      <div class="dropdown flex-grow-1">
                         <button id="giveDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="dropdown-default-text text-center">{{ selectedGiveDt || 'N/A' }}</span> <!-- 기본값 설정 -->
-                          <span class="caret"></span> <!-- 화살표 -->
+                          <span class="dropdown-default-text text-center">{{ selectedGiveDt || 'N/A' }}</span>
+                          <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
@@ -1026,7 +1041,7 @@
                           </li>
                         </ul>
                       </div>
-                      <span class="col-auto ms-2">일</span> <!-- "일"을 드롭다운 옆에 추가 -->
+                      <span class="col-auto ms-2">일</span>
                     </div>
                   </div>
                 </div>
@@ -1034,30 +1049,30 @@
                 <!-- 은행 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
-                    <label for="bank" class="col-form-label">은행</label> <!-- 레이블 -->
+                    <label for="bank" class="col-form-label">은행</label>
                   </div>
                 </div>
 
                 <!-- 은행 입력란 -->
-                <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
+                <div class="input-wrap">
+                  <div class="col-10">
                     <input type="text" id="bank" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.BANK"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.BANK" @input="checkInputs">
                   </div>
                 </div>
 
                 <!-- 계좌번호 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
-                    <label for="actNo" class="col-form-label">계좌번호</label> <!-- 레이블 -->
+                    <label for="actNo" class="col-form-label">계좌번호</label>
                   </div>
                 </div>
 
                 <!-- 계좌번호 입력란 -->
-                <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                  <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
+                <div class="input-wrap">
+                  <div class="col-10">
                     <input type="text" id="actNo" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ACTNO"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.ACTNO" @input="checkInputs">
                   </div>
                 </div>
               </div>
@@ -1077,33 +1092,16 @@
   <!-- 모달 배경 -->
   <div v-if="showModal" class="modal-backdrop fade show"></div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      isVisible: true,
-      paymentInputStatus: '입력중', // 초기 상태
-    };
-  },
-  methods: {
-    togglePaymentInputStatus() {
-      this.isVisible = !this.isVisible; // 토글 기능
-      this.paymentInputStatus = this.isVisible ? '입력중' : '입력완료'; // 상태 업데이트
-    },
-    selectClctPickupDt(value) {
-      this.selectedClctPickupDt = value; // 선택된 값 저장
-    },
-    selectGiveDt(value) {
-      this.selectedGiveDt = value; // 선택된 값 저장
-    }
-  }
-};
-</script>
+
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
+// 초기 선택 값들
+const isVisible = ref(true);
+const paymentInputStatus = ref('입력중'); // 초기 상태
+const isToggled = ref(false); // 클릭 상태를 관리하는 변수
 
 // 초기 선택 값들
 const selectedGndr = ref('남'); // 기본값 설정
@@ -1272,14 +1270,30 @@ const selectPjInpStts = (pjInpStts) => {
 const selectClctPickupDt = (clctPickupDt) => {
   selectedClctPickupDt.value = clctPickupDt;
   formData.value.CLCT_PICKUP_DT = clctPickupDt;
+  checkInputs(); // 입력 확인
 };
 
 // 지급일자 선택
 const selectGiveDt = (giveDt) => {
   selectedGiveDt.value = giveDt;
   formData.value.GIVE_DT = giveDt;
+  checkInputs(); // 입력 확인
 };
 
+const togglePaymentInputStatus = () => {
+  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+
+  isVisible.value = !isVisible.value; // isVisible 값을 반전
+  if (paymentInputStatus.value === '입력중') {
+    paymentInputStatus.value = '입력완료';
+  } else {
+    paymentInputStatus.value = '입력중';
+  }
+};
+
+const toggleToggleState = () => {
+  isToggled.value = !isToggled.value; // 클릭할 때마다 상태 반전
+};
 // 생년월일 업데이트
 const updateBirthDate = () => {
   if (formData.value.BRDT && formData.value.BRDT.length === 6) {
@@ -1363,6 +1377,23 @@ const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번�
 // 이메일 부분을 저장할 배열
 const emailParts = ref(['', '']); // 이메일 앞부분과 도메인을 저장
 
+const checkInputs = () => {
+  const { CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO } = formData.value; // 대문자로 수정
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+  console.log('CLCT_PICKUP_DT:', CLCT_PICKUP_DT);
+  console.log('GIVE_DT:', GIVE_DT);
+  console.log('BANK:', BANK);
+  console.log('ACTNO:', ACTNO);
+
+  if (CLCT_PICKUP_DT && GIVE_DT && BANK && ACTNO) {
+    paymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    isVisible.value = false; // 지급 정보를 숨김
+    console.log("paymentInputStatus.value",paymentInputStatus.value);
+  } else {
+    paymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+
 const submitForm = async () => {
   // MBL_TELNO에 번호를 결합하여 저장
   formData.value.MBL_TELNO = phoneParts.value.join('-'); // '-''로 결합
@@ -1403,6 +1434,21 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.form-status-button {
+  border: 1px solid dimgray;
+  border-radius: 20px;
+  width : 100px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.form-status-toggle-button {
+  margin-right: 4px;
+}
+
 .flex-all-center{
   display : flex;
   justify-content : center;
@@ -1567,10 +1613,6 @@ onUnmounted(() => {
   border-radius: 20px;
 }
 
-.form-status-bg{
-  background-color: white;
-}
-
 .form-status{
   border-radius: 25px;
   border: 1px solid dimgray;
@@ -1578,15 +1620,6 @@ onUnmounted(() => {
   align-items: center;
 }
 
-.form-status-button{
-  border: 1px solid dimgray;
-  border-radius: 20px;
-  width : 100px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .dropdown-toggle {
   width: 100%;
