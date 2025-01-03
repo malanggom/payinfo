@@ -930,7 +930,7 @@
             <div>
               <div class="mb-2 d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;" @click="togglePaymentInputStatus">
+                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;" @click="handleClick">
                     <div>지급정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div
@@ -945,11 +945,11 @@
                       <div
                           class="form-status-toggle-button"
                           :style="{
-                transform: isToggled || paymentInputStatus === '입력완료' ? 'scaleY(-1)' : 'none',
+                transform: isVisible === true ? 'scaleY(-1)' : 'none',
                 transition: 'transform 0.3s ease' // 부드러운 전환 효과 추가
               }"
                           @click.stop="toggleToggleState"
-                      >&#9650;</div>
+                      >&#9660;</div>
                     </div>
                   </div>
                 </div>
@@ -1282,18 +1282,27 @@ const selectGiveDt = (giveDt) => {
 
 const togglePaymentInputStatus = () => {
   // 입력 완료 상태 전환 로직 (필요에 따라 정의)
-
-  isVisible.value = !isVisible.value; // isVisible 값을 반전
-  if (paymentInputStatus.value === '입력중') {
-    paymentInputStatus.value = '입력완료';
-  } else {
-    paymentInputStatus.value = '입력중';
+  if(isVisible.value === true){
+    isVisible.value = false;
+  }else{
+    isVisible.value = true;
   }
+  // if (paymentInputStatus.value === '입력중') {
+  //   paymentInputStatus.value = '입력완료';
+  // } else {
+  //   paymentInputStatus.value = '입력중';
+  // }
 };
 
 const toggleToggleState = () => {
   isToggled.value = !isToggled.value; // 클릭할 때마다 상태 반전
 };
+
+const handleClick = () => {
+  togglePaymentInputStatus(); // 상태 전환 메서드 호출
+  toggleToggleState(); // 클릭 상태 전환 메서드 호출
+};
+
 // 생년월일 업데이트
 const updateBirthDate = () => {
   if (formData.value.BRDT && formData.value.BRDT.length === 6) {
@@ -1415,12 +1424,6 @@ const submitForm = async () => {
 const openModalHandler = () => {
   showModal.value = true; // 모달 열기
 };
-
-// const openDatePicker = (inputId) => {
-//   const inputElement = document.getElementById(inputId);
-//   inputElement.focus(); // 입력란에 포커스
-//   inputElement.click(); // 클릭 이벤트 트리거
-// };
 
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
 onMounted(() => {
