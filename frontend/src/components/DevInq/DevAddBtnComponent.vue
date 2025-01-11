@@ -116,7 +116,7 @@
                           style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
-                          @change="updateBirthDate"
+                          @change="updateBirthDate" required
                       /> <!-- 입력란 -->
                     </div>
                     <!-- 구분 기호 -->
@@ -132,7 +132,7 @@
                           id="sn"
                           class="form-control input-radius text-center"
                           aria-describedby="passwordHelpInline"
-                          v-model="formData.SN"
+                          v-model="formData.SN" required
                       /> <!-- 입력란 -->
                     </div>
                   </div>
@@ -705,7 +705,7 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM"
-                             style="padding-left: 40px; padding-right: 40px;"> <!-- 입력란 -->
+                             style="padding-left: 40px; padding-right: 40px;" required> <!-- 입력란 -->
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
