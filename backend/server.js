@@ -20,7 +20,7 @@ oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-wind
 // OracleDB 설정
 const dbConfig = {
     user: process.env.DB_USER || 'system', // 환경 변수 사용
-    password: process.env.DB_PASSWORD || 'oracle', // 환경 변수 사용
+    password: process.env.DB_PASSWORD || 'ORACLE', // 환경 변수 사용
     connectString: process.env.DB_CONNECT_STRING || '211.33.184.136:1521/xe', // 환경 변수 사용
 };
 

@@ -11,12 +11,12 @@
           <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button> <!-- 오른쪽 정렬 -->
         </div>
         <div class="modal-body">
-          <form @submit.prevent="submitForm" class="row g-3">
-            <!--폼 내용 시작-->
-            <div class="b_line pb-3">
+          <form @submit="submitForm" class="row g-3">
+            <div class="b_line pt-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg" > <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid dimgray;">
+                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
+                  <div class="d-flex justify-content-between form-control form-status" value="개인정보"
+                       style="border: 1px solid dimgray;">
                     <div>개인정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -124,7 +124,8 @@
                       <span style="margin: 0;">-</span> <!-- 구분 기호 -->
                     </div>
                     <!-- 일련번호 -->
-                    <div class="form-group col-5 d-flex flex-column align-items-center input mb-0"> <!-- 일련번호를 col-5로 설정 -->
+                    <div class="form-group col-5 d-flex flex-column align-items-center input mb-0">
+                      <!-- 일련번호를 col-5로 설정 -->
                       <input
                           placeholder="7자리 입력"
                           type="text"
@@ -216,7 +217,8 @@
                           <button class="dropdown-item" type="button" @click="selectMs('보충역')">보충역</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectMs('병역준비역 및 전시근로역')">병역준비역 및 전시근로역</button>
+                          <button class="dropdown-item" type="button" @click="selectMs('병역준비역 및 전시근로역')">병역준비역 및 전시근로역
+                          </button>
                         </li>
                         <li>
                           <button class="dropdown-item" type="button" @click="selectMs('면제')">면제</button>
@@ -300,7 +302,8 @@
                     <div class="dropdown">
                       <button id="whtaxbzmnYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedWhtaxbzmn || '3.3%' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedWhtaxbzmn || '3.3%' }}</span>
+                        <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
@@ -379,13 +382,13 @@
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input
-                        type="date"
-                        id="inpPsbltyDt"
-                        class="date-default input form-control text-center"
-                        style="padding-left: 28px; padding-right: 8px;"
-                        aria-describedby="passwordHelpInline"
-                        v-model="formattedPossibilityDate"
-                        @change="updatePossibilityDate"
+                          type="date"
+                          id="inpPsbltyDt"
+                          class="date-default input form-control text-center"
+                          style="padding-left: 28px; padding-right: 8px;"
+                          aria-describedby="passwordHelpInline"
+                          v-model="formattedPossibilityDate"
+                          @change="updatePossibilityDate"
                       />
                     </div>
                   </div>
@@ -403,10 +406,11 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text" id="mmDmndUntprc"  style="padding-left: 40px; padding-right: 40px;"
+                      <input type="text" id="mmDmndUntprc" style="padding-left: 40px; padding-right: 40px;"
                              class="form-control flex-all-center w-100 input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC">
-                      <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                      <span class="position-absolute"
+                            style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
                     </div>
                   </div>
                 </div>
@@ -422,7 +426,9 @@
                 <div class="dropdown-wrap">
                   <div class="d-flex col-10">
                     <div class="dropdown d-flex col-5">
-                      <button id="tCrPer" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="tCrPer"
+                              class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                              type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="flex-grow-1 text-center">{{ selectedYear }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
@@ -437,7 +443,9 @@
                       <span class="col-auto">년</span>
                     </div>
                     <div class="dropdown d-flex col-5">
-                      <button id="tCrPer" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="tCrPer"
+                              class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                              type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="flex-grow-1 text-center">{{ selectedMonth }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
@@ -471,13 +479,27 @@
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('초급')">초급</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('초상급')">초상급</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('중급')">중급</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('중상급')">중상급</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('고급')">고급</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectGrade('특급')">특급</button></li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('N/A')">N/A</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('초급')">초급</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('초상급')">초상급</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('중급')">중급</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('중상급')">중상급</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('고급')">고급</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectGrade('특급')">특급</button>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -500,14 +522,30 @@
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('사원')">사원</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('주임')">주임</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('대리')">대리</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('과장')">과장</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('차장')">차장</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('부장')">부장</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbps('이사')">이사</button></li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('N/A')">N/A</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('사원')">사원</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('주임')">주임</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('대리')">대리</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('과장')">과장</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('차장')">차장</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('부장')">부장</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbps('이사')">이사</button>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -530,11 +568,21 @@
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
-                        <li><button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PL')">PL</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PMO')">PMO</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbttl('PM')">PM</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectJbttl('DBA')">DBA</button></li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbttl('PL')">PL</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbttl('PMO')">PMO</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbttl('PM')">PM</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectJbttl('DBA')">DBA</button>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -543,13 +591,11 @@
               <!-- 개인정보 종료구간 -->
             </div>
 
-
-
-
-            <div class="b_line pb-3">
+            <div class="b_line pt-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg" > <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보" style="border: 1px solid dimgray;">
+                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
+                  <div class="d-flex justify-content-between form-control form-status" value="개인정보"
+                       style="border: 1px solid dimgray;">
                     <div>계약상태</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -574,7 +620,8 @@
                     <div class="dropdown">
                       <button id="CtrtHstryYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedCtrtHstryYn || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedCtrtHstryYn || 'N' }}</span>
+                        <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
@@ -630,7 +677,8 @@
                     <div class="dropdown">
                       <button id="CrtrCoEmpYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedCtrtCoEmpYn || 'N' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedCtrtCoEmpYn || 'N' }}</span>
+                        <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
@@ -656,8 +704,10 @@
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" style="padding-left: 40px; padding-right: 40px;"> <!-- 입력란 -->
-                      <span class="position-absolute" style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
+                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM"
+                             style="padding-left: 40px; padding-right: 40px;"> <!-- 입력란 -->
+                      <span class="position-absolute"
+                            style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
                   </div>
                 </div>
@@ -673,20 +723,29 @@
                 <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="conttMthd" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="conttMthd"
+                              class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                              type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedConttMthd || '잡코리아지원' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedConttMthd || '잡코리아지원' }}</span>
+                        <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectConttMthd('잡코리아지원')">잡코리아지원</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectConttMthd('잡코리아지원')">잡코리아지원
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectConttMthd('소개자')">소개자</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectConttMthd('소개자')">소개자
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectConttMthd('이메일지원')">이메일지원</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectConttMthd('이메일지원')">이메일지원
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -704,35 +763,54 @@
                 <div class="dropdown-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <div class="dropdown">
-                      <button id="pjInpStts" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                      <button id="pjInpStts"
+                              class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                              type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedPjInpStts || '구직중' }}</span> <!-- 기본값 설정 -->
+                        <span class="dropdown-default text-center">{{ selectedPjInpStts || '구직중' }}</span>
+                        <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu" style="width: 100%;">
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('구직중')">구직중</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('구직중')">구직중
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('인터뷰대기')">인터뷰대기</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('인터뷰대기')">인터뷰대기
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('인터뷰중')">인터뷰중</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('인터뷰중')">인터뷰중
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('인터뷰완료')">인터뷰완료</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('인터뷰완료')">인터뷰완료
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('인터뷰합격')">인터뷰합격</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('인터뷰합격')">인터뷰합격
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('프로젝트투입중')">프로젝트투입중</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('프로젝트투입중')">프로젝트투입중
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('프로젝트만료1달전')">프로젝트만료1달전</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('프로젝트만료1달전')">프로젝트만료1달전
+                          </button>
                         </li>
                         <li>
-                          <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectPjInpStts('타사프로젝트중')">타사프로젝트중</button>
+                          <button class="dropdown-item d-flex justify-content-center" type="button"
+                                  @click="selectPjInpStts('타사프로젝트중')">타사프로젝트중
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -771,12 +849,11 @@
               </div>
             </div>
 
-
-
-            <div class="b_line pb-3">
+            <div class="b_line pt-3">
               <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
                 <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;">
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray;">
                     <div>보유스킬</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div class="form-status-button me-2">입력중</div>
@@ -925,12 +1002,11 @@
             </div>
 
 
-
-
-            <div>
-              <div class="mb-2 d-flex justify-content-center">
+            <div class="pt-3">
+              <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status" style="border: 1px solid dimgray;" @click="handleClick">
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray; margin-bottom:20px" @click="handleClick">
                     <div>지급정보</div>
                     <div class="d-flex align-items-center" style="margin-left: auto;">
                       <div
@@ -944,19 +1020,17 @@
                       </div>
                       <div
                           class="form-status-toggle-button"
-                          :style="{
-                transform: isVisible === true ? 'scaleY(-1)' : 'none',
-                transition: 'transform 0.3s ease' // 부드러운 전환 효과 추가
-              }"
+                          :style="{transform: isVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
                           @click.stop="toggleToggleState"
-                      >&#9660;</div>
+                      >&#9660;
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- 지급정보 내용 -->
-              <div v-if="isVisible" class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <div v-if="isVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 대금수령날짜 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -969,32 +1043,48 @@
                   <div class="col-10">
                     <div class="d-flex align-items-center">
                       <div class="dropdown flex-grow-1">
-                        <button id="clctPickupDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                        <button id="clctPickupDt"
+                                class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                                type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                           <span class="dropdown-default-text text-center">{{ selectedClctPickupDt || 'N/A' }}</span>
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('N/A')">N/A</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('N/A')">N/A
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('1')">1</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('1')">1
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('5')">5</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('5')">5
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('10')">10</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('10')">10
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('15')">15</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('15')">15
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('21')">21</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('21')">21
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectClctPickupDt('말')">말</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectClctPickupDt('말')">말
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -1015,29 +1105,43 @@
                   <div class="col-10">
                     <div class="d-flex align-items-center">
                       <div class="dropdown flex-grow-1">
-                        <button id="giveDt" class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center" type="button"
+                        <button id="giveDt"
+                                class="btn btn-outline-primary dropdown-toggle w-100 input-radius d-flex justify-content-between align-items-center"
+                                type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                           <span class="dropdown-default-text text-center">{{ selectedGiveDt || 'N/A' }}</span>
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('N/A')">N/A</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('N/A')">N/A
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('5')">5</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('5')">5
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('10')">10</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('10')">10
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('15')">15</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('15')">15
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('21')">21</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('21')">21
+                            </button>
                           </li>
                           <li>
-                            <button class="dropdown-item d-flex justify-content-center" type="button" @click="selectGiveDt('말')">말</button>
+                            <button class="dropdown-item d-flex justify-content-center" type="button"
+                                    @click="selectGiveDt('말')">말
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -1077,13 +1181,12 @@
                 </div>
               </div>
             </div>
+            <div class="modal-footer-wrap d-flex align-items-center justify-content-center t_line">
+              <div class="modal-footer d-flex">
+                <button type="submit" class="btn btn-primary">제출</button>
+              </div>
+            </div>
           </form>
-        </div>
-        <div class="d-flex align-items-center justify-content-center t_line">
-          <div class="modal-footer">
-<!--            <button type="button" class="btn btn-outline-primary" @click="closeModal">Close</button>-->
-            <button type="submit" class="btn btn-primary" @click="submitForm">제출</button>
-          </div>
         </div>
       </div>
     </div>
@@ -1094,7 +1197,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import {ref, onMounted, onUnmounted, computed} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
@@ -1121,8 +1224,8 @@ const selectedGiveDt = ref('N/A');
 
 const selectedYear = ref(0);
 const selectedMonth = ref(0);
-const years = Array.from({ length: 36 }, (_, i) => i);
-const months = Array.from({ length: 13 }, (_, i) => i);
+const years = Array.from({length: 36}, (_, i) => i);
+const months = Array.from({length: 13}, (_, i) => i);
 
 // formData 정의
 const formData = ref({
@@ -1282,9 +1385,9 @@ const selectGiveDt = (giveDt) => {
 
 const togglePaymentInputStatus = () => {
   // 입력 완료 상태 전환 로직 (필요에 따라 정의)
-  if(isVisible.value === true){
+  if (isVisible.value === true) {
     isVisible.value = false;
-  }else{
+  } else {
     isVisible.value = true;
   }
   // if (paymentInputStatus.value === '입력중') {
@@ -1387,7 +1490,7 @@ const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번�
 const emailParts = ref(['', '']); // 이메일 앞부분과 도메인을 저장
 
 const checkInputs = () => {
-  const { CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO } = formData.value; // 대문자로 수정
+  const {CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO} = formData.value; // 대문자로 수정
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
   console.log('CLCT_PICKUP_DT:', CLCT_PICKUP_DT);
   console.log('GIVE_DT:', GIVE_DT);
@@ -1397,21 +1500,33 @@ const checkInputs = () => {
   if (CLCT_PICKUP_DT && GIVE_DT && BANK && ACTNO) {
     paymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     isVisible.value = false; // 지급 정보를 숨김
-    console.log("paymentInputStatus.value",paymentInputStatus.value);
+    console.log("paymentInputStatus.value", paymentInputStatus.value);
   } else {
     paymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
 
-const submitForm = async () => {
+const submitForm = async (event) => {
+  // 현재 폼 요소를 가져옴
+  const form = event.target;
+
+  // 기본 유효성 검사
+  if (!form.checkValidity()) {
+    // 유효하지 않은 필드에 포커스를 맞춤
+    const invalidField = form.querySelector(':invalid');
+    if (invalidField) {
+      invalidField.focus(); // 첫 번째 유효하지 않은 필드에 포커스
+    }
+    return; // 유효하지 않으면 실행 중단
+  }
+
   // MBL_TELNO에 번호를 결합하여 저장
-  formData.value.MBL_TELNO = phoneParts.value.join('-'); // '-''로 결합
+  formData.value.MBL_TELNO = phoneParts.value.join('-'); // '-'로 결합
   // EML에 이메일을 결합하여 저장
   formData.value.EML = emailParts.value.join('@');
 
   console.log('제출할 formData:', formData.value); // 제출할 때 formData 상태 출력
   try {
-
     const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
     alert(response.data.message); // 성공 메시지 표시
   } catch (error) {
@@ -1440,7 +1555,7 @@ onUnmounted(() => {
 .form-status-button {
   border: 1px solid dimgray;
   border-radius: 20px;
-  width : 100px;
+  width: 100px;
   height: 32px;
   display: flex;
   justify-content: center;
@@ -1452,25 +1567,25 @@ onUnmounted(() => {
   margin-right: 4px;
 }
 
-.flex-all-center{
-  display : flex;
-  justify-content : center;
+.flex-all-center {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.date{
-  display : flex;
-  justify-content : space-between;
+.date {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-.date-wrap{
+.date-wrap {
   margin-bottom: 20px;
-  display : flex;
-  justify-content : center;
+  display: flex;
+  justify-content: center;
 }
 
-.date-default{
+.date-default {
   border-radius: 20px;
   padding-left: 28px;
   padding-right: 8px;
@@ -1479,44 +1594,44 @@ onUnmounted(() => {
 .date-default-wrap {
   width: 100%;
   margin-bottom: 0px;
-  display : flex;
+  display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-.label-wrap-between{
-  display : flex;
-  justify-content : space-between;
+.label-wrap-between {
+  display: flex;
+  justify-content: space-between;
 }
 
-.label-wrap{
-  display : flex;
-  justify-content : center;
+.label-wrap {
+  display: flex;
+  justify-content: center;
 }
 
-.label-date-wrap{
-  display : flex;
-  justify-content : space-between;
+.label-date-wrap {
+  display: flex;
+  justify-content: space-between;
 }
 
-.label-w100{
-  display : flex;
-  justify-content : center;
+.label-w100 {
+  display: flex;
+  justify-content: center;
   width: 100px;
 }
 
-.label{
-  display : flex;
-  justify-content : center;
+.label {
+  display: flex;
+  justify-content: center;
 }
 
-.dropdown-wrap{
-  display : flex;
-  justify-content : center;
+.dropdown-wrap {
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-.input-with-image{
+.input-with-image {
   padding: 4px;
   border-radius: 20px;
   display: flex;
@@ -1524,14 +1639,14 @@ onUnmounted(() => {
   align-items: center;
 }
 
-.input-wrap{
+.input-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.input{
+.input {
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -1539,7 +1654,7 @@ onUnmounted(() => {
   border: 1px solid dimgray;
 }
 
-.btn{
+.btn {
   height: 45px;
   width: 70px;
   border-radius: 25px;
@@ -1556,10 +1671,25 @@ onUnmounted(() => {
 }
 
 .modal-content {
-  height: auto; /* 내용에 맞게 자동으로 설정 */
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 요소 배치 */
+  height: 100%; /* 모달 높이 설정 */
 }
 
 .modal-body {
+  flex-grow: 1; /* 몸체가 남은 공간을 차지하도록 설정 */
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
+  padding: 0px;
+}
+
+.modal-footer-wrap {
+  position: sticky; /* 하단에 고정 */
+  bottom: 0; /* 하단에 위치 */
+  left: 0; /* 왼쪽 정렬 */
+  right: 0; /* 오른쪽 정렬 */
+  background-color: white; /* 필요시 배경색 설정 */
+  border-top: 1px solid #dee2e6; /* 필요시 경계선 설정 */
 }
 
 .modal-backdrop {
@@ -1589,7 +1719,11 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.modal-footer{
+.modal-header{
+  border-bottom: 1px solid dimgray; /* 두께와 색상을 설정 */
+}
+
+.modal-footer {
   border: none;
 }
 
@@ -1601,22 +1735,22 @@ onUnmounted(() => {
   border-bottom: 1px solid dimgray; /* 두께와 색상을 설정 */
 }
 
-.devAddBtnStyle{
+.devAddBtnStyle {
   background-color: #57687c;
   border-radius: 20px;
   color: #c9d6df;
   width: 120px;
 }
 
-.custom-modal{
-  max-width:600px;
+.custom-modal {
+  max-width: 600px;
 }
 
-.input-radius{
+.input-radius {
   border-radius: 20px;
 }
 
-.form-status{
+.form-status {
   border-radius: 25px;
   border: 1px solid dimgray;
   height: 50px;
@@ -1632,12 +1766,12 @@ onUnmounted(() => {
   justify-content: space-between;
 }
 
-.dropdown-default{
+.dropdown-default {
   flex-grow: 1;
   padding-left: 14px;
 }
 
-.dropdown-default-text{
+.dropdown-default-text {
   flex-grow: 1;
   padding-left: 34px;
 }
