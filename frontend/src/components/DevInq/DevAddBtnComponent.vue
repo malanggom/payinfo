@@ -12,20 +12,35 @@
         </div>
         <div class="modal-body">
           <form @submit="submitForm" class="row g-3">
-            <div class="b_line pt-3">
-              <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보"
-                       style="border: 1px solid dimgray;">
-                    <div>개인정보</div>
-                    <div class="d-flex align-items-center" style="margin-left: auto;">
-                      <div class="form-status-button me-2">입력중</div>
-                      <div class="me-1">&#9660;</div>
+            <div class="b-line pt-3 pb-3">
+              <div class="d-flex justify-content-center">
+                <div class="col-10 d-flex align-items-center form-status-bg">
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray; margin-bottom:20px" @click="indvInfoHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">개인정보</div>
+                    <div class="d-flex align-items-center">
+                      <div
+                          class="form-status-button"
+                          :style="{
+                          backgroundColor: indvInfoPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
+                          color: indvInfoPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
+                        }"
+                      >
+                        {{ indvInfoPaymentInputStatus }}
+                      </div>
+                      <div
+                          class="form-status-toggle-button"
+                          :style="{transform: indvInfoIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
+                          @click.stop="indvInfoToggleState"
+                      >&#9660;
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <!-- 개인정보 내용 -->
+              <div v-if="indvInfoIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 이름 레이블 -->
                 <div class="label-wrap col-10 mt-2">
                   <div class="label-w100">
@@ -36,7 +51,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="name" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.NM" required>
+                           aria-describedby="passwordHelpInline" v-model="formData.NM" required @input="indvInfoCheckInputs">
                   </div>
                 </div>
                 <!-- 소개자 레이블 -->
@@ -49,7 +64,7 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <input type="text" id="brkr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.BRKR">
+                           aria-describedby="passwordHelpInline" v-model="formData.BRKR" @input="indvInfoCheckInputs">
                   </div>
                 </div>
                 <!-- 카카오톡 닉네임 레이블 -->
@@ -62,7 +77,7 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <input type="text" id="KakaoNick" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK">
+                           aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK" @input="indvInfoCheckInputs">
                   </div>
                 </div>
                 <!-- 성별 드롭다운 레이블 -->
@@ -117,7 +132,7 @@
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
                           @change="updateBirthDate" required
-                      /> <!-- 입력란 -->
+                          @input="indvInfoCheckInputs"/> <!-- 입력란 -->
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -133,7 +148,7 @@
                           class="form-control input-radius text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formData.SN" required
-                      /> <!-- 입력란 -->
+                          @input="indvInfoCheckInputs"/> <!-- 입력란 -->
                     </div>
                   </div>
                 </div>
@@ -149,7 +164,7 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <input type="text" id="age" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.AGE"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.AGE" @input="indvInfoCheckInputs">
                   </div>
                 </div>
 
@@ -243,7 +258,7 @@
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
                       <input type="text" id="mblTelno" class="form-control input text-center"
-                             v-model="phoneParts[0]"> <!-- 입력란 -->
+                             v-model="phoneParts[0]" @input="indvInfoCheckInputs">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -251,7 +266,7 @@
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="mblTelno2" class="form-control input text-center"
-                             v-model="phoneParts[1]"> <!-- 입력란 -->
+                             v-model="phoneParts[1]" @input="indvInfoCheckInputs">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -259,7 +274,7 @@
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 세 번째 입력란 -->
                       <input type="text" id="mblTelno3" class="form-control input text-center"
-                             v-model="phoneParts[2]"> <!-- 입력란 -->
+                             v-model="phoneParts[2]" @input="indvInfoCheckInputs">
                     </div>
                   </div>
                 </div>
@@ -276,7 +291,7 @@
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
                       <input type="text" id="eml" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="emailParts[0]"> <!-- 입력란 -->
+                             aria-describedby="passwordHelpInline" v-model="emailParts[0]" @input="indvInfoCheckInputs">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -284,7 +299,7 @@
                     </div>
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="eml2" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="emailParts[1]"> <!-- 입력란 -->
+                             aria-describedby="passwordHelpInline" v-model="emailParts[1]" @input="indvInfoCheckInputs">
                     </div>
                   </div>
                 </div>
@@ -334,7 +349,7 @@
                     <div class="form-group col-5 flex-column flex-all-center mb-0"> <!-- 오른쪽 여백 추가 및 세로 정렬 -->
 
                       <input type="text" id="rgn" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.RGN"> <!-- 입력란 -->
+                             aria-describedby="passwordHelpInline" v-model="formData.RGN" @input="indvInfoCheckInputs">
                     </div>
                     <div class="col-2 flex-all-center">
                       +
@@ -343,7 +358,7 @@
                     <div class="form-group col-5 flex-column flex-all-center mb-0">
 
                       <input type="text" id="addr" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.ADDR"> <!-- 입력란 -->
+                             aria-describedby="passwordHelpInline" v-model="formData.ADDR" @input="indvInfoCheckInputs">
                     </div>
                   </div>
                 </div>
@@ -365,7 +380,7 @@
                           aria-describedby="passwordHelpInline"
                           v-model="formattedInterviewDate"
                           @change="updateInterviewDate"
-                      />
+                          @input="indvInfoCheckInputs"/>
                     </div>
                   </div>
                 </div>
@@ -389,7 +404,7 @@
                           aria-describedby="passwordHelpInline"
                           v-model="formattedPossibilityDate"
                           @change="updatePossibilityDate"
-                      />
+                          @input="indvInfoCheckInputs"/>
                     </div>
                   </div>
                 </div>
@@ -408,7 +423,7 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="mmDmndUntprc" style="padding-left: 40px; padding-right: 40px;"
                              class="form-control flex-all-center w-100 input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC">
+                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC" @input="indvInfoCheckInputs">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
                     </div>
@@ -588,25 +603,39 @@
                   </div>
                 </div>
               </div>
-              <!-- 개인정보 종료구간 -->
             </div>
+            <!-- 개인정보 종료구간 -->
 
-            <div class="b_line pt-3">
-              <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
-                  <div class="d-flex justify-content-between form-control form-status" value="개인정보"
-                       style="border: 1px solid dimgray;">
-                    <div>계약상태</div>
-                    <div class="d-flex align-items-center" style="margin-left: auto;">
-                      <div class="form-status-button me-2">입력중</div>
-                      <div class="me-1">&#9660;</div>
+            <div class="b-line pt-3 pb-3">
+              <div class="d-flex justify-content-center">
+                <div class="col-10 d-flex align-items-center form-status-bg">
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray; margin-bottom:20px" @click="ctrtSttsHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">계약상태</div>
+                    <div class="d-flex align-items-center">
+                      <div
+                          class="form-status-button"
+                          :style="{
+                          backgroundColor: ctrtSttsPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
+                          color: ctrtSttsPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
+                        }"
+                      >
+                        {{ ctrtSttsPaymentInputStatus }}
+                      </div>
+                      <div
+                          class="form-status-toggle-button"
+                          :style="{transform: ctrtSttsIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
+                          @click.stop="ctrtSttsToggleState"
+                      >&#9660;
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
-
+              <!-- 계약상태 내용 -->
+              <div v-if="ctrtSttsIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 계약이력존재여부 드롭다운 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label">
@@ -705,7 +734,7 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM"
-                             style="padding-left: 40px; padding-right: 40px;" required> <!-- 입력란 -->
+                             style="padding-left: 40px; padding-right: 40px;" required @input="ctrtSttsCheckInputs">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
@@ -828,7 +857,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO" @input="ctrtSttsCheckInputs">
                   </div>
                 </div>
 
@@ -843,27 +872,42 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="dept" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DEPT"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.DEPT" @input="ctrtSttsCheckInputs">
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="b_line pt-3">
-              <div class="mb-2 d-flex justify-content-center"> <!-- 입력란을 가운데 정렬 -->
-                <div class="col-10 d-flex align-items-center form-status-bg"> <!-- 배경색을 하얀색으로 설정 -->
+            <div class="b-line pt-3 pb-3">
+              <div class="d-flex justify-content-center">
+                <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray;">
-                    <div>보유스킬</div>
-                    <div class="d-flex align-items-center" style="margin-left: auto;">
-                      <div class="form-status-button me-2">입력중</div>
-                      <div class="me-1">&#9660;</div>
+                       style="border: 1px solid dimgray; margin-bottom:20px" @click="hldTechHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">보유스킬</div>
+                    <div class="d-flex align-items-center">
+                      <div
+                          class="form-status-button"
+                          :style="{
+                          backgroundColor: hldTechPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
+                          color: hldTechPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
+                        }"
+                      >
+                        {{ hldTechPaymentInputStatus }}
+                      </div>
+                      <div
+                          class="form-status-toggle-button"
+                          :style="{transform: hldTechIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
+                          @click.stop="hldTechToggleState"
+                      >&#9660;
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="d-flex mb-2 row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <!-- 보유스킬 내용 -->
+              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
                 <!-- 기종 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -875,7 +919,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Mdl" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.MDL"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -890,7 +934,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Os" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OS"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -905,7 +949,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lang" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LANG"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -920,7 +964,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Db" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DB"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -935,7 +979,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Tool" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.TOOL"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -950,7 +994,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Frmw" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.FRMW"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -965,7 +1009,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lbrr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LBRR"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -980,7 +1024,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Cmnct" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -995,7 +1039,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Etc" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ETC"> <!-- 입력란 -->
+                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs">
                   </div>
                 </div>
               </div>
@@ -1007,8 +1051,9 @@
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
                        style="border: 1px solid dimgray; margin-bottom:20px" @click="handleClick">
-                    <div>지급정보</div>
-                    <div class="d-flex align-items-center" style="margin-left: auto;">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">지급정보</div>
+                    <div class="d-flex align-items-center">
                       <div
                           class="form-status-button"
                           :style="{
@@ -1201,10 +1246,25 @@ import {ref, onMounted, onUnmounted, computed} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
+// 개인정보 초기 선택 값
+const indvInfoIsVisible = ref(true);
+const indvInfoPaymentInputStatus = ref('입력중'); // 초기 상태
+const indvInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
+
+// 계약상태 초기 선택 값
+const ctrtSttsIsVisible = ref(true);
+const ctrtSttsPaymentInputStatus = ref('입력중'); // 초기 상태
+const ctrtSttsIsToggled = ref(false); // 클릭 상태를 관리하는 변수
+
 // 초기 선택 값들
 const isVisible = ref(true);
 const paymentInputStatus = ref('입력중'); // 초기 상태
 const isToggled = ref(false); // 클릭 상태를 관리하는 변수
+
+// 보유스킬 초기 선택 값
+const hldTechIsVisible = ref(true);
+const hldTechPaymentInputStatus = ref('입력중'); // 초기 상태
+const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
 // 초기 선택 값들
 const selectedGndr = ref('남'); // 기본값 설정
@@ -1390,11 +1450,6 @@ const togglePaymentInputStatus = () => {
   } else {
     isVisible.value = true;
   }
-  // if (paymentInputStatus.value === '입력중') {
-  //   paymentInputStatus.value = '입력완료';
-  // } else {
-  //   paymentInputStatus.value = '입력중';
-  // }
 };
 
 const toggleToggleState = () => {
@@ -1404,6 +1459,63 @@ const toggleToggleState = () => {
 const handleClick = () => {
   togglePaymentInputStatus(); // 상태 전환 메서드 호출
   toggleToggleState(); // 클릭 상태 전환 메서드 호출
+};
+
+//보유스킬 함수
+const hldTechTogglePaymentInputStatus = () => {
+  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+  if (hldTechIsVisible.value === true) {
+    hldTechIsVisible.value = false;
+  } else {
+    hldTechIsVisible.value = true;
+  }
+};
+
+const hldTechToggleState = () => {
+  hldTechIsToggled.value = !hldTechIsToggled.value; // 클릭할 때마다 상태 반전
+};
+
+const hldTechHandleClick = () => {
+  hldTechTogglePaymentInputStatus(); // 상태 전환 메서드 호출
+  hldTechToggleState(); // 클릭 상태 전환 메서드 호출
+};
+
+//개인정보 함수
+const indvInfoTogglePaymentInputStatus = () => {
+  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+  if (indvInfoIsVisible.value === true) {
+    indvInfoIsVisible.value = false;
+  } else {
+    indvInfoIsVisible.value = true;
+  }
+};
+
+const indvInfoToggleState = () => {
+  indvInfoIsToggled.value = !indvInfoIsToggled.value; // 클릭할 때마다 상태 반전
+};
+
+const indvInfoHandleClick = () => {
+  indvInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
+  indvInfoToggleState(); // 클릭 상태 전환 메서드 호출
+};
+
+//계약상태 함수
+const ctrtSttsTogglePaymentInputStatus = () => {
+  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+  if (ctrtSttsIsVisible.value === true) {
+    ctrtSttsIsVisible.value = false;
+  } else {
+    ctrtSttsIsVisible.value = true;
+  }
+};
+
+const ctrtSttsToggleState = () => {
+  ctrtSttsIsToggled.value = !ctrtSttsIsToggled.value; // 클릭할 때마다 상태 반전
+};
+
+const ctrtSttsHandleClick = () => {
+  ctrtSttsTogglePaymentInputStatus(); // 상태 전환 메서드 호출
+  ctrtSttsToggleState(); // 클릭 상태 전환 메서드 호출
 };
 
 // 생년월일 업데이트
@@ -1503,6 +1615,46 @@ const checkInputs = () => {
     console.log("paymentInputStatus.value", paymentInputStatus.value);
   } else {
     paymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+
+const hldTechCheckInputs = () => {
+  const {MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC} = formData.value; // 대문자로 수정
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  if (MDL && OS && LANG && DB && TOOL && FRMW && LBRR && CMNCT && ETC) {
+    hldTechPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    hldTechIsVisible.value = false; // 지급 정보를 숨김
+  } else {
+    hldTechPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+
+const indvInfoCheckInputs = () => {
+  const {NM, BRKR, KAKAO_NICK, formattedBirthDate, SN, AGE,
+         MBL_TELNO, EML,
+         RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC} = formData.value; // 대문자로 수정
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
+      MBL_TELNO && EML,
+      RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC) {
+    indvInfoPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    indvInfoIsVisible.value = false; // 지급 정보를 숨김
+  } else {
+    indvInfoPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+
+const ctrtSttsCheckInputs = () => {
+  const {CTRT_NMTM, OGDP_CO, DEPT} = formData.value; // 대문자로 수정
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  if (CTRT_NMTM && OGDP_CO && DEPT) {
+    ctrtSttsPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    ctrtSttsIsVisible.value = false; // 지급 정보를 숨김
+  } else {
+    ctrtSttsPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
 
@@ -1652,6 +1804,10 @@ onUnmounted(() => {
   justify-content: center;
   align-items: center;
   border: 1px solid dimgray;
+}
+
+.b-line{
+  border-bottom: lightgray 1px solid;
 }
 
 .btn {
