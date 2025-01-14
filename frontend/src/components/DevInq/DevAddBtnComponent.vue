@@ -10,13 +10,13 @@
           </div>
           <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button> <!-- 오른쪽 정렬 -->
         </div>
-        <div class="modal-body">
-          <form @submit="submitForm" class="row g-3">
-            <div class="b-line pt-3 pb-3">
+        <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody" style="height: 100%;">
+          <form @submit="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1">
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray; margin-bottom:20px" @click="indvInfoHandleClick">
+                       style="border: 1px solid dimgray;" @click="indvInfoHandleClick">
                     <div class="d-flex" style="width:122px;"></div>
                     <div class="d-flex" style="text-align: center">개인정보</div>
                     <div class="d-flex align-items-center">
@@ -40,7 +40,7 @@
                 </div>
               </div>
               <!-- 개인정보 내용 -->
-              <div v-if="indvInfoIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <div v-if="indvInfoIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 이름 레이블 -->
                 <div class="label-wrap col-10 mt-2">
                   <div class="label-w100">
@@ -606,11 +606,11 @@
             </div>
             <!-- 개인정보 종료구간 -->
 
-            <div class="b-line pt-3 pb-3">
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray; margin-bottom:20px" @click="ctrtSttsHandleClick">
+                       style="border: 1px solid dimgray;" @click="ctrtSttsHandleClick">
                     <div class="d-flex" style="width:122px;"></div>
                     <div class="d-flex" style="text-align: center">계약상태</div>
                     <div class="d-flex align-items-center">
@@ -635,7 +635,7 @@
               </div>
 
               <!-- 계약상태 내용 -->
-              <div v-if="ctrtSttsIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <div v-if="ctrtSttsIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 계약이력존재여부 드롭다운 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label">
@@ -878,11 +878,11 @@
               </div>
             </div>
 
-            <div class="b-line pt-3 pb-3">
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray; margin-bottom:20px" @click="hldTechHandleClick">
+                       style="border: 1px solid dimgray;" @click="hldTechHandleClick">
                     <div class="d-flex" style="width:122px;"></div>
                     <div class="d-flex" style="text-align: center">보유스킬</div>
                     <div class="d-flex align-items-center">
@@ -907,7 +907,7 @@
               </div>
 
               <!-- 보유스킬 내용 -->
-              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 기종 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1045,12 +1045,11 @@
               </div>
             </div>
 
-
-            <div class="pt-3">
+            <div class="pt-4 pb-4 flex-column d-flex" style="margin-bottom: auto; justify-content: start">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray; margin-bottom:20px" @click="handleClick">
+                       style="border: 1px solid dimgray;" @click="handleClick">
                     <div class="d-flex" style="width:122px;"></div>
                     <div class="d-flex" style="text-align: center">지급정보</div>
                     <div class="d-flex align-items-center">
@@ -1075,7 +1074,7 @@
               </div>
 
               <!-- 지급정보 내용 -->
-              <div v-if="isVisible" class="d-flex row justify-content-center"> <!-- 전체를 중앙 정렬 -->
+              <div v-if="isVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 대금수령날짜 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1242,7 +1241,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, onUnmounted, computed} from 'vue';
+import {ref, onMounted, onUnmounted, computed, nextTick} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
@@ -1334,6 +1333,7 @@ const formData = ref({
   AGE: "",
   ACBG: "",
 });
+
 // 학력 선택
 const selectCtrtHstryYn = (ctrtHstryYn) => {
   selectedCtrtHstryYn.value = ctrtHstryYn;
@@ -1459,6 +1459,7 @@ const toggleToggleState = () => {
 const handleClick = () => {
   togglePaymentInputStatus(); // 상태 전환 메서드 호출
   toggleToggleState(); // 클릭 상태 전환 메서드 호출
+  scrollChecks(); // 상태 변경 후 체크
 };
 
 //보유스킬 함수
@@ -1478,6 +1479,7 @@ const hldTechToggleState = () => {
 const hldTechHandleClick = () => {
   hldTechTogglePaymentInputStatus(); // 상태 전환 메서드 호출
   hldTechToggleState(); // 클릭 상태 전환 메서드 호출
+  scrollChecks(); // 상태 변경 후 체크
 };
 
 //개인정보 함수
@@ -1497,6 +1499,8 @@ const indvInfoToggleState = () => {
 const indvInfoHandleClick = () => {
   indvInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
   indvInfoToggleState(); // 클릭 상태 전환 메서드 호출
+  console.log("개인정보 상태:", indvInfoIsVisible.value);
+  scrollChecks(); // 상태 변경 후 체크
 };
 
 //계약상태 함수
@@ -1516,6 +1520,7 @@ const ctrtSttsToggleState = () => {
 const ctrtSttsHandleClick = () => {
   ctrtSttsTogglePaymentInputStatus(); // 상태 전환 메서드 호출
   ctrtSttsToggleState(); // 클릭 상태 전환 메서드 호출
+  scrollChecks(); // 상태 변경 후 체크
 };
 
 // 생년월일 업데이트
@@ -1658,6 +1663,29 @@ const ctrtSttsCheckInputs = () => {
   }
 };
 
+const hasPadding = ref(true); // 패딩 상태 관리
+
+// 스크롤 체크 함수
+const scrollChecks = () => {
+  console.log("개인정보 상태:", indvInfoIsVisible.value);
+  console.log("계약상태 상태:", ctrtSttsIsVisible.value);
+  console.log("보유스킬 상태:", hldTechIsVisible.value);
+  console.log("지급정보 상태:", isVisible.value);
+  // 모든 섹션이 접혀 있을 때
+  if (
+      indvInfoIsVisible.value === true ||
+      ctrtSttsIsVisible.value === true ||
+      hldTechIsVisible.value === true ||
+      isVisible.value === true
+  ) {
+    hasPadding.value = false; // 패딩 추가
+  } else {
+    hasPadding.value = true; //
+  }
+  console.log("현재 패딩 상태:", hasPadding.value);
+};
+
+
 const submitForm = async (event) => {
   // 현재 폼 요소를 가져옴
   const form = event.target;
@@ -1693,8 +1721,10 @@ const openModalHandler = () => {
 };
 
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
-onMounted(() => {
+onMounted(async () => {
   eventbus.SearchResultEvent.add('openModal', openModalHandler); // 모달 열기 이벤트 등록
+  await nextTick(); // DOM 업데이트 후
+  scrollChecks(); // 초기 상태 체크
 });
 
 // 컴포넌트가 언마운트될 때 핸들러 제거
@@ -1836,7 +1866,17 @@ onUnmounted(() => {
   flex-grow: 1; /* 몸체가 남은 공간을 차지하도록 설정 */
   overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
   overflow-x: hidden; /* 수평 스크롤 숨김 */
-  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+}
+
+.padding-right {
+  padding-right: 17px; /* 스크롤바 생기기 전의 패딩 */
 }
 
 .modal-footer-wrap {
