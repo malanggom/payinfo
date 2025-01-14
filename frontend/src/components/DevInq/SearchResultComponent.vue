@@ -648,8 +648,23 @@ export default defineComponent({
 
   const deleteRowBtnClick = async () => {
     const selectedNodes = gridApi.value.getSelectedNodes();
+    // 선택된 노드가 없을 경우 경고 메시지 출력
+    if (selectedNodes.length === 0) {
+      alert("삭제할 개발자를 선택해주세요.");
+      return; // 함수 종료
+    }
+
+    // 삭제 확인
+    const confirmDelete = confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) {
+      return; // 사용자가 "아니오"를 선택하면 함수 종료
+    }
+
     const selectedData = selectedNodes.map(node => node.data);
     const devNoList = selectedData.map(row => row.DEV_NO);
+
+    // 삭제된 개발자의 이름을 저장할 배열
+    const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
     try {
       const response = await fetch('http://localhost:8080/api/deleteDevData', {
@@ -662,8 +677,11 @@ export default defineComponent({
 
       if (!response.ok) {
         throw new Error('Failed to delete data');
-      }
+      } // 선택된 행을 rowData에서 필터링하여 제거
       rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+
+      // 삭제 성공 알림
+      alert(`개발자 ${deletedNames}가 삭제되었습니다.`);
     } catch (error) {
       alert("삭제할 개발자를 선택해주세요.");
     }
