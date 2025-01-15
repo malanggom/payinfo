@@ -11,7 +11,7 @@
           <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button> <!-- 오른쪽 정렬 -->
         </div>
         <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody" style="height: 100%;">
-          <form @submit.prevent="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1">
+          <form @submit.prevent="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1" autocomplete='off'>
             <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
@@ -1331,7 +1331,7 @@ const formData = ref({
   CMNCT: "",
   ETC: "",
   AGE: "",
-  ACBG: "",
+  ACBG: selectedAcbg.value,
 });
 
 // 학력 선택
@@ -1635,6 +1635,7 @@ const hldTechCheckInputs = () => {
   }
 };
 
+//개인정보 체크
 const indvInfoCheckInputs = () => {
   const {NM, BRKR, KAKAO_NICK, formattedBirthDate, SN, AGE,
          MBL_TELNO, EML,
@@ -1723,6 +1724,50 @@ const submitForm = async (event) => {
 
 // 모달 열기 핸들러
 const openModalHandler = () => {
+  formData.value = {  DEV_NO: "",
+    NM: "",
+    PJ_INP_STTS: selectedPjInpStts.value, // 초기화
+    CTRT_NMTM: "",
+    BRDT: "",
+    GNDR: selectedGndr.value, // 기본값으로 '남' 설정
+    JBPS: selectedJbps.value, // 초기화
+    GRD: selectedGrade.value, // 초기화
+    T_CR_PER: "",
+    RGN: "",
+    MBL_TELNO: "",
+    EML: "",
+    CONTT_MTHD: selectedConttMthd.value, // 초기화
+    NTRV_DMND_DT: "",
+    INP_PSBLTY_DT: "",
+    OGDP_CO: "",
+    SN: "",
+    WHTAX_YN: "",
+    BZMN_YN: "",
+    KDS_EMP_YN: selectedKdsEmpYn.value,
+    CTRT_CO_EMP_YN: selectedCtrtCoEmpYn.value,
+    CLCT_PICKUP_DT: selectedClctPickupDt.value, // 초기화
+    GIVE_DT: selectedGiveDt.value, // 초기화
+    BANK: "",
+    ACTNO: "",
+    DEPT: "",
+    MM_DMND_UNTPRC: "",
+    ADDR: "",
+    JBTTL: selectedJbttl.value, // 초기화
+    BRKR: "",
+    KAKAO_NICK: "",
+    CTRT_HSTRY_YN: selectedCtrtHstryYn.value,
+    MS: selectedMs.value, // 초기화
+    MDL: "",
+    OS: "",
+    LANG: "",
+    DB: "",
+    TOOL: "",
+    FRMW: "",
+    LBRR: "",
+    CMNCT: "",
+    ETC: "",
+    AGE: "",
+    ACBG: selectedAcbg.value}; // 초기화
   showModal.value = true; // 모달 열기
 };
 
@@ -1875,10 +1920,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-left: 0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  padding-right: 0px;
+  padding: 0px;
 }
 
 .padding-right {

@@ -330,21 +330,6 @@ export default defineComponent({
       gridApi.value = params.api;
       const pagingPanel = document.querySelector('.ag-paging-panel');
       if (pagingPanel) {
-
-        const saveDirectlyAddRows = document.createElement("span");
-        saveDirectlyAddRows.textContent = "저장";
-        saveDirectlyAddRows.style.cursor = "pointer";
-        saveDirectlyAddRows.style.marginLeft = "10px";
-        saveDirectlyAddRows.onclick = () => {
-          if (!searchPerformed.value) {
-            alert("검색을 먼저 수행해 주세요.");
-            gridApi.value.setFilterModel(null);
-          } else {
-            //저장하는 코드
-          }
-        }
-        pagingPanel.insertBefore(saveDirectlyAddRows, pagingPanel.firstChild);
-
         const addRows = document.createElement("span");
         addRows.textContent = "개발자추가";
         addRows.style.cursor = "pointer";
@@ -357,7 +342,7 @@ export default defineComponent({
             openModal();
           }
         }
-        pagingPanel.insertBefore(addRows, saveDirectlyAddRows.nextSibling);
+        pagingPanel.insertBefore(addRows, pagingPanel.firstChild);
 
         const editRows = document.createElement("span");
         editRows.textContent = "수정"; // span의 텍스트 설정
