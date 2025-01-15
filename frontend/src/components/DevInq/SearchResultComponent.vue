@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, shallowRef} from "vue";
+import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount} from "vue";
 import DevAddBtnComponent from './DevAddBtnComponent.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
@@ -330,76 +330,6 @@ export default defineComponent({
       gridApi.value = params.api;
       const pagingPanel = document.querySelector('.ag-paging-panel');
       if (pagingPanel) {
-        const directlyAddRows = document.createElement("span");
-        directlyAddRows.textContent = "개발자직접추가";
-        directlyAddRows.style.cursor = "pointer";
-        directlyAddRows.style.marginLeft = "10px";
-        directlyAddRows.onclick = () => {
-          if (!searchPerformed.value) {
-            alert("검색을 먼저 수행해 주세요.");
-            gridApi.value.setFilterModel(null);
-          } else {
-            // 새로운 행 추가
-            const newRow = {
-              DEV_NO: '', // 기본값 설정
-              NM: '',
-              resumeImage: '/downloadResume.png', // 이미지 URL 추가
-              PJ_INP_STTS: '',
-              CTRT_NMTM: '',
-              BRDT: '',
-              GNDR: '',
-              JBPS: '',
-              GRD: '',
-              T_CR_PER: '',
-              RGN: '',
-              MBL_TELNO: '',
-              EML: '',
-              CONTT_MTHD: '',
-              NTRV_DMND_DT: '',
-              INP_PSBLTY_DT: '',
-              OGDP_CO: '',
-              SN: '',
-              WHTAX_YN: '',
-              BZMN_YN: '',
-              KDS_EMP_YN: '',
-              CTRT_CO_EMP_YN: '',
-              CLCT_PICKUP_DT: '',
-              GIVE_DT: '',
-              BANK: '',
-              ACTNO: '',
-              DEPT: '',
-              MM_DMND_UNTPRC: '',
-              ADDR: '',
-              JBTTL: '',
-              BRKR: '',
-              KAKAO_NICK: '',
-              CTRT_HSTRY_YN: '',
-              MS: '',
-              MDL: '',
-              OS: '',
-              LANG: '',
-              DB: '',
-              TOOL: '',
-              FRMW: '',
-              LBRR: '',
-              CMNCT: '',
-              ETC: '',
-              AGE: '',
-              ACBG: '',
-            };
-            // 현재 데이터 가져오기
-            const currentData = [];
-            gridApi.value.forEachNode(node => currentData.push(node.data));
-
-            // 새로운 행을 배열의 첫 번째 요소로 추가
-            const updatedData = [newRow, ...currentData]; // 새로운 행을 맨 위에 추가
-
-            // 전체 데이터를 다시 설정 (기존 데이터는 유지)
-            gridApi.value.applyTransaction({ remove: currentData }); // 기존 데이터 제거
-            gridApi.value.applyTransaction({ add: updatedData }); // 업데이트된 데이터 추가
-          }
-        }
-        pagingPanel.insertBefore(directlyAddRows, pagingPanel.firstChild);
 
         const saveDirectlyAddRows = document.createElement("span");
         saveDirectlyAddRows.textContent = "저장";
@@ -413,7 +343,7 @@ export default defineComponent({
             //저장하는 코드
           }
         }
-        pagingPanel.insertBefore(saveDirectlyAddRows, directlyAddRows.nextSibling);
+        pagingPanel.insertBefore(saveDirectlyAddRows, pagingPanel.firstChild);
 
         const addRows = document.createElement("span");
         addRows.textContent = "개발자추가";
@@ -464,228 +394,228 @@ export default defineComponent({
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
 
-  const previousFilterKeys = ref([]);
-  const previousFilters = ref([]);
+    const previousFilterKeys = ref([]);
+    const previousFilters = ref([]);
 
-  const onFilterChanged = async () => {
-    if (!searchPerformed.value) {
-      alert("검색을 먼저 수행해 주세요.");
-      gridApi.value.setFilterModel(null);
-    } else {
-      const grf = eventbus.SearchResultEvent.getRegisteredFilters();
-      const filterModels = gridApi.value.getFilterModel();
-      const filterModelKeys = Object.keys(filterModels);
+    const onFilterChanged = async () => {
+      if (!searchPerformed.value) {
+        alert("검색을 먼저 수행해 주세요.");
+        gridApi.value.setFilterModel(null);
+      } else {
+        const grf = eventbus.SearchResultEvent.getRegisteredFilters();
+        const filterModels = gridApi.value.getFilterModel();
+        const filterModelKeys = Object.keys(filterModels);
 
-      Object.keys(filterModels).forEach(key => {
-        const filterObject = filterModels[key];
-        const existsInGrf = grf.some(item => {
-          return (
-              item.KeyName === key &&
-              item.type === filterObject.type &&
-              item.filter === filterObject.filter
-          );
-        });
+        Object.keys(filterModels).forEach(key => {
+          const filterObject = filterModels[key];
+          const existsInGrf = grf.some(item => {
+            return (
+                item.KeyName === key &&
+                item.type === filterObject.type &&
+                item.filter === filterObject.filter
+            );
+          });
 
-        let grfFiltersCondition = false;
-        let grfFiltersConditionCheck = true;
-        if (existsInGrf) {
-          return;
-        }
-        for (let i = 0; i < grf.length; i++) {
-          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-            if (grf[i].KeyName === key &&
-                grf[i].type === filterObject.conditions[j].type &&
-                grf[i].filter === filterObject.conditions[j].filter) {
-              grfFiltersCondition = true;
-              break;
+          let grfFiltersCondition = false;
+          let grfFiltersConditionCheck = true;
+          if (existsInGrf) {
+            return;
+          }
+          for (let i = 0; i < grf.length; i++) {
+            for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
+              if (grf[i].KeyName === key &&
+                  grf[i].type === filterObject.conditions[j].type &&
+                  grf[i].filter === filterObject.conditions[j].filter) {
+                grfFiltersCondition = true;
+                break;
+              }
             }
           }
-        }
 
-        if (filterObject?.conditions && filterObject.conditions.length > 0) {
-          const currentCondition = filterObject.conditions[0];
-          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
+          if (filterObject?.conditions && filterObject.conditions.length > 0) {
+            const currentCondition = filterObject.conditions[0];
+            const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+            const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
 
-          if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
-            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-            eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+            if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
+              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+              eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
 
+            }
+            if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
+              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
+              eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+            }
+
+            if (grfFiltersCondition === true) {
+              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+            }
+
+            if (!duplicateConditionsFilters && grfFiltersCondition === false) {
+              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+            }
+          } else {
+            eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
           }
-          if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
-            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-            eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+        });
+
+        previousFilterKeys.value.forEach((key) => {
+          const previousFilter = previousFilters.value[key];
+          const currentFilterModel = filterModels[key];
+
+          if (currentFilterModel === undefined) {
+            if (previousFilter) {
+              if (Array.isArray(previousFilter.conditions)) {
+                previousFilter.conditions.forEach(condition => {
+                  eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
+                  eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
+                  eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+                });
+              } else {
+                eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+                eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+              }
+            }
           }
+          if (currentFilterModel !== undefined) {
+            if (!filterModelKeys.includes(key)) {
+              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+            }
 
-          if (grfFiltersCondition === true) {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-        } else {
-          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-        }
-      });
-
-      previousFilterKeys.value.forEach((key) => {
-        const previousFilter = previousFilters.value[key];
-        const currentFilterModel = filterModels[key];
-
-        if (currentFilterModel === undefined) {
-          if (previousFilter) {
-            if (Array.isArray(previousFilter.conditions)) {
-              previousFilter.conditions.forEach(condition => {
-                eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
-                eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
-              });
-            } else {
+            if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
               eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
             }
           }
-        }
-        if (currentFilterModel !== undefined) {
-          if (!filterModelKeys.includes(key)) {
-            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-          }
-
-          if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
-            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-          }
-        }
-      });
-      previousFilterKeys.value = filterModelKeys;
-      previousFilters.value = filterModels;
-    }
-  };
-
-  const onCellValueChanged = async (event) => {
-    try {
-      const response = await fetch('http://localhost:8080/api/updateDevData', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(event.data),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update data');
-      }
-    } catch (error) {
-      console.error('개발자 데이터 수정에러:', error);
-    }
-  };
-
-  const resetFilter = () => {
-    const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
-    gridApi.value.setFilterModel(null);
-    if (registeredFilters.length === 0) {
-      if (searchPerformed.value) {
-        alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
-      }
-      if (!searchPerformed.value) {
-        alert("검색을 먼저 수행해 주세요.");
-      }
-    } else {
-      registeredFilters.forEach(filter => {
-        eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
-        eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
-      });
-      eventbus.SearchResultEvent.resetKorButton();
-    }
-  };
-
-  const removeFilter = (KeyName, filterType, filterValue) => {
-    const filterModel = gridApi.value.getFilterModel();
-
-    if (filterModel[KeyName]) {
-      const currentFilter = filterModel[KeyName];
-      let adjustedFilterType;
-
-      if (Array.isArray(currentFilter.conditions)) {
-        const previousConditions = currentFilter.conditions.slice();
-
-        currentFilter.conditions = currentFilter.conditions.filter(condition => {
-
-          adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
-
-          const shouldKeep = !(adjustedFilterType === filterTypeMap[condition.type] && condition.filter === filterValue);
-          console.log(`조건 유지 여부: ${shouldKeep}`);
-
-          return shouldKeep;
         });
+        previousFilterKeys.value = filterModelKeys;
+        previousFilters.value = filterModels;
+      }
+    };
 
-        if (currentFilter.conditions.length === 0) {
-          eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+    const onCellValueChanged = async (event) => {
+      try {
+        const response = await fetch('http://localhost:8080/api/updateDevData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(event.data),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update data');
         }
-        if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
-          gridApi.value.setFilterModel(filterModel);
-          if (previousConditions.length !== currentFilter.conditions.length) {
-            eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
-          }
+      } catch (error) {
+        console.error('개발자 데이터 수정에러:', error);
+      }
+    };
+
+    const resetFilter = () => {
+      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      gridApi.value.setFilterModel(null);
+      if (registeredFilters.length === 0) {
+        if (searchPerformed.value) {
+          alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+        }
+        if (!searchPerformed.value) {
+          alert("검색을 먼저 수행해 주세요.");
         }
       } else {
-        const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
-        const targetFilterType = filterTypeMap[filterType] || filterType;
+        registeredFilters.forEach(filter => {
+          eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
+          eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
+        });
+        eventbus.SearchResultEvent.resetKorButton();
+      }
+    };
 
-        if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
-          delete filterModel[KeyName];
-          gridApi.value.setFilterModel(filterModel);
-          eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+    const removeFilter = (KeyName, filterType, filterValue) => {
+      const filterModel = gridApi.value.getFilterModel();
+
+      if (filterModel[KeyName]) {
+        const currentFilter = filterModel[KeyName];
+        let adjustedFilterType;
+
+        if (Array.isArray(currentFilter.conditions)) {
+          const previousConditions = currentFilter.conditions.slice();
+
+          currentFilter.conditions = currentFilter.conditions.filter(condition => {
+
+            adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
+
+            const shouldKeep = !(adjustedFilterType === filterTypeMap[condition.type] && condition.filter === filterValue);
+            console.log(`조건 유지 여부: ${shouldKeep}`);
+
+            return shouldKeep;
+          });
+
+          if (currentFilter.conditions.length === 0) {
+            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+          }
+          if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
+            gridApi.value.setFilterModel(filterModel);
+            if (previousConditions.length !== currentFilter.conditions.length) {
+              eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
+            }
+          }
+        } else {
+          const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
+          const targetFilterType = filterTypeMap[filterType] || filterType;
+
+          if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
+            delete filterModel[KeyName];
+            gridApi.value.setFilterModel(filterModel);
+            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+          }
         }
       }
-    }
-  };
+    };
 
-  const deleteRowBtnClick = async () => {
-    const selectedNodes = gridApi.value.getSelectedNodes();
-    // 선택된 노드가 없을 경우 경고 메시지 출력
-    if (selectedNodes.length === 0) {
-      alert("삭제할 개발자를 선택해주세요.");
-      return; // 함수 종료
-    }
+    const deleteRowBtnClick = async () => {
+      const selectedNodes = gridApi.value.getSelectedNodes();
+      // 선택된 노드가 없을 경우 경고 메시지 출력
+      if (selectedNodes.length === 0) {
+        alert("삭제할 개발자를 선택해주세요.");
+        return; // 함수 종료
+      }
 
-    // 삭제 확인
-    const confirmDelete = confirm("정말 삭제하시겠습니까?");
-    if (!confirmDelete) {
-      return; // 사용자가 "아니오"를 선택하면 함수 종료
-    }
+      // 삭제 확인
+      const confirmDelete = confirm("정말 삭제하시겠습니까?");
+      if (!confirmDelete) {
+        return; // 사용자가 "아니오"를 선택하면 함수 종료
+      }
 
-    const selectedData = selectedNodes.map(node => node.data);
-    const devNoList = selectedData.map(row => row.DEV_NO);
+      const selectedData = selectedNodes.map(node => node.data);
+      const devNoList = selectedData.map(row => row.DEV_NO);
 
-    // 삭제된 개발자의 이름을 저장할 배열
-    const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
+      // 삭제된 개발자의 이름을 저장할 배열
+      const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
-    try {
-      const response = await fetch('http://localhost:8080/api/deleteDevData', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({devNoList}),
-      });
+      try {
+        const response = await fetch('http://localhost:8080/api/deleteDevData', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({devNoList}),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete data');
-      } // 선택된 행을 rowData에서 필터링하여 제거
-      rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+        if (!response.ok) {
+          throw new Error('Failed to delete data');
+        } // 선택된 행을 rowData에서 필터링하여 제거
+        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
 
-      // 삭제 성공 알림
-      alert(`개발자 ${deletedNames}가 삭제되었습니다.`);
-    } catch (error) {
-      alert("삭제할 개발자를 선택해주세요.");
-    }
-  };
+        // 삭제 성공 알림
+        alert(`개발자 ${deletedNames}가 삭제되었습니다.`);
+      } catch (error) {
+        alert("삭제할 개발자를 선택해주세요.");
+      }
+    };
     /* global downloadResume */
 
     window.downloadResume = (resumeId) => {
@@ -698,23 +628,36 @@ export default defineComponent({
       link.click();
       document.body.removeChild(link);
     };
+    // 이벤트 수신 등록
+    const handleRefreshData = () => {
+      alert("fetchData 실행잘됨");
+      fetchData(); // 데이터 새로 고침
+    };
 
-  return {
-    columnDefs,
-    gridApi,
-    defaultColDef,
-    rowSelection,
-    rowData,
-    gridOptions,
-    onGridReady,
-    onCellValueChanged,
-    deleteRowBtnClick,
-    resetFilter,
-    removeFilter,
-    textFilterParams,
-    downloadResume,
-  };
-},
+    onMounted(() => {
+      eventbus.SearchResultEvent.add('refreshData', handleRefreshData); // 이벤트 핸들러 등록
+    });
+
+    onBeforeUnmount(() => {
+      eventbus.SearchResultEvent.remove('refreshData', handleRefreshData); // 이벤트 핸들러 해제
+    });
+
+    return {
+      columnDefs,
+      gridApi,
+      defaultColDef,
+      rowSelection,
+      rowData,
+      gridOptions,
+      onGridReady,
+      onCellValueChanged,
+      deleteRowBtnClick,
+      resetFilter,
+      removeFilter,
+      textFilterParams,
+      downloadResume,
+    };
+  },
 })
 ;
 </script>

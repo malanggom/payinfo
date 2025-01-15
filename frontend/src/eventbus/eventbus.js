@@ -6,6 +6,7 @@ let handlers = {
     filterUpdate: [],
     resetKorButton: [], // 초기화 이벤트 추가
     resetButtons: [],
+    refreshData: [],
     registeredFilters: [],
     openModal: [],
     removeButton: [],
@@ -90,6 +91,9 @@ export default {
             handlers.registeredFilters = updatedFilters;
             console.log('등록된 필터가 업데이트되었습니다:', handlers.registeredFilters);
         },
+        refreshData() {
+            handlers.search.forEach(handler => handler());
+        },
     },SearchPjHistoryResultEvent: {
         add(eventType, handler) {
             if (handlers[eventType]) {
@@ -152,6 +156,6 @@ export default {
         updateRegisteredFilters(updatedFilters) {
             handlers.pjRegisteredFilters = updatedFilters;
             console.log('등록된 필터가 업데이트되었습니다:', handlers.pjRegisteredFilters);
-        }
+        },
     }
 }

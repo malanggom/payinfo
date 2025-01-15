@@ -11,7 +11,7 @@
           <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button> <!-- 오른쪽 정렬 -->
         </div>
         <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody" style="height: 100%;">
-          <form @submit="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1">
+          <form @submit.prevent="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1">
             <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
@@ -1642,8 +1642,7 @@ const indvInfoCheckInputs = () => {
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
 
   if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
-      MBL_TELNO && EML,
-      RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC) {
+      MBL_TELNO && EML && RGN && ADDR && formattedInterviewDate && formattedPossibilityDate && MM_DMND_UNTPRC) {
     indvInfoPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     indvInfoIsVisible.value = false; // 지급 정보를 숨김
   } else {
@@ -1709,9 +1708,16 @@ const submitForm = async (event) => {
   try {
     const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
     alert(response.data.message); // 성공 메시지 표시
+
+    // 데이터 새로 고침 이벤트 발생
+    console.log("refreshData 호출 전"); // 디버깅 로그
+    eventbus.SearchResultEvent.refreshData(); // 이벤트 발생
+    console.log("refreshData 호출 후"); // 디버깅 로그
+    closeModal();
   } catch (error) {
     const errorMessage = error.response?.data?.message || error.message || '개발자 추가에 실패했습니다.';
     alert(`오류: ${errorMessage}`);
+    closeModal();
   }
 };
 
