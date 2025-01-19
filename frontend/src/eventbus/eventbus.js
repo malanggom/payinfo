@@ -9,6 +9,7 @@ let handlers = {
     refreshData: [],
     registeredFilters: [],
     openModal: [],
+    openModalUpdate: [],
     removeButton: [],
     activeFilters: [], // 활성 필터 목록 추가
     pjDeleteRow: [],
@@ -75,7 +76,14 @@ export default {
             console.log(`활성 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
         openModal() {
+            console.log("openmodal시작");
             handlers.openModal.forEach(handler => handler());
+            console.log("openmodal종료");
+        },
+        openModalUpdate() {
+            console.log("openmodalupdate시작");
+            handlers.openModalUpdate.forEach(handler => handler());
+            console.log("openmodalupdate종료");
         },
         resetKorButton() { // 초기화 함수 추가
             handlers.resetKorButton.forEach(handler => handler());

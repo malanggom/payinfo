@@ -1,35 +1,46 @@
 <template>
-  <div class="modal fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
-       aria-labelledby="staticBackdropLabel" aria-hidden="false">
+  <div class="modal
+  fade" :class="{ show: showModal }" v-if="showModal" tabindex="-1"
+       aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm custom-modal">
       <div class="modal-content">
-        <div class="modal-header d-flex align-items-center">
-          <div class="flex-grow-1 text-center">
-            <h1 class="modal-title fs-4" id="staticBackdropLabel">개발자 추가</h1>
+        <div class="modal-header d-flex align-items-center"> <!-- Flexbox로 구성 -->
+          <div class="flex-grow-1 text-center"> <!-- 제목을 중앙에 위치시키고 넓이를 차지하도록 설정 -->
+            <h1 class="modal-title fs-4" id="staticBackdropLabel">개발자 수정</h1>
           </div>
-          <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+          <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button> <!-- 오른쪽 정렬 -->
         </div>
-        <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody">
-          <form @submit.prevent="submitForm" class="form d-flex flex-column flex-grow-1" autocomplete='off'>
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
+        <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody" style="height: 100%;">
+          <form @submit.prevent="submitForm" style="height: auto" class="d-flex flex-column flex-grow-1" autocomplete='off'>
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="indvInfoHandleClick">
-                    <div class="d-flex toggleTextEmptySpace"></div>
-                    <div class="d-flex text-center">개인정보</div>
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray;" @click="indvInfoHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">개인정보</div>
                     <div class="d-flex align-items-center">
-                      <div class="form-status-button" :class="{completed: indvInfoPaymentInputStatus === '입력완료', default: indvInfoPaymentInputStatus !== '입력완료'}">
+                      <div
+                          class="form-status-button"
+                          :style="{
+                          backgroundColor: indvInfoPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
+                          color: indvInfoPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
+                        }"
+                      >
                         {{ indvInfoPaymentInputStatus }}
                       </div>
-                      <div class="form-status-toggle-button" :class="{visible: indvInfoIsVisible, hidden: !indvInfoIsVisible}" @click.stop="indvInfoToggleState">
-                        &#9660;
+                      <div
+                          class="form-status-toggle-button"
+                          :style="{transform: indvInfoIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
+                          @click.stop="indvInfoToggleState"
+                      >&#9660;
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <!-- 개인정보 내용 -->
-              <div v-if="indvInfoIsVisible" class="d-flex row justify-content-center mt20">
+              <div v-if="indvInfoIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 이름 레이블 -->
                 <div class="label-wrap col-10 mt-2">
                   <div class="label-w100">
@@ -40,8 +51,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="name" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.NM" required
-                           @input="indvInfoCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.NM" required @input="indvInfoCheckInputs">
                   </div>
                 </div>
                 <!-- 소개자 레이블 -->
@@ -67,8 +77,7 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <input type="text" id="KakaoNick" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK"
-                           @input="indvInfoCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK" @input="indvInfoCheckInputs">
                   </div>
                 </div>
                 <!-- 성별 드롭다운 레이블 -->
@@ -414,8 +423,7 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="mmDmndUntprc" style="padding-left: 40px; padding-right: 40px;"
                              class="form-control flex-all-center w-100 input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"
-                             @input="indvInfoCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC" @input="indvInfoCheckInputs">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
                     </div>
@@ -598,13 +606,13 @@
             </div>
             <!-- 개인정보 종료구간 -->
 
-            <!-- 계약상태 시작구간 -->
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="ctrtSttsHandleClick">
-                    <div class="d-flex toggleTextEmptySpace"></div>
-                    <div class="d-flex text-center">계약상태</div>
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray;" @click="ctrtSttsHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">계약상태</div>
                     <div class="d-flex align-items-center">
                       <div
                           class="form-status-button"
@@ -627,7 +635,7 @@
               </div>
 
               <!-- 계약상태 내용 -->
-              <div v-if="ctrtSttsIsVisible" class="d-flex row justify-content-center mt20">
+              <div v-if="ctrtSttsIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 계약이력존재여부 드롭다운 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label">
@@ -849,8 +857,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"
-                           @input="ctrtSttsCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO" @input="ctrtSttsCheckInputs">
                   </div>
                 </div>
 
@@ -870,15 +877,14 @@
                 </div>
               </div>
             </div>
-            <!-- 계약상태 종료구간 -->
 
-            <!-- 보유스킬 시작구간 -->
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
+            <div class="b-line pt-4 pb-4 flex-column d-flex" style="justify-content: center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="hldTechHandleClick">
-                    <div class="d-flex toggleTextEmptySpace"></div>
-                    <div class="d-flex text-center">보유스킬</div>
+                  <div class="d-flex justify-content-between form-control form-status"
+                       style="border: 1px solid dimgray;" @click="hldTechHandleClick">
+                    <div class="d-flex" style="width:122px;"></div>
+                    <div class="d-flex" style="text-align: center">보유스킬</div>
                     <div class="d-flex align-items-center">
                       <div
                           class="form-status-button"
@@ -901,8 +907,7 @@
               </div>
 
               <!-- 보유스킬 내용 -->
-              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px">
-                <!-- 전체를 중앙 정렬 -->
+              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 기종 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1069,8 +1074,7 @@
               </div>
 
               <!-- 지급정보 내용 -->
-              <div v-if="isVisible" class="d-flex row justify-content-center" style="margin-top: 20px">
-                <!-- 전체를 중앙 정렬 -->
+              <div v-if="isVisible" class="d-flex row justify-content-center" style="margin-top: 20px"> <!-- 전체를 중앙 정렬 -->
                 <!-- 대금수령날짜 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1238,68 +1242,65 @@
 
 <script setup>
 import {ref, onMounted, onUnmounted, computed, nextTick} from 'vue';
-import axios from '../../axios';
-import eventbus from '@/eventbus/eventbus';
+import axios from '../../axios'; // 생성한 axios 인스턴스 경로
+import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
-// 개인정보 토글 초기 값
+// 개인정보 초기 선택 값
 const indvInfoIsVisible = ref(true);
 const indvInfoPaymentInputStatus = ref('입력중'); // 초기 상태
 const indvInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-// 계약상태 토글 초기 값
+// 계약상태 초기 선택 값
 const ctrtSttsIsVisible = ref(true);
 const ctrtSttsPaymentInputStatus = ref('입력중'); // 초기 상태
 const ctrtSttsIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-// 보유스킬 토글 초기 값
-const hldTechIsVisible = ref(true);
-const hldTechPaymentInputStatus = ref('입력중'); // 초기 상태
-const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
-
-// 지급정보 토글 초기 값
+// 초기 선택 값들
 const isVisible = ref(true);
 const paymentInputStatus = ref('입력중'); // 초기 상태
 const isToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-// 개인정보 입력 기본 값
-const selectedGndr = ref('남'); // 성벽
-const selectedAcbg = ref('고졸'); // 학력
-const selectedMs = ref('현역'); // 병역
-const selectedWhtaxbzmn = ref('3.3%'); // 소득구분
-const years = Array.from({length: 36}, (_, i) => i); // 총 경력기간 드롭다운
-const months = Array.from({length: 13}, (_, i) => i); // 총 경력기간 드롭다운
-const selectedYear = ref(0); // 총 경력기간
-const selectedMonth = ref(0); // 총 경력기간
-const selectedGrade = ref('초급'); // 등급
-const selectedJbps = ref('사원'); // 직위
-const selectedJbttl = ref('PMO'); // 직책
+// 보유스킬 초기 선택 값
+const hldTechIsVisible = ref(true);
+const hldTechPaymentInputStatus = ref('입력중'); // 초기 상태
+const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-// 계약상태 입력 기본 값
-const selectedCtrtHstryYn = ref('N'); // 계약이력존재여부
-const selectedKdsEmpYn = ref('N'); // 자사정규직여부
-const selectedCtrtCoEmpYn = ref('N'); // 계약회사정규직여부
-const selectedConttMthd = ref('잡코리아지원'); // 컨텍방법
-const selectedPjInpStts = ref('구직중'); // 프로젝트투입상태
+// 초기 선택 값들
+const selectedGndr = ref('남'); // 기본값 설정
+const selectedAcbg = ref('고졸');
+const selectedMs = ref('현역');
+const selectedWhtaxbzmn = ref('3.3%');
+const selectedGrade = ref('초급');
+const selectedJbps = ref('사원');
+const selectedJbttl = ref('PMO');
+const selectedCtrtHstryYn = ref('N'); // 기본값 설정
+const selectedCtrtCoEmpYn = ref('N'); // 기본값 설정
+const selectedKdsEmpYn = ref('N'); // 기본값 설정
+const selectedConttMthd = ref('잡코리아지원');
+const selectedPjInpStts = ref('구직중');
+const selectedClctPickupDt = ref('N/A');
+const selectedGiveDt = ref('N/A');
 
-// 지급정보 입력 기본 값
-const selectedClctPickupDt = ref('N/A'); // 대금수령날짜
-const selectedGiveDt = ref('N/A'); // 지급일자
+const selectedYear = ref(0);
+const selectedMonth = ref(0);
+const years = Array.from({length: 36}, (_, i) => i);
+const months = Array.from({length: 13}, (_, i) => i);
 
-// formData에 기본 값 정의
+// formData 정의
 const formData = ref({
   DEV_NO: "",
   NM: "",
-  PJ_INP_STTS: selectedPjInpStts.value,
+  PJ_INP_STTS: selectedPjInpStts.value, // 초기화
   CTRT_NMTM: "",
   BRDT: "",
-  GNDR: selectedGndr.value,
-  JBPS: selectedJbps.value,
-  GRD: selectedGrade.value,
+  GNDR: selectedGndr.value, // 기본값으로 '남' 설정
+  JBPS: selectedJbps.value, // 초기화
+  GRD: selectedGrade.value, // 초기화
   T_CR_PER: "",
   RGN: "",
   MBL_TELNO: "",
   EML: "",
-  CONTT_MTHD: selectedConttMthd.value,
+  CONTT_MTHD: selectedConttMthd.value, // 초기화
   NTRV_DMND_DT: "",
   INP_PSBLTY_DT: "",
   OGDP_CO: "",
@@ -1308,18 +1309,18 @@ const formData = ref({
   BZMN_YN: "",
   KDS_EMP_YN: selectedKdsEmpYn.value,
   CTRT_CO_EMP_YN: selectedCtrtCoEmpYn.value,
-  CLCT_PICKUP_DT: selectedClctPickupDt.value,
-  GIVE_DT: selectedGiveDt.value,
+  CLCT_PICKUP_DT: selectedClctPickupDt.value, // 초기화
+  GIVE_DT: selectedGiveDt.value, // 초기화
   BANK: "",
   ACTNO: "",
   DEPT: "",
   MM_DMND_UNTPRC: "",
   ADDR: "",
-  JBTTL: selectedJbttl.value,
+  JBTTL: selectedJbttl.value, // 초기화
   BRKR: "",
   KAKAO_NICK: "",
   CTRT_HSTRY_YN: selectedCtrtHstryYn.value,
-  MS: selectedMs.value,
+  MS: selectedMs.value, // 초기화
   MDL: "",
   OS: "",
   LANG: "",
@@ -1333,7 +1334,22 @@ const formData = ref({
   ACBG: selectedAcbg.value,
 });
 
-// 개인정보 선택 시작
+// 학력 선택
+const selectCtrtHstryYn = (ctrtHstryYn) => {
+  selectedCtrtHstryYn.value = ctrtHstryYn;
+  formData.value.CTRT_HSTRY_YN = ctrtHstryYn;
+};
+
+const selectKdsEmpYn = (kdsEmpYn) => {
+  selectedKdsEmpYn.value = kdsEmpYn;
+  formData.value.KDS_EMP_YN = kdsEmpYn;
+};
+
+const selectCtrtCoEmpYn = (ctrtCoEmpYn) => {
+  selectedCtrtCoEmpYn.value = ctrtCoEmpYn;
+  formData.value.CTRT_CO_EMP_YN = ctrtCoEmpYn;
+};
+
 // 성별 선택
 const selectGndr = (gndr) => {
   selectedGndr.value = gndr;
@@ -1346,35 +1362,33 @@ const selectAcbg = (acbg) => {
   formData.value.ACBG = acbg;
 };
 
-// 병역 선택
-const selectMs = (ms) => {
-  selectedMs.value = ms;
-  formData.value.MS = ms;
-};
-
-// 소득구분 선택
+// 세금 선택 (소득세)
 const selectWhtax = (whtax) => {
   selectedWhtaxbzmn.value = whtax;
   formData.value.WHTAX_YN = 'y';
   formData.value.BZMN_YN = 'n';
 };
+
+// 사업자 선택
 const selectBzmn = (bzmn) => {
   selectedWhtaxbzmn.value = bzmn;
   formData.value.WHTAX_YN = 'n';
   formData.value.BZMN_YN = 'y';
 };
 
-// 총 경력기간 선택
+// 년도 선택
 const selectYear = (year) => {
   selectedYear.value = year;
   updateT_CR_PER(year, selectedMonth.value);
 };
+
+// 개월 선택
 const selectMonth = (month) => {
   selectedMonth.value = month;
   updateT_CR_PER(selectedYear.value, month);
 };
 
-// 총 경력기간 업데이트
+// T_CR_PER 업데이트
 const updateT_CR_PER = (year, month) => {
   formData.value.T_CR_PER = `${year}년 ${month}개월`;
 };
@@ -1396,25 +1410,11 @@ const selectJbttl = (jbttl) => {
   selectedJbttl.value = jbttl;
   formData.value.JBTTL = jbttl;
 };
-// 개인정보 선택 종료
 
-// 계약상태 선택 시작
-// 계약이력존재여부 선택
-const selectCtrtHstryYn = (ctrtHstryYn) => {
-  selectedCtrtHstryYn.value = ctrtHstryYn;
-  formData.value.CTRT_HSTRY_YN = ctrtHstryYn;
-};
-
-// 자사정규직여부 선택
-const selectKdsEmpYn = (kdsEmpYn) => {
-  selectedKdsEmpYn.value = kdsEmpYn;
-  formData.value.KDS_EMP_YN = kdsEmpYn;
-};
-
-// 계약회사정규직여부 선택
-const selectCtrtCoEmpYn = (ctrtCoEmpYn) => {
-  selectedCtrtCoEmpYn.value = ctrtCoEmpYn;
-  formData.value.CTRT_CO_EMP_YN = ctrtCoEmpYn;
+// 병역 선택
+const selectMs = (ms) => {
+  selectedMs.value = ms;
+  formData.value.MS = ms;
 };
 
 // 컨택 방법 선택
@@ -1428,9 +1428,7 @@ const selectPjInpStts = (pjInpStts) => {
   selectedPjInpStts.value = pjInpStts;
   formData.value.PJ_INP_STTS = pjInpStts;
 };
-// 계약상태 선택 종료
 
-// 지급정보 선택 시작
 // 대금수령날짜 선택
 const selectClctPickupDt = (clctPickupDt) => {
   selectedClctPickupDt.value = clctPickupDt;
@@ -1444,7 +1442,6 @@ const selectGiveDt = (giveDt) => {
   formData.value.GIVE_DT = giveDt;
   checkInputs(); // 입력 확인
 };
-// 지급정보 선택 종료
 
 const togglePaymentInputStatus = () => {
   // 입력 완료 상태 전환 로직 (필요에 따라 정의)
@@ -1640,11 +1637,9 @@ const hldTechCheckInputs = () => {
 
 //개인정보 체크
 const indvInfoCheckInputs = () => {
-  const {
-    NM, BRKR, KAKAO_NICK, formattedBirthDate, SN, AGE,
-    MBL_TELNO, EML,
-    RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC
-  } = formData.value; // 대문자로 수정
+  const {NM, BRKR, KAKAO_NICK, formattedBirthDate, SN, AGE,
+         MBL_TELNO, EML,
+         RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC} = formData.value; // 대문자로 수정
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
 
   if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
@@ -1728,9 +1723,8 @@ const submitForm = async (event) => {
 };
 
 // 모달 열기 핸들러
-const openModalHandler = () => {
-  formData.value = {
-    DEV_NO: "",
+const openModalUpdateHandler = () => {
+  formData.value = {  DEV_NO: "",
     NM: "",
     PJ_INP_STTS: selectedPjInpStts.value, // 초기화
     CTRT_NMTM: "",
@@ -1773,33 +1767,24 @@ const openModalHandler = () => {
     CMNCT: "",
     ETC: "",
     AGE: "",
-    ACBG: selectedAcbg.value
-  }; // 초기화
+    ACBG: selectedAcbg.value}; // 초기화
   showModal.value = true; // 모달 열기
 };
 
 // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
 onMounted(async () => {
-  eventbus.SearchResultEvent.add('openModal', openModalHandler); // 모달 열기 이벤트 등록
+  eventbus.SearchResultEvent.add('openModalUpdate', openModalUpdateHandler); // 모달 열기 이벤트 등록
   await nextTick(); // DOM 업데이트 후
   scrollChecks(); // 초기 상태 체크
 });
 
 // 컴포넌트가 언마운트될 때 핸들러 제거
 onUnmounted(() => {
-  eventbus.SearchResultEvent.remove('openModal', openModalHandler); // 모달 열기 이벤트 제거
+  eventbus.SearchResultEvent.remove('openModalUpdate', openModalUpdateHandler); // 모달 열기 이벤트 제거
 });
 </script>
 
 <style scoped>
-.mt20{
-  margin-top: 20px;
-}
-
-.form {
-  height: auto;
-}
-
 .form-status-button {
   border: 1px solid dimgray;
   border-radius: 20px;
@@ -1811,27 +1796,8 @@ onUnmounted(() => {
   margin-right: 8px;
 }
 
-.form-status-button.completed {
-  background-color: #007bff; /* '입력완료' 상태일 때 배경색 */
-  color: white; /* 글자색 */
-}
-
-.form-status-button.default {
-  background-color: white; /* 기본 배경색 */
-  color: black; /* 기본 글자색 */
-}
-
 .form-status-toggle-button {
   margin-right: 4px;
-  transition: transform 0.3s ease; /* 전환 효과 설정 */
-}
-
-.form-status-toggle-button.visible {
-  transform: scaleY(-1); /* 상태가 visible일 때의 스타일 */
-}
-
-.form-status-toggle-button.hidden {
-  transform: none; /* 기본 상태 (숨김) */
 }
 
 .flex-all-center {
@@ -1921,7 +1887,7 @@ onUnmounted(() => {
   border: 1px solid dimgray;
 }
 
-.b-line {
+.b-line{
   border-bottom: lightgray 1px solid;
 }
 
@@ -1997,7 +1963,7 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.modal-header {
+.modal-header{
   border-bottom: 1px solid dimgray; /* 두께와 색상을 설정 */
 }
 
@@ -2057,13 +2023,5 @@ onUnmounted(() => {
 /* caret 화살표를 오른쪽으로 정렬 */
 .dropdown-toggle .caret {
   margin-left: auto; /* 왼쪽 여백 자동으로 설정하여 오른쪽 정렬 */
-}
-
-.toggleTextWrap{
-  border: 1px solid dimgray;
-}
-
-.toggleTextEmptySpace{
-  width: 122px;
 }
 </style>

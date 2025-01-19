@@ -1,6 +1,7 @@
 <template>
   <div class="ag-theme-quartz pl10" style="width: 100%; height: 98%;">
     <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
+    <dev-update-btn-component ref="devUpdateBtn" @open-modal="openModalUpdate"></dev-update-btn-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -12,6 +13,7 @@
         :textFilterParams="textFilterParams"
         :pagination="true"
         @cell-value-changed="onCellValueChanged"
+        @row-selected="cellValueUpdate"
     />
   </div>
 </template>
@@ -19,6 +21,7 @@
 <script>
 import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount} from "vue";
 import DevAddBtnComponent from './DevAddBtnComponent.vue';
+import DevUpdateBtnComponent from './DevUpdateBtnComponent.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
 
@@ -26,6 +29,7 @@ export default defineComponent({
   components: {
     "ag-grid-vue": AgGridVue,
     DevAddBtnComponent,
+    DevUpdateBtnComponent,
   },
   setup() {
     const gridApi = shallowRef();
@@ -103,7 +107,11 @@ export default defineComponent({
       {
         headerName: '이력서', field: 'resumeIcon', minWidth: 120,
         cellRenderer: (params) => {
-          return `<img src="${params.data.resumeImage}" style="padding-top: 0.4px;cursor: pointer; width: 18.4px; height: 18.4px;" onclick="downloadResume('${params.data.RESM}')"/>`;
+          const resumeId = params.data.RESM; // resumeId 확인
+          return `<img src="${params.data.resumeImage}" style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;" onclick="downloadResume('${resumeId}')"/>
+            <img src="${params.data.resumePreviewImage}"
+             style="cursor: pointer; margin-left: 5px; margin-bottom: 5px; width: 18.4px; height: 18.4px;"
+             onclick="previewResume('${resumeId}')"/>`;
         },
       },
       {
@@ -270,6 +278,7 @@ export default defineComponent({
           DEV_NO: item.DEV_NO,
           NM: item.NM,
           resumeImage: '/downloadResume.png', // 이미지 URL 추가 (아이콘 이미지 경로)
+          resumePreviewImage: '/resumePreview.png', // 이미지 URL 추가 (아이콘 이미지 경로)
           PJ_INP_STTS: item.PJ_INP_STTS,
           CTRT_NMTM: item.CTRT_NMTM,
           BRDT: item.BRDT,
@@ -326,6 +335,27 @@ export default defineComponent({
       eventbus.SearchResultEvent.openModal();
     };
 
+    const openModalUpdate = () => {
+      eventbus.SearchResultEvent.openModalUpdate();
+      console.log("수정모달열기",);
+    };
+
+    //셀 업데이트
+    const cellValueUpdate = () => {
+      const selectedRows = gridApi.value.getSelectedRows();
+      console.log("selectedRows:",selectedRows);
+      if(selectedRows.length > 1){
+        return 0;
+        //alert 개발자를 한명만 선택해주세요. 발생
+      }else if(selectedRows.length < 1){
+        return 2;
+      }
+      else{
+        //openModalUpdate();실행
+        return 1;
+      }
+    };
+
     const onGridReady = async (params) => {
       gridApi.value = params.api;
       const pagingPanel = document.querySelector('.ag-paging-panel');
@@ -352,8 +382,12 @@ export default defineComponent({
           if (!searchPerformed.value) {
             alert("검색을 먼저 수행해 주세요.");
             gridApi.value.setFilterModel(null);
-          } else {
-            //수정코드
+          } else if(searchPerformed.value && cellValueUpdate() === 0) {
+            alert("개발자를 한명만 선택해주세요.");
+          } else if(searchPerformed.value && cellValueUpdate() === 2){
+            alert("개발자를 선택하지 않았습니다. 개발자를 선택해주세요.");
+          } else if(searchPerformed.value && cellValueUpdate() === 1){
+            openModalUpdate();
           }
         }
         pagingPanel.insertBefore(editRows, addRows.nextSibling);
@@ -604,6 +638,11 @@ export default defineComponent({
     /* global downloadResume */
 
     window.downloadResume = (resumeId) => {
+      if (!resumeId) {
+        console.error('이력서 ID가 없습니다.');
+        return;
+      }
+
       console.log('다운로드 이미지 클릭');
       const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
       const link = document.createElement('a');
@@ -613,6 +652,23 @@ export default defineComponent({
       link.click();
       document.body.removeChild(link);
     };
+
+    window.previewResume = (resumeId) => {
+      if (!resumeId) {
+        console.error('이력서 ID가 없습니다.');
+        return;
+      }
+
+      console.log('다운로드 이미지 클릭');
+      const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', resumeId);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
     // 이벤트 수신 등록
     const handleRefreshData = () => {
       alert("fetchData 실행잘됨");
@@ -641,6 +697,8 @@ export default defineComponent({
       removeFilter,
       textFilterParams,
       downloadResume,
+      openModal,
+      openModalUpdate,cellValueUpdate
     };
   },
 })
