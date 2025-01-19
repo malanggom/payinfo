@@ -606,20 +606,11 @@
                     <div class="d-flex toggleTextEmptySpace"></div>
                     <div class="d-flex text-center">계약상태</div>
                     <div class="d-flex align-items-center">
-                      <div
-                          class="form-status-button"
-                          :style="{
-                          backgroundColor: ctrtSttsPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
-                          color: ctrtSttsPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
-                        }"
-                      >
+                      <div class="form-status-button" :class="{completed: ctrtSttsPaymentInputStatus === '입력완료', default: ctrtSttsPaymentInputStatus !== '입력완료'}">
                         {{ ctrtSttsPaymentInputStatus }}
                       </div>
-                      <div
-                          class="form-status-toggle-button"
-                          :style="{transform: ctrtSttsIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
-                          @click.stop="ctrtSttsToggleState"
-                      >&#9660;
+                      <div class="form-status-toggle-button" :class="{visible: ctrtSttsIsVisible, hidden: !ctrtSttsIsVisible}" @click.stop="ctrtSttsToggleState">
+                        &#9660;
                       </div>
                     </div>
                   </div>
@@ -880,20 +871,11 @@
                     <div class="d-flex toggleTextEmptySpace"></div>
                     <div class="d-flex text-center">보유스킬</div>
                     <div class="d-flex align-items-center">
-                      <div
-                          class="form-status-button"
-                          :style="{
-                          backgroundColor: hldTechPaymentInputStatus === '입력완료' ? '#007bff' : 'white',
-                          color: hldTechPaymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
-                        }"
-                      >
+                      <div class="form-status-button" :class="{completed: hldTechPaymentInputStatus === '입력완료', default: hldTechPaymentInputStatus !== '입력완료'}">
                         {{ hldTechPaymentInputStatus }}
                       </div>
-                      <div
-                          class="form-status-toggle-button"
-                          :style="{transform: hldTechIsVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
-                          @click.stop="hldTechToggleState"
-                      >&#9660;
+                      <div class="form-status-toggle-button" :class="{visible: hldTechIsVisible, hidden: !hldTechIsVisible}" @click.stop="hldTechToggleState">
+                        &#9660;
                       </div>
                     </div>
                   </div>
@@ -1039,29 +1021,21 @@
                 </div>
               </div>
             </div>
+            <!-- 보유스킬 종료구간 -->
 
-            <div class="pt-4 pb-4 flex-column d-flex" style="margin-bottom: auto; justify-content: start">
+            <!-- 지급정보 시작구간 -->
+            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status"
-                       style="border: 1px solid dimgray;" @click="handleClick">
-                    <div class="d-flex" style="width:122px;"></div>
-                    <div class="d-flex" style="text-align: center">지급정보</div>
+                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="handleClick">
+                    <div class="d-flex toggleTextEmptySpace"></div>
+                    <div class="d-flex text-center">지급정보</div>
                     <div class="d-flex align-items-center">
-                      <div
-                          class="form-status-button"
-                          :style="{
-                          backgroundColor: paymentInputStatus === '입력완료' ? '#007bff' : 'white',
-                          color: paymentInputStatus === '입력완료' ? 'white' : 'black' // 텍스트 색상 설정
-                        }"
-                      >
+                      <div class="form-status-button" :class="{completed: paymentInputStatus === '입력완료', default: paymentInputStatus !== '입력완료'}">
                         {{ paymentInputStatus }}
                       </div>
-                      <div
-                          class="form-status-toggle-button"
-                          :style="{transform: isVisible === true ? 'scaleY(-1)' : 'none', transition: 'transform 0.3s ease'}"
-                          @click.stop="toggleToggleState"
-                      >&#9660;
+                      <div class="form-status-toggle-button" :class="{visible: isVisible, hidden: !isVisible}" @click.stop="toggleToggleState">
+                        &#9660;
                       </div>
                     </div>
                   </div>
@@ -1221,6 +1195,8 @@
                 </div>
               </div>
             </div>
+            <!-- 지급정보 종료구간 -->
+
             <div class="modal-footer-wrap d-flex align-items-center justify-content-center t_line">
               <div class="modal-footer d-flex">
                 <button type="submit" class="btn btn-primary">제출</button>
