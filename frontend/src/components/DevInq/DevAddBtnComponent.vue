@@ -87,7 +87,7 @@
                         <span class="dropdown-default text-center">{{ selectedGndr || '남' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectGndr('남')">남</button>
                         </li>
@@ -119,7 +119,6 @@
                           type="date"
                           id="brdt"
                           class="form-control input date-default text-center"
-                          style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
                           @change="updateBirthDate" required
@@ -127,7 +126,7 @@
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
-                      <span style="margin: 0;">-</span> <!-- 구분 기호 -->
+                      <span class="m0">-</span> <!-- 구분 기호 -->
                     </div>
                     <!-- 일련번호 -->
                     <div class="form-group col-5 d-flex flex-column align-items-center input mb-0">
@@ -175,7 +174,7 @@
                         <span class="dropdown-default text-center">{{ selectedAcbg || '고졸' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectAcbg('고졸')">고졸</button>
                         </li>
@@ -209,7 +208,7 @@
                         <span class="dropdown-default text-center">{{ selectedMs || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectMs('N/A')">N/A</button>
                         </li>
@@ -253,7 +252,7 @@
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
-                      <span style="margin: 0;">-</span> <!-- 구분 기호 -->
+                      <span class="m0">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="mblTelno2" class="form-control input text-center"
@@ -261,7 +260,7 @@
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
-                      <span style="margin: 0;">-</span> <!-- 구분 기호 -->
+                      <span class="m0">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 세 번째 입력란 -->
                       <input type="text" id="mblTelno3" class="form-control input text-center"
@@ -286,7 +285,7 @@
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
-                      <span style="margin: 0;">@</span> <!-- 구분 기호 -->
+                      <span class="m0">@</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="eml2" class="form-control input text-center"
@@ -312,7 +311,7 @@
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectWhtax('3.3%')">3.3%</button>
                         </li>
@@ -367,7 +366,6 @@
                           type="date"
                           id="ntrvDmndDt"
                           class="date-default input form-control text-center"
-                          style="text-align: center;"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedInterviewDate"
                           @change="updateInterviewDate"
@@ -390,8 +388,7 @@
                       <input
                           type="date"
                           id="inpPsbltyDt"
-                          class="date-default input form-control text-center"
-                          style="padding-left: 28px; padding-right: 8px;"
+                          class="date-default input form-control text-center pl28 pr8"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedPossibilityDate"
                           @change="updatePossibilityDate"
@@ -412,8 +409,8 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text" id="mmDmndUntprc" style="padding-left: 40px; padding-right: 40px;"
-                             class="form-control flex-all-center w-100 input text-center"
+                      <input type="text" id="mmDmndUntprc"
+                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
                              aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"
                              @input="indvInfoCheckInputs">
                       <span class="position-absolute"
@@ -485,7 +482,7 @@
                         <span class="dropdown-default text-center">{{ selectedGrade || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectGrade('N/A')">N/A</button>
                         </li>
@@ -528,7 +525,7 @@
                         <span class="dropdown-default text-center">{{ selectedJbps || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectJbps('N/A')">N/A</button>
                         </li>
@@ -574,7 +571,7 @@
                         <span class="dropdown-default text-center">{{ selectedJbttl || 'N/A' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button>
                         </li>
@@ -636,7 +633,7 @@
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectCtrtHstryYn('Y')">Y</button>
                         </li>
@@ -664,7 +661,7 @@
                         <span class="dropdown-default text-center">{{ selectedKdsEmpYn || 'N' }}</span> <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectKdsEmpYn('Y')">Y</button>
                         </li>
@@ -693,7 +690,7 @@
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item" type="button" @click="selectCtrtCoEmpYn('Y')">Y</button>
                         </li>
@@ -715,9 +712,8 @@
                 <div class="input-wrap">
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM"
-                             style="padding-left: 40px; padding-right: 40px;" required @input="ctrtSttsCheckInputs">
+                      <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" required @input="ctrtSttsCheckInputs">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
@@ -743,7 +739,7 @@
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item d-flex justify-content-center" type="button"
                                   @click="selectConttMthd('잡코리아지원')">잡코리아지원
@@ -783,7 +779,7 @@
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
-                      <ul class="dropdown-menu" style="width: 100%;">
+                      <ul class="dropdown-menu">
                         <li>
                           <button class="dropdown-item d-flex justify-content-center" type="button"
                                   @click="selectPjInpStts('구직중')">구직중
@@ -883,8 +879,7 @@
               </div>
 
               <!-- 보유스킬 내용 -->
-              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center" style="margin-top: 20px">
-                <!-- 전체를 중앙 정렬 -->
+              <div v-if="hldTechIsVisible" class="d-flex row justify-content-center mt20">
                 <!-- 기종 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1024,7 +1019,7 @@
             <!-- 보유스킬 종료구간 -->
 
             <!-- 지급정보 시작구간 -->
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
+            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-start paymentInputWrap">
               <div class="d-flex justify-content-center">
                 <div class="col-10 d-flex align-items-center form-status-bg">
                   <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="handleClick">
@@ -1043,8 +1038,7 @@
               </div>
 
               <!-- 지급정보 내용 -->
-              <div v-if="isVisible" class="d-flex row justify-content-center" style="margin-top: 20px">
-                <!-- 전체를 중앙 정렬 -->
+              <div v-if="isVisible" class="d-flex row justify-content-center mt20">
                 <!-- 대금수령날짜 레이블 -->
                 <div class="label-wrap col-10">
                   <div class="label-w100">
@@ -1064,7 +1058,7 @@
                           <span class="dropdown-default-text text-center">{{ selectedClctPickupDt || 'N/A' }}</span>
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
+                        <ul class="dropdown-menu dropdown-menu-text">
                           <li>
                             <button class="dropdown-item d-flex justify-content-center" type="button"
                                     @click="selectClctPickupDt('N/A')">N/A
@@ -1126,7 +1120,7 @@
                           <span class="dropdown-default-text text-center">{{ selectedGiveDt || 'N/A' }}</span>
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-text" style="width: 100%;">
+                        <ul class="dropdown-menu dropdown-menu-text">
                           <li>
                             <button class="dropdown-item d-flex justify-content-center" type="button"
                                     @click="selectGiveDt('N/A')">N/A
@@ -1768,8 +1762,27 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.m0{
+  margin: 0px;
+}
 .mt20{
   margin-top: 20px;
+}
+
+.pl28{
+  padding-left: 28px;
+}
+
+.pr8{
+  padding-right: 8px;
+}
+
+.pl40{
+  padding-left: 40px;
+}
+
+.pr40{
+  padding-right: 40px;
 }
 
 .form {
@@ -1959,6 +1972,7 @@ onUnmounted(() => {
 .dropdown-menu {
   overflow-y: scroll;
   padding-left: 18px;
+  width:100%;
 }
 
 .dropdown-menu-text {
@@ -2041,5 +2055,9 @@ onUnmounted(() => {
 
 .toggleTextEmptySpace{
   width: 122px;
+}
+
+.paymentInputWrap{
+  margin-bottom: auto;
 }
 </style>
