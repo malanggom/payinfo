@@ -891,7 +891,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Mdl" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -906,7 +907,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Os" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -921,7 +923,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lang" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -936,7 +939,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Db" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -951,7 +955,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Tool" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -966,7 +971,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Frmw" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -981,7 +987,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lbrr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -996,7 +1003,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Cmnct" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
 
@@ -1011,7 +1019,8 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Etc" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs"
+                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
                   </div>
                 </div>
               </div>
@@ -1225,6 +1234,7 @@ const ctrtSttsIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 const hldTechIsVisible = ref(true);
 const hldTechPaymentInputStatus = ref('입력중'); // 초기 상태
 const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
+const hldTechIsBlur = ref(false); // 초기값 설정
 
 // 지급정보 토글 초기 값
 const isVisible = ref(true);
@@ -1596,15 +1606,36 @@ const checkInputs = () => {
   }
 };
 
+const updateInputStatus = (isBlur) => {
+  if(check.value === true){
+    hldTechIsVisible.value = false;
+  }
+  hldTechIsBlur.value = isBlur;
+  console.log('hldTechIsBlur 상태:', hldTechIsBlur.value);
+};
+const check = ref(false);
 const hldTechCheckInputs = () => {
-  const {MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC} = formData.value; // 대문자로 수정
-  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+  const { MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC } = formData.value;
+
+  console.log('현재 입력값:', formData.value);
+  console.log('hldTechIsBlur:', hldTechIsBlur.value);
+  console.log('hldTechPaymentInputStatus:', hldTechPaymentInputStatus.value);
 
   if (MDL && OS && LANG && DB && TOOL && FRMW && LBRR && CMNCT && ETC) {
     hldTechPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    hldTechIsVisible.value = false; // 지급 정보를 숨김
+    console.log("hldTechIsBlur.value",hldTechIsBlur.value);
+    // hldTechIsBlur가 true일 때만 지급 정보를 숨김
+    if (hldTechIsBlur.value) {
+      console.log('블러 true.');
+      hldTechIsVisible.value = true;
+    } else {
+      console.log('입력 완료 상태이지만 focus 상태입니다.');
+      check.value = true;
+    }
+
   } else {
     hldTechPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+    hldTechIsVisible.value = true; // 지급 정보를 보이게 함
   }
 };
 
@@ -1620,7 +1651,7 @@ const indvInfoCheckInputs = () => {
   if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
       MBL_TELNO && EML && RGN && ADDR && formattedInterviewDate && formattedPossibilityDate && MM_DMND_UNTPRC) {
     indvInfoPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    indvInfoIsVisible.value = false; // 지급 정보를 숨김
+    // indvInfoIsVisible.value = false; // 지급 정보를 숨김
   } else {
     indvInfoPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }

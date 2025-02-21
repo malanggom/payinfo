@@ -4,6 +4,7 @@
 const express = require('express');
 const oracledb = require('oracledb');
 const cors = require('cors');
+const fs = require('fs');
 const path = require('path'); // 이 부분이 필요함
 const app = express();
 const port = 8080;
@@ -86,6 +87,7 @@ app.get('/api/getDevData', async (req, res) => {
                 ETC: row[41],
                 AGE: row[42],
                 ACBG: row[43],
+                RESUME: row[44],
             };
         });
 
@@ -572,17 +574,17 @@ app.post('/api/update/PjDevHistoryData', async (req, res) => {
 });
 
 // 이력서 파일이 저장된 디렉토리
-const RESUME_DIR = path.join(__dirname, 'resumes'); // 이력서 파일이 저장된 경로
+const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\frontend\\public\\downloads\\resumes');
 
-app.post('/api/downloadResume/:resumeId', (req, res) => {
+app.get('/api/downloadResume/:resumeId', (req, res) => { // GET 메서드로 변경
     const resumeId = req.params.resumeId; // URL에서 resumeId 추출
-    const filePath = path.join(RESUME_DIR, resumeId); // 이력서 파일 경로
+    const filePath = path.join(RESUME_DIR, `${resumeId}.docx`); // 파일 이름에 확장자 추가
 
     // 파일 전송
     res.download(filePath, (err) => {
         if (err) {
             console.error('File download error:', err);
-            res.status(500).send('File download failed');
+            res.status(404).send('이력서를 찾을 수 없습니다.'); // 404로 변경
         }
     });
 });

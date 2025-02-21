@@ -107,7 +107,7 @@ export default defineComponent({
       {
         headerName: '이력서', field: 'resumeIcon', minWidth: 120,
         cellRenderer: (params) => {
-          const resumeId = params.data.RESM; // resumeId 확인
+          const resumeId = params.data.RESUME; // resumeId 확인
           return `<img src="${params.data.resumeImage}" style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;" onclick="downloadResume('${resumeId}')"/>
             <img src="${params.data.resumePreviewImage}"
              style="cursor: pointer; margin-left: 5px; margin-bottom: 5px; width: 18.4px; height: 18.4px;"
@@ -321,7 +321,9 @@ export default defineComponent({
           ETC: item.ETC,
           AGE: item.AGE,
           ACBG: item.ACBG,
+          RESUME: item.RESUME,
         }));
+        console.log(data.result.row);
         rowData.value = translatedData;
         gridApi.value.refreshCells();
         searchPerformed.value = true;
@@ -642,15 +644,16 @@ export default defineComponent({
         console.error('이력서 ID가 없습니다.');
         return;
       }
-
-      console.log('다운로드 이미지 클릭');
-      const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', resumeId);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      else{
+        console.log("resumeId:",resumeId);
+        const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', resumeId);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     };
 
     window.previewResume = (resumeId) => {
