@@ -589,6 +589,18 @@ app.get('/api/downloadResume/:resumeId', (req, res) => { // GET 메서드로 변
     });
 });
 
+app.get('/api/previewResume/:resumeId', (req, res) => {
+    const resumeId = decodeURIComponent(req.params.resumeId); // URL 디코딩
+    const filePath = path.join(RESUME_DIR, `${resumeId}.docx`); // 파일 경로 설정
+
+    // 파일 전송
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error('File download error:', err);
+            res.status(404).send('이력서를 찾을 수 없습니다.'); // 404로 변경
+        }
+    });
+});
 
 app.delete('/api/deleteDevData', async (req, res) => {
     const { devNoList } = req.body;

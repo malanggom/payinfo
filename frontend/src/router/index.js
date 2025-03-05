@@ -28,44 +28,39 @@ const routes = [
     component: () => import('../views/CtrtcoMng/CtrtcoInqView.vue')
   },
   {
-    path: '/ctrtcoctrtinq',
-    name: 'ctrtcoctrtinq',
-    component: () => import('../views/CtrtMng/CtrtcoctrtInqView.vue')
+    path: '/sbcncoinq',
+    name: 'sbcncoinq',
+    component: () => import('../views/CtrtcoMng/SbcncoInqView.vue')
   },
   {
-    path: '/devctrtinq',
-    name: 'devctrtinq',
-    component: () => import('../views/CtrtMng/DevctrtInqView.vue')
+    path: '/ctrtcodocinq',
+    name: 'ctrtcodocinq',
+    component: () => import('@/views/DocMng/CtrtcodocInqView.vue')
   },
   {
-    path: '/etcctrtinq',
-    name: 'etcctrtinq',
-    component: () => import('../views/CtrtMng/EtcctrtInqView.vue')
+    path: '/devdocinq',
+    name: 'devdocinq',
+    component: () => import('@/views/DocMng/DevdocInqView.vue')
+  },
+  {
+    path: '/sbcncodocinq',
+    name: 'sbcncodocinq',
+    component: () => import('@/views/DocMng/SbcncodocInqView.vue')
   },
   {
     path: '/slsmng',
     name: 'slsmng',
-    component: () => import('../views/SlsMng/SlsMngGridComponent.vue')
+    component: () => import('@/views/acntgMng/SlsMngGridComponent.vue')
   },
   {
     path: '/taxbillinq',
     name: 'taxbillinq',
-    component: () => import('../views/SlsMng/TaxbillInqView.vue')
+    component: () => import('@/views/acntgMng/TaxbillInqView.vue')
   },
   {
     path: '/whtaxinq',
     name: 'whtaxinq',
-    component: () => import('../views/SlsMng/WhtaxbillInqView.vue')
-  },
-  {
-    path: '/dpstwdrlinq',
-    name: 'dpstwdrlinq',
-    component: () => import('../views/PnssMng/DpstWdrlInqView.vue')
-  },
-  {
-    path: '/ofcexpnssinq',
-    name: 'ofcexpnssinq',
-    component: () => import('../views/PnssMng/OfcexpnssInqView.vue')
+    component: () => import('@/views/acntgMng/WhtaxbillInqView.vue')
   },
   {
     path: '/dvcinq',

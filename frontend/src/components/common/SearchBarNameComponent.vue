@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <span>개발자 상세검색</span>
+  <span></span>
 </template>
 
 <style scoped>

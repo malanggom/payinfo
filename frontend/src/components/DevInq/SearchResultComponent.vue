@@ -2,6 +2,7 @@
   <div class="ag-theme-quartz pl10" style="width: 100%; height: 98%;">
     <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
     <dev-update-btn-component ref="devUpdateBtn" @open-modal="openModalUpdate"></dev-update-btn-component>
+    <preview-resume-component ref="previewResumeBtn" @open-modal="openModalPreviewResume"></preview-resume-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -22,6 +23,7 @@
 import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount} from "vue";
 import DevAddBtnComponent from './DevAddBtnComponent.vue';
 import DevUpdateBtnComponent from './DevUpdateBtnComponent.vue';
+import PreviewResumeComponent from './PreviewResumeComponent.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
 
@@ -30,6 +32,7 @@ export default defineComponent({
     "ag-grid-vue": AgGridVue,
     DevAddBtnComponent,
     DevUpdateBtnComponent,
+    PreviewResumeComponent,
   },
   setup() {
     const gridApi = shallowRef();
@@ -341,6 +344,11 @@ export default defineComponent({
       eventbus.SearchResultEvent.openModalUpdate();
       console.log("수정모달열기",);
     };
+
+    const openModalPreviewResume = () => {
+      eventbus.SearchResultEvent.openModalPreviewResume();
+      console.log("이력서 미리보기 열기",);
+    }
 
     //셀 업데이트
     const cellValueUpdate = () => {
@@ -661,15 +669,18 @@ export default defineComponent({
         console.error('이력서 ID가 없습니다.');
         return;
       }
+      else {
+        console.log("미리보기 체크 resumeId:",resumeId);
+        const url = `http://localhost:8080/api/previewResume/${resumeId}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', resumeId);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-      console.log('다운로드 이미지 클릭');
-      const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', resumeId);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        openModalPreviewResume();
+      }
     };
 
     // 이벤트 수신 등록
@@ -701,7 +712,9 @@ export default defineComponent({
       textFilterParams,
       downloadResume,
       openModal,
-      openModalUpdate,cellValueUpdate
+      openModalUpdate,
+      openModalPreviewResume,
+      cellValueUpdate
     };
   },
 })
