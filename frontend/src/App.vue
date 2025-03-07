@@ -14,7 +14,7 @@
           <img class="padding__left20 icon__size" src="/icons/개발자관리white.png" alt="KDS Logo">
           <span class="nav-link" @click="toggleNav('devmng')">개발자관리</span>
         </div>
-        <div v-if="isActive('devmng')" class="nav__submenu__wrap">
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('devmng')}" class="nav__submenu__wrap__item2">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/개발자조회white.png" alt="KDS Logo">
             <router-link class="nav-link" to="/devinq">개발자조회</router-link>
@@ -28,7 +28,7 @@
           <img class="padding__left20 icon__size" src="/icons/프로젝트관리white.png" alt="KDS Logo">
           <span class="nav-link" @click="toggleNav('pjmng')">프로젝트관리</span>
         </div>
-        <div v-if="isActive('pjmng')" class="nav__submenu__wrap">
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('pjmng')}" class="nav__submenu__wrap__item1">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/프로젝트조회white.png" alt="KDS Logo">
             <router-link class="nav-link" to="/pjinq">프로젝트조회</router-link>
@@ -38,7 +38,7 @@
           <img class="padding__left20 icon__size" src="/icons/계약회사관리white.png" alt="KDS Logo">
           <span class="nav-link nav__menu" @click="toggleNav('ctrtcomng')">계약회사관리</span>
         </div>
-        <div v-if="isActive('ctrtcomng')" class="nav__submenu__wrap">
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('ctrtcomng')}" class="nav__submenu__wrap__item2">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/계약회사조회white.png" alt="KDS Logo">
             <router-link class="nav-link" to="/ctrtcoinq">계약회사조회</router-link>
@@ -52,7 +52,7 @@
           <img class="padding__left20 icon__size" src="/icons/개발자관리white.png" alt="KDS Logo">
           <span class="nav-link nav__menu" @click="toggleNav('docmng')">문서관리</span>
         </div>
-        <div v-if="isActive('docmng')" class="nav__submenu__wrap">
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('docmng')}" class="nav__submenu__wrap__item3">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/계약회사문서조회white.png" alt="KDS Logo">
             <router-link class="nav-link" to="/ctrtcodocinq">계약회사문서조회</router-link>
@@ -70,7 +70,7 @@
           <img class="padding__left20 icon__size" src="/icons/회계관리white.png" alt="KDS Logo">
           <span class="nav-link nav__menu" @click="toggleNav('acntgmng')">회계관리</span>
         </div>
-        <div v-if="isActive('acntgmng')" class="nav__submenu__wrap"><!--sls-->
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('acntgmng')}" class="nav__submenu__wrap__item2">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/세금조회white.png" alt="KDS Logo">
             <router-link class="nav-link" to="/taxbillinq">세금조회</router-link>
@@ -84,8 +84,7 @@
           <img class="padding__left20 icon__size" src="/icons/기기관리white.png" alt="KDS Logo">
           <span class="nav-link nav__menu" @click="toggleNav('dvcmng')">기기관리</span>
         </div>
-
-        <div v-if="isActive('dvcmng')" class="nav__submenu__wrap">
+        <div :class="{'nav__submenu__wrap': true, 'active': isActive('dvcmng')}" class="nav__submenu__wrap__item1">
           <div class="nav__submenu">
             <img class="padding__left20 icon__size" src="/icons/기기조회white.png" alt="기기조회">
             <router-link class="nav-link" to="/dvcinq">기기조회</router-link>
@@ -202,6 +201,24 @@ nav a.router-link-exact-active {
 
 .nav__submenu .nav-link:hover {
   opacity: 1; /* 텍스트의 불투명도 설정 */
+}
+
+.nav__submenu__wrap {
+  overflow: hidden; /* 내용이 넘치는 것을 숨김 */
+  max-height: 0; /* 기본적으로 높이를 0으로 설정 */
+  transition: max-height 1s ease; /* max-height 변화에 대한 트랜지션 효과 */
+}
+
+.nav__submenu__wrap__item1.active {
+  max-height: 100px; /* 최대 높이를 설정하여 애니메이션을 적용 */
+}
+
+.nav__submenu__wrap__item2.active {
+  max-height: 200px; /* 최대 높이를 설정하여 애니메이션을 적용 */
+}
+
+.nav__submenu__wrap__item3.active {
+  max-height: 300px; /* 최대 높이를 설정하여 애니메이션을 적용 */
 }
 
 .nav-link{
