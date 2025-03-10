@@ -138,7 +138,8 @@
                           class="form-control input-radius text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formData.SN" required
-                          @input="indvInfoCheckInputs"/> <!-- 입력란 -->
+                          maxlength="7"
+                          @input="handleInput"/> <!-- 입력란 -->
                     </div>
                   </div>
                 </div>
@@ -1655,6 +1656,19 @@ const indvInfoCheckInputs = () => {
   } else {
     indvInfoPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
+};
+
+// 입력값 검증 및 개인 정보 체크 함수
+const handleInput = (event) => {
+  const input = event.target.value;
+  // 숫자만 남기고 나머지 지우기
+  const numericInput = input.replace(/[^\d]/g, ''); // 숫자가 아닌 문자 제거
+
+  // 7자리까지만 허용
+  formData.value.SN = numericInput.slice(0, 7);
+
+  // 개인 정보 체크 함수 호출
+  indvInfoCheckInputs();
 };
 
 const ctrtSttsCheckInputs = () => {
