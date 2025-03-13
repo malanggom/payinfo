@@ -18,8 +18,8 @@
                     <div class="d-flex toggleTextEmptySpace"></div>
                     <div class="d-flex text-center">개인정보</div>
                     <div class="d-flex align-items-center">
-                      <div class="form-status-button" :class="{completed: indvInfoPaymentInputStatus === '입력완료', default: indvInfoPaymentInputStatus !== '입력완료'}">
-                        {{ indvInfoPaymentInputStatus }}
+                      <div class="form-status-button" :class="{completed: indvInfoInputStatus === '입력완료', default: indvInfoInputStatus !== '입력완료'}">
+                        {{ indvInfoInputStatus }}
                       </div>
                       <div class="form-status-toggle-button" :class="{visible: indvInfoIsVisible, hidden: !indvInfoIsVisible}" @click.stop="indvInfoToggleState">
                         &#9660;
@@ -604,8 +604,8 @@
                     <div class="d-flex toggleTextEmptySpace"></div>
                     <div class="d-flex text-center">계약상태</div>
                     <div class="d-flex align-items-center">
-                      <div class="form-status-button" :class="{completed: ctrtSttsPaymentInputStatus === '입력완료', default: ctrtSttsPaymentInputStatus !== '입력완료'}">
-                        {{ ctrtSttsPaymentInputStatus }}
+                      <div class="form-status-button" :class="{completed: ctrtSttsInputStatus === '입력완료', default: ctrtSttsInputStatus !== '입력완료'}">
+                        {{ ctrtSttsInputStatus }}
                       </div>
                       <div class="form-status-toggle-button" :class="{visible: ctrtSttsIsVisible, hidden: !ctrtSttsIsVisible}" @click.stop="ctrtSttsToggleState">
                         &#9660;
@@ -714,7 +714,10 @@
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" required @input="ctrtSttsCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" required
+                             @input="setIsTyping(true)"
+                             @focusout="checkCompletion"
+                             @blur="checkCompletion">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
@@ -838,7 +841,9 @@
                   <div class="col-10">
                     <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"
-                           @input="ctrtSttsCheckInputs">
+                           @input="setIsTyping(true)"
+                           @focusout="checkCompletion"
+                           @blur="checkCompletion">
                   </div>
                 </div>
 
@@ -853,7 +858,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="dept" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DEPT" @input="ctrtSttsCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.DEPT"
+                           @input="setIsTyping(true)"
+                           @focusout="checkCompletion"
+                           @blur="checkCompletion">
                   </div>
                 </div>
               </div>
@@ -868,8 +876,8 @@
                     <div class="d-flex toggleTextEmptySpace"></div>
                     <div class="d-flex text-center">보유스킬</div>
                     <div class="d-flex align-items-center">
-                      <div class="form-status-button" :class="{completed: hldTechPaymentInputStatus === '입력완료', default: hldTechPaymentInputStatus !== '입력완료'}">
-                        {{ hldTechPaymentInputStatus }}
+                      <div class="form-status-button" :class="{completed: hldTechInputStatus === '입력완료', default: hldTechInputStatus !== '입력완료'}">
+                        {{ hldTechInputStatus }}
                       </div>
                       <div class="form-status-toggle-button" :class="{visible: hldTechIsVisible, hidden: !hldTechIsVisible}" @click.stop="hldTechToggleState">
                         &#9660;
@@ -892,8 +900,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Mdl" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -908,8 +915,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Os" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -924,8 +930,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lang" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -940,8 +945,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Db" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -956,8 +960,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Tool" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -972,8 +975,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Frmw" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -988,8 +990,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lbrr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -1004,8 +1005,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Cmnct" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs">
                   </div>
                 </div>
 
@@ -1020,8 +1020,7 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Etc" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs"
-                           @blur="updateInputStatus(true)" @focus="updateInputStatus(false)">
+                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs">
                   </div>
                 </div>
               </div>
@@ -1179,7 +1178,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="bank" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.BANK" @input="checkInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.BANK"
+                           @input="paymentSetIsTyping(true)"
+                           @focusout="paymentCheckCompletion"
+                           @blur="paymentCheckCompletion">
                   </div>
                 </div>
 
@@ -1194,7 +1196,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="actNo" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ACTNO" @input="checkInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.ACTNO"
+                           @input="paymentSetIsTyping(true)"
+                           @focusout="paymentCheckCompletion"
+                           @blur="paymentCheckCompletion">
                   </div>
                 </div>
               </div>
@@ -1223,17 +1228,17 @@ import eventbus from '@/eventbus/eventbus';
 
 // 개인정보 토글 초기 값
 const indvInfoIsVisible = ref(true);
-const indvInfoPaymentInputStatus = ref('입력중'); // 초기 상태
+const indvInfoInputStatus = ref('입력중'); // 초기 상태
 const indvInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
 // 계약상태 토글 초기 값
 const ctrtSttsIsVisible = ref(true);
-const ctrtSttsPaymentInputStatus = ref('입력중'); // 초기 상태
+const ctrtSttsInputStatus = ref('입력중'); // 초기 상태
 const ctrtSttsIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
 // 보유스킬 토글 초기 값
 const hldTechIsVisible = ref(true);
-const hldTechPaymentInputStatus = ref('입력중'); // 초기 상태
+const hldTechInputStatus = ref('입력중'); // 초기 상태
 const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 const hldTechIsBlur = ref(false); // 초기값 설정
 
@@ -1416,14 +1421,14 @@ const selectPjInpStts = (pjInpStts) => {
 const selectClctPickupDt = (clctPickupDt) => {
   selectedClctPickupDt.value = clctPickupDt;
   formData.value.CLCT_PICKUP_DT = clctPickupDt;
-  checkInputs(); // 입력 확인
+  paymentCheckCompletion(); // 입력 확인
 };
 
 // 지급일자 선택
 const selectGiveDt = (giveDt) => {
   selectedGiveDt.value = giveDt;
   formData.value.GIVE_DT = giveDt;
-  checkInputs(); // 입력 확인
+  paymentCheckCompletion(); // 입력 확인
 };
 // 지급정보 선택 종료
 
@@ -1590,41 +1595,45 @@ const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번�
 // 이메일 부분을 저장할 배열
 const emailParts = ref(['', '']); // 이메일 앞부분과 도메인을 저장
 
-const checkInputs = () => {
-  const {CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO} = formData.value; // 대문자로 수정
-  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
-  console.log('CLCT_PICKUP_DT:', CLCT_PICKUP_DT);
-  console.log('GIVE_DT:', GIVE_DT);
-  console.log('BANK:', BANK);
-  console.log('ACTNO:', ACTNO);
+const paymentIsTyping = ref(false); // 입력 중 상태
 
+const paymentSetIsTyping = (value) => {
+  paymentIsTyping.value = value; // 입력 중 상태 설정
+};
+
+const paymentCheckCompletion = () => {
+  // 포커스가 벗어났을 때만 체크
+  if (paymentIsTyping.value) {
+    paymentIsTyping.value = false; // 입력 종료 상태로 변경
+    return; // 입력 중이면 체크하지 않음
+  }
+
+  const {CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO} = formData.value;
+
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  // 모든 입력란이 채워졌는지 확인
   if (CLCT_PICKUP_DT && GIVE_DT && BANK && ACTNO) {
     paymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     isVisible.value = false; // 지급 정보를 숨김
-    console.log("paymentInputStatus.value", paymentInputStatus.value);
   } else {
     paymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
 
-const updateInputStatus = (isBlur) => {
-  if(check.value === true){
-    hldTechIsVisible.value = false;
-  }
-  hldTechIsBlur.value = isBlur;
-  console.log('hldTechIsBlur 상태:', hldTechIsBlur.value);
-};
 const check = ref(false);
+
 const hldTechCheckInputs = () => {
   const { MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC } = formData.value;
 
   console.log('현재 입력값:', formData.value);
   console.log('hldTechIsBlur:', hldTechIsBlur.value);
-  console.log('hldTechPaymentInputStatus:', hldTechPaymentInputStatus.value);
+  console.log('hldTechPaymentInputStatus:', hldTechInputStatus.value);
 
   if (MDL && OS && LANG && DB && TOOL && FRMW && LBRR && CMNCT && ETC) {
-    hldTechPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    hldTechInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     console.log("hldTechIsBlur.value",hldTechIsBlur.value);
+    hldTechIsVisible.value = false;
     // hldTechIsBlur가 true일 때만 지급 정보를 숨김
     if (hldTechIsBlur.value) {
       console.log('블러 true.');
@@ -1635,7 +1644,7 @@ const hldTechCheckInputs = () => {
     }
 
   } else {
-    hldTechPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+    hldTechInputStatus.value = '입력중'; // 하나라도 비어있으면
     hldTechIsVisible.value = true; // 지급 정보를 보이게 함
   }
 };
@@ -1651,10 +1660,10 @@ const indvInfoCheckInputs = () => {
 
   if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
       MBL_TELNO && EML && RGN && ADDR && formattedInterviewDate && formattedPossibilityDate && MM_DMND_UNTPRC) {
-    indvInfoPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    indvInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     // indvInfoIsVisible.value = false; // 지급 정보를 숨김
   } else {
-    indvInfoPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+    indvInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
 
@@ -1671,15 +1680,29 @@ const handleInput = (event) => {
   indvInfoCheckInputs();
 };
 
-const ctrtSttsCheckInputs = () => {
-  const {CTRT_NMTM, OGDP_CO, DEPT} = formData.value; // 대문자로 수정
+const isTyping = ref(false); // 입력 중 상태
+
+const setIsTyping = (value) => {
+  isTyping.value = value; // 입력 중 상태 설정
+};
+
+const checkCompletion = () => {
+  // 포커스가 벗어났을 때만 체크
+  if (isTyping.value) {
+    isTyping.value = false; // 입력 종료 상태로 변경
+    return; // 입력 중이면 체크하지 않음
+  }
+
+  const { CTRT_NMTM, OGDP_CO, DEPT } = formData.value;
+
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
 
+  // 모든 입력란이 채워졌는지 확인
   if (CTRT_NMTM && OGDP_CO && DEPT) {
-    ctrtSttsPaymentInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    ctrtSttsInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     ctrtSttsIsVisible.value = false; // 지급 정보를 숨김
   } else {
-    ctrtSttsPaymentInputStatus.value = '입력중'; // 하나라도 비어있으면
+    ctrtSttsInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
 

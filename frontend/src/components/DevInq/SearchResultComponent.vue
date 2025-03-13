@@ -105,10 +105,10 @@ export default defineComponent({
     };
 
     const columnDefs = ref([
-      {headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, cellClass: 'checkboxCentered'},
+      {headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, sortable: false, cellClass: 'checkboxCentered'},
       {headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {
-        headerName: '이력서', field: 'resumeIcon', minWidth: 120,
+        headerName: '이력서', field: 'resumeIcon', minWidth: 120, filter: false, sortable: false,
         cellRenderer: (params) => {
           const resumeId = params.data.RESUME; // resumeId 확인
           return `<img src="${params.data.resumeImage}" style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;" onclick="downloadResume('${resumeId}')"/>
