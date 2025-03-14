@@ -41,7 +41,9 @@
                   <div class="col-10">
                     <input type="text" id="name" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.NM" required
-                           @input="indvInfoCheckInputs">
+                           @input="indvInfoSetIsTyping(true)"
+                           @focusout="indvInfoCheckCompletion"
+                           @blur="indvInfoCheckCompletion">
                   </div>
                 </div>
                 <!-- 소개자 레이블 -->
@@ -54,7 +56,10 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <input type="text" id="brkr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.BRKR" @input="indvInfoCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.BRKR"
+                           @input="indvInfoSetIsTyping(true)"
+                           @focusout="indvInfoCheckCompletion"
+                           @blur="indvInfoCheckCompletion">
                   </div>
                 </div>
                 <!-- 카카오톡 닉네임 레이블 -->
@@ -68,7 +73,9 @@
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
                     <input type="text" id="KakaoNick" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK"
-                           @input="indvInfoCheckInputs">
+                           @input="indvInfoSetIsTyping(true)"
+                           @focusout="indvInfoCheckCompletion"
+                           @blur="indvInfoCheckCompletion">
                   </div>
                 </div>
                 <!-- 성별 드롭다운 레이블 -->
@@ -121,8 +128,10 @@
                           class="form-control input date-default text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
-                          @change="updateBirthDate" required
-                          @input="indvInfoCheckInputs"/> <!-- 입력란 -->
+                          @change="(event) => updateBirthDate(event.target.value)" required
+                          @input="indvInfoSetIsTyping(true)"
+                          @focusout="indvInfoCheckCompletion"
+                          @blur="indvInfoCheckCompletion">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -139,7 +148,9 @@
                           aria-describedby="passwordHelpInline"
                           v-model="formData.SN" required
                           maxlength="7"
-                          @input="handleInput"/> <!-- 입력란 -->
+                          @input="handleInput"
+                          @focusout="indvInfoCheckCompletion"
+                          @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -155,7 +166,10 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
                     <input type="text" id="age" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.AGE" @input="indvInfoCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.AGE"
+                           @input="indvInfoSetIsTyping(true)"
+                           @focusout="indvInfoCheckCompletion"
+                           @blur="indvInfoCheckCompletion">
                   </div>
                 </div>
 
@@ -249,7 +263,10 @@
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
                       <input type="text" id="mblTelno" class="form-control input text-center"
-                             v-model="phoneParts[0]" @input="indvInfoCheckInputs">
+                             v-model="phoneParts[0]"
+                             @input="updateMblTelno"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -257,7 +274,10 @@
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="mblTelno2" class="form-control input text-center"
-                             v-model="phoneParts[1]" @input="indvInfoCheckInputs">
+                             v-model="phoneParts[1]"
+                             @input="updateMblTelno"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -265,7 +285,10 @@
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 세 번째 입력란 -->
                       <input type="text" id="mblTelno3" class="form-control input text-center"
-                             v-model="phoneParts[2]" @input="indvInfoCheckInputs">
+                             v-model="phoneParts[2]"
+                             @input="updateMblTelno"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -282,7 +305,10 @@
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
                       <input type="text" id="eml" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="emailParts[0]" @input="indvInfoCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="emailParts[0]"
+                             @input="updateEml"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
@@ -290,7 +316,10 @@
                     </div>
                     <div class="form-group col-5 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
                       <input type="text" id="eml2" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="emailParts[1]" @input="indvInfoCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="emailParts[1]"
+                             @input="updateEml"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -340,7 +369,10 @@
                     <div class="form-group col-5 flex-column flex-all-center mb-0"> <!-- 오른쪽 여백 추가 및 세로 정렬 -->
 
                       <input type="text" id="rgn" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.RGN" @input="indvInfoCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="formData.RGN"
+                             @input="indvInfoSetIsTyping(true)"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                     <div class="col-2 flex-all-center">
                       +
@@ -349,7 +381,10 @@
                     <div class="form-group col-5 flex-column flex-all-center mb-0">
 
                       <input type="text" id="addr" class="form-control input text-center"
-                             aria-describedby="passwordHelpInline" v-model="formData.ADDR" @input="indvInfoCheckInputs">
+                             aria-describedby="passwordHelpInline" v-model="formData.ADDR"
+                             @input="indvInfoSetIsTyping(true)"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -369,8 +404,9 @@
                           class="date-default input form-control text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedInterviewDate"
-                          @change="updateInterviewDate"
-                          @input="indvInfoCheckInputs"/>
+                          @input="indvInfoSetIsTyping(true)"
+                          @focusout="indvInfoCheckCompletion"
+                          @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -392,8 +428,9 @@
                           class="date-default input form-control text-center pl28 pr8"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedPossibilityDate"
-                          @change="updatePossibilityDate"
-                          @input="indvInfoCheckInputs"/>
+                          @input="indvInfoSetIsTyping(true)"
+                          @focusout="indvInfoCheckCompletion"
+                          @blur="indvInfoCheckCompletion">
                     </div>
                   </div>
                 </div>
@@ -413,7 +450,9 @@
                       <input type="text" id="mmDmndUntprc"
                              class="form-control flex-all-center w-100 input text-center pl40 pr40"
                              aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"
-                             @input="indvInfoCheckInputs">
+                             @input="indvInfoSetIsTyping(true)"
+                             @focusout="indvInfoCheckCompletion"
+                             @blur="indvInfoCheckCompletion">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
                     </div>
@@ -715,9 +754,9 @@
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
                       <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center pl40 pr40"
                              aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" required
-                             @input="setIsTyping(true)"
-                             @focusout="checkCompletion"
-                             @blur="checkCompletion">
+                             @input="ctrtSttsSetIsTyping(true)"
+                             @focusout="ctrtSttsCheckCompletion"
+                             @blur="ctrtSttsCheckCompletion">
                       <span class="position-absolute"
                             style="right: 12px; top: 50%; transform: translateY(-50%);">회</span>
                     </div>
@@ -841,9 +880,9 @@
                   <div class="col-10">
                     <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"
-                           @input="setIsTyping(true)"
-                           @focusout="checkCompletion"
-                           @blur="checkCompletion">
+                           @input="ctrtSttsSetIsTyping(true)"
+                           @focusout="ctrtSttsCheckCompletion"
+                           @blur="ctrtSttsCheckCompletion">
                   </div>
                 </div>
 
@@ -859,9 +898,9 @@
                   <div class="col-10">
                     <input type="text" id="dept" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.DEPT"
-                           @input="setIsTyping(true)"
-                           @focusout="checkCompletion"
-                           @blur="checkCompletion">
+                           @input="ctrtSttsSetIsTyping(true)"
+                           @focusout="ctrtSttsCheckCompletion"
+                           @blur="ctrtSttsCheckCompletion">
                   </div>
                 </div>
               </div>
@@ -900,7 +939,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Mdl" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.MDL" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.MDL"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -915,7 +957,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Os" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.OS" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.OS"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -930,7 +975,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lang" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LANG" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.LANG"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -945,7 +993,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Db" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.DB" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.DB"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -960,7 +1011,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Tool" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.TOOL" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.TOOL"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -975,7 +1029,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Frmw" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.FRMW" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.FRMW"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -990,7 +1047,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Lbrr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.LBRR" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.LBRR"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -1005,7 +1065,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Cmnct" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.CMNCT"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
 
@@ -1020,7 +1083,10 @@
                 <div class="input-wrap">
                   <div class="col-10">
                     <input type="text" id="Etc" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ETC" @input="hldTechCheckInputs">
+                           aria-describedby="passwordHelpInline" v-model="formData.ETC"
+                           @input="hldTechSetIsTyping(true)"
+                           @focusout="hldTechCheckCompletion"
+                           @blur="hldTechCheckCompletion">
                   </div>
                 </div>
               </div>
@@ -1240,7 +1306,6 @@ const ctrtSttsIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 const hldTechIsVisible = ref(true);
 const hldTechInputStatus = ref('입력중'); // 초기 상태
 const hldTechIsToggled = ref(false); // 클릭 상태를 관리하는 변수
-const hldTechIsBlur = ref(false); // 초기값 설정
 
 // 지급정보 토글 초기 값
 const isVisible = ref(true);
@@ -1336,6 +1401,26 @@ const selectAcbg = (acbg) => {
 const selectMs = (ms) => {
   selectedMs.value = ms;
   formData.value.MS = ms;
+};
+
+// 휴대폰번호 선택
+const selectMblTelno = () => {
+  formData.value.MBL_TELNO = `${phoneParts.value[0]}-${phoneParts.value[1]}-${phoneParts.value[2]}`;
+};
+
+// 전화번호 입력란에서 값이 변경될 때마다 호출
+const updateMblTelno = () => {
+  selectMblTelno();
+};
+
+// 이메일 선택
+const selectEml = () => {
+  formData.value.EML = `${emailParts.value[0]}@${emailParts.value[1]}`;
+};
+
+// 전화번호 입력란에서 값이 변경될 때마다 호출
+const updateEml = () => {
+  selectEml();
 };
 
 // 소득구분 선택
@@ -1513,36 +1598,36 @@ const ctrtSttsHandleClick = () => {
 };
 
 // 생년월일 업데이트
-const updateBirthDate = () => {
-  if (formData.value.BRDT && formData.value.BRDT.length === 6) {
-    const year = `20${formData.value.BRDT.slice(0, 2)}`; // YY를 YYYY로 변환
-    const month = formData.value.BRDT.slice(2, 4);
-    const day = formData.value.BRDT.slice(4, 6);
-    // 입력란에 YYYY-MM-DD 형식으로 저장
-    formData.value.displayBRDT = `${year}-${month}-${day}`;
-    console.log('변환된 생년월일:', formData.value.BRDT);
-  } else {
-    console.error('잘못된 날짜 형식:', formData.value.BRDT);
+const updateBirthDate = (value) => {
+  if (!value) {
+    console.error('잘못된 날짜 형식: 값이 정의되지 않음');
+    return; // 값이 없으면 함수 종료
   }
-  console.log('현재 formData:', formData.value); // formData의 현재 상태 출력
+
+  const dateParts = value.split('-'); // YYYY-MM-DD 형식에서 '-'로 분리
+  if (dateParts.length === 3) {
+    const year = dateParts[0].slice(2); // 연도의 뒤 두 자리 (YY)
+    const month = dateParts[1]; // 월
+    const day = dateParts[2]; // 일
+
+    // YYMMDD 형식으로 저장
+    formData.value.BRDT = `${year}${month}${day}`; // 예: '250320'로 저장
+  } else {
+    console.error('잘못된 날짜 형식:', value); // 오류 메시지
+  }
 };
 
-// 생년월일을 YYYY-MM-DD 형식으로 유지하기 위해 computed 속성 사용
+// 생년월일을 YYYY-MM-DD 형식으로 유지하기 위한 computed 속성
 const formattedBirthDate = computed({
   get: () => {
-    return formData.value.displayBRDT || ''; // displayBRDT에서 가져옴
+    const brdt = formData.value.BRDT;
+    if (brdt.length === 6) {
+      return `20${brdt.slice(0, 2)}-${brdt.slice(2, 4)}-${brdt.slice(4, 6)}`; // YYYY-MM-DD 형식으로 변환
+    }
+    return '';
   },
   set: (value) => {
-    const dateParts = value.split('-');
-    if (dateParts.length === 3) {
-      const year = dateParts[0].slice(2); // 연도의 뒤 두 자리
-      const month = dateParts[1];
-      const day = dateParts[2];
-      formData.value.BRDT = `${year}${month}${day}`; // YYMMDD 형식으로 저장
-      updateBirthDate(); // 생년월일 업데이트
-    } else {
-      console.error('잘못된 날짜 형식:', value);
-    }
+    updateBirthDate(value); // 생년월일 업데이트
   }
 });
 
@@ -1556,7 +1641,6 @@ const formattedInterviewDate = computed({
   },
   set: (value) => {
     formData.value.NTRV_DMND_DT = value.replace(/-/g, ''); // YYYY-MM-DD에서 YYYYMMDD로 변환
-    updateInterviewDate(); // 인터뷰 요청일 업데이트
   }
 });
 
@@ -1570,19 +1654,8 @@ const formattedPossibilityDate = computed({
   },
   set: (value) => {
     formData.value.INP_PSBLTY_DT = value.replace(/-/g, ''); // YYYY-MM-DD에서 YYYYMMDD로 변환
-    updatePossibilityDate(); // 투입 가능일 업데이트
   }
 });
-
-// 인터뷰 요청일 업데이트
-const updateInterviewDate = () => {
-  console.log('변환된 인터뷰 요청일:', formData.value.NTRV_DMND_DT);
-};
-
-// 투입 가능일 업데이트
-const updatePossibilityDate = () => {
-  console.log('변환된 투입 가능일:', formData.value.INP_PSBLTY_DT);
-};
 
 // 모달 상태 관리
 const showModal = ref(false);
@@ -1595,6 +1668,88 @@ const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번�
 // 이메일 부분을 저장할 배열
 const emailParts = ref(['', '']); // 이메일 앞부분과 도메인을 저장
 
+//개인정보 입력완료, 입력중 동작 시작
+const indvInfoIsTyping = ref(false); // 입력 중 상태
+
+const indvInfoSetIsTyping = (value) => {
+  indvInfoIsTyping.value = value; // 입력 중 상태 설정
+};
+
+const indvInfoCheckCompletion = () => {
+  const {
+    NM, BRKR, KAKAO_NICK, BRDT, SN, AGE,
+    MBL_TELNO, EML,
+    RGN, ADDR, NTRV_DMND_DT, INP_PSBLTY_DT, MM_DMND_UNTPRC
+  } = formData.value;
+
+  console.log('개인정보 현재 입력값:', formData.value); // 전체 입력값 출력
+
+  if (NM && BRKR && KAKAO_NICK && BRDT && SN && AGE &&
+      MBL_TELNO && EML && RGN && ADDR && NTRV_DMND_DT && INP_PSBLTY_DT && MM_DMND_UNTPRC) {
+    indvInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    indvInfoIsVisible.value = false; // 지급 정보를 숨김
+  } else {
+    indvInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+//개인정보 입력완료, 입력중 동작 종료
+
+//계약상태 입력완료, 입력중 동작 시작
+const ctrtSttsIsTyping = ref(false); // 입력 중 상태
+
+const ctrtSttsSetIsTyping = (value) => {
+  ctrtSttsIsTyping.value = value; // 입력 중 상태 설정
+};
+
+const ctrtSttsCheckCompletion = () => {
+  // 포커스가 벗어났을 때만 체크
+  if (ctrtSttsIsTyping.value) {
+    ctrtSttsIsTyping.value = false; // 입력 종료 상태로 변경
+    return; // 입력 중이면 체크하지 않음
+  }
+
+  const { CTRT_NMTM, OGDP_CO, DEPT } = formData.value;
+
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  // 모든 입력란이 채워졌는지 확인
+  if (CTRT_NMTM && OGDP_CO && DEPT) {
+    ctrtSttsInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    ctrtSttsIsVisible.value = false; // 지급 정보를 숨김
+  } else {
+    ctrtSttsInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+//계약상태 입력완료, 입력중 동작 종료
+
+//보유기술 입력완료, 입력중 동작 시작
+const hldTechIsTyping = ref(false); // 입력 중 상태
+
+const hldTechSetIsTyping = (value) => {
+  hldTechIsTyping.value = value; // 입력 중 상태 설정
+};
+
+const hldTechCheckCompletion = () => {
+  // 포커스가 벗어났을 때만 체크
+  if (hldTechIsTyping.value) {
+    hldTechIsTyping.value = false; // 입력 종료 상태로 변경
+    return; // 입력 중이면 체크하지 않음
+  }
+
+  const { MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC } = formData.value;
+
+  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
+
+  if (MDL && OS && LANG && DB && TOOL && FRMW && LBRR && CMNCT && ETC) {
+    hldTechInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+    hldTechIsVisible.value = false;
+  } else {
+    hldTechInputStatus.value = '입력중'; // 하나라도 비어있으면
+  }
+};
+//보유기술 입력완료, 입력중 동작 종료
+
+//지급정보 입력완료, 입력중 동작 시작
 const paymentIsTyping = ref(false); // 입력 중 상태
 
 const paymentSetIsTyping = (value) => {
@@ -1620,52 +1775,7 @@ const paymentCheckCompletion = () => {
     paymentInputStatus.value = '입력중'; // 하나라도 비어있으면
   }
 };
-
-const check = ref(false);
-
-const hldTechCheckInputs = () => {
-  const { MDL, OS, LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC } = formData.value;
-
-  console.log('현재 입력값:', formData.value);
-  console.log('hldTechIsBlur:', hldTechIsBlur.value);
-  console.log('hldTechPaymentInputStatus:', hldTechInputStatus.value);
-
-  if (MDL && OS && LANG && DB && TOOL && FRMW && LBRR && CMNCT && ETC) {
-    hldTechInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    console.log("hldTechIsBlur.value",hldTechIsBlur.value);
-    hldTechIsVisible.value = false;
-    // hldTechIsBlur가 true일 때만 지급 정보를 숨김
-    if (hldTechIsBlur.value) {
-      console.log('블러 true.');
-      hldTechIsVisible.value = true;
-    } else {
-      console.log('입력 완료 상태이지만 focus 상태입니다.');
-      check.value = true;
-    }
-
-  } else {
-    hldTechInputStatus.value = '입력중'; // 하나라도 비어있으면
-    hldTechIsVisible.value = true; // 지급 정보를 보이게 함
-  }
-};
-
-//개인정보 체크
-const indvInfoCheckInputs = () => {
-  const {
-    NM, BRKR, KAKAO_NICK, formattedBirthDate, SN, AGE,
-    MBL_TELNO, EML,
-    RGN, ADDR, formattedInterviewDate, formattedPossibilityDate, MM_DMND_UNTPRC
-  } = formData.value; // 대문자로 수정
-  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
-
-  if (NM && BRKR && KAKAO_NICK && formattedBirthDate && SN && AGE &&
-      MBL_TELNO && EML && RGN && ADDR && formattedInterviewDate && formattedPossibilityDate && MM_DMND_UNTPRC) {
-    indvInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    // indvInfoIsVisible.value = false; // 지급 정보를 숨김
-  } else {
-    indvInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
-  }
-};
+//지급정보 입력완료, 입력중 동작 종료
 
 // 입력값 검증 및 개인 정보 체크 함수
 const handleInput = (event) => {
@@ -1677,33 +1787,7 @@ const handleInput = (event) => {
   formData.value.SN = numericInput.slice(0, 7);
 
   // 개인 정보 체크 함수 호출
-  indvInfoCheckInputs();
-};
-
-const isTyping = ref(false); // 입력 중 상태
-
-const setIsTyping = (value) => {
-  isTyping.value = value; // 입력 중 상태 설정
-};
-
-const checkCompletion = () => {
-  // 포커스가 벗어났을 때만 체크
-  if (isTyping.value) {
-    isTyping.value = false; // 입력 종료 상태로 변경
-    return; // 입력 중이면 체크하지 않음
-  }
-
-  const { CTRT_NMTM, OGDP_CO, DEPT } = formData.value;
-
-  console.log('현재 입력값:', formData.value); // 전체 입력값 출력
-
-  // 모든 입력란이 채워졌는지 확인
-  if (CTRT_NMTM && OGDP_CO && DEPT) {
-    ctrtSttsInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    ctrtSttsIsVisible.value = false; // 지급 정보를 숨김
-  } else {
-    ctrtSttsInputStatus.value = '입력중'; // 하나라도 비어있으면
-  }
+  indvInfoCheckCompletion();
 };
 
 const hasPadding = ref(true); // 패딩 상태 관리
@@ -1742,11 +1826,11 @@ const submitForm = async (event) => {
     }
     return; // 유효하지 않으면 실행 중단
   }
-
-  // MBL_TELNO에 번호를 결합하여 저장
-  formData.value.MBL_TELNO = phoneParts.value.join('-'); // '-'로 결합
-  // EML에 이메일을 결합하여 저장
-  formData.value.EML = emailParts.value.join('@');
+  //
+  // // MBL_TELNO에 번호를 결합하여 저장
+  // formData.value.MBL_TELNO = phoneParts.value.join('-'); // '-'로 결합
+  // // EML에 이메일을 결합하여 저장
+  // formData.value.EML = emailParts.value.join('@');
 
   console.log('제출할 formData:', formData.value); // 제출할 때 formData 상태 출력
   try {
