@@ -1897,6 +1897,17 @@ const openModalHandler = () => {
     AGE: "",
     ACBG: selectedAcbg.value
   }; // 초기화
+  // 입력 상태 초기화
+  indvInfoInputStatus.value = '입력중'; // 개인정보 상태
+  ctrtSttsInputStatus.value = '입력중'; // 계약상태 상태
+  hldTechInputStatus.value = '입력중'; // 보유기술 상태
+  paymentInputStatus.value = '입력중'; // 지급정보 상태
+
+  indvInfoIsVisible.value = true; // 클릭 상태를 관리하는 변수
+  ctrtSttsIsVisible.value = true; // 클릭 상태를 관리하는 변수
+  hldTechIsVisible.value = true; // 클릭 상태를 관리하는 변수
+  isVisible.value = true; // 클릭 상태를 관리하는 변수
+
   showModal.value = true; // 모달 열기
 };
 
