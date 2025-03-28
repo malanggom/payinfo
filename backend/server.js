@@ -579,12 +579,35 @@ const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\front
 app.get('/api/downloadResume/:resumeId', (req, res) => { // GET 메서드로 변경
     const resumeId = req.params.resumeId; // URL에서 resumeId 추출
     const filePath = path.join(RESUME_DIR, `${resumeId}.docx`); // 파일 이름에 확장자 추가
+    const docxFilePath = path.join(RESUME_DIR, `${resumeId}.docx`); // .docx 파일 경로
+    const docFilePath = path.join(RESUME_DIR, `${resumeId}.doc`); // .doc 파일 경로
 
-    // 파일 전송
-    res.download(filePath, (err) => {
-        if (err) {
-            console.error('File download error:', err);
-            res.status(404).send('이력서를 찾을 수 없습니다.'); // 404로 변경
+    // .docx 파일이 존재하는지 확인
+    fs.access(docxFilePath, fs.constants.F_OK, (err) => {
+        if (!err) {
+            // .docx 파일이 존재하면 다운로드
+            res.download(docxFilePath, (err) => {
+                if (err) {
+                    console.error('File download error:', err);
+                    res.status(404).send('이력서를 찾을 수 없습니다.');
+                }
+            });
+        } else {
+            // .docx 파일이 없으면 .doc 파일을 확인
+            fs.access(docFilePath, fs.constants.F_OK, (errDoc) => {
+                if (!errDoc) {
+                    // .doc 파일이 존재하면 다운로드
+                    res.download(docFilePath, (err) => {
+                        if (err) {
+                            console.error('File download error:', err);
+                            res.status(404).send('이력서를 찾을 수 없습니다.');
+                        }
+                    });
+                } else {
+                    // 두 파일 모두 없으면 404 응답
+                    res.status(404).send('이력서를 찾을 수 없습니다.');
+                }
+            });
         }
     });
 });
