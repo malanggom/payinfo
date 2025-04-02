@@ -10,6 +10,16 @@ const app = express();
 const port = 8080;
 
 
+// JSON 요청 본문을 파싱하기 위한 미들웨어
+app.use(express.json());
+
+// CORS 설정
+app.use(cors());
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
 // Oracle Instant Client 경로 설정
 oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-windows.x64-23.4.0.24.05\\instantclient_23_4' });
 
@@ -596,18 +606,11 @@ app.get('/api/downloadResume/:resumeId', (req, res) => {
 });
 
 app.get('/api/previewResume/:resumeId', (req, res) => {
-    console.log("✅ /api/previewResume 라우트 실행됨!");
-    console.log("요청된 resumeId:", req.params.resumeId);
     const encodedResumeId = req.params.resumeId;
     const resumeId = decodeURIComponent(encodedResumeId);  // 🔹 디코딩 추가
     const docxFilePath = path.join(RESUME_DIR, `${resumeId}.docx`);
     const docFilePath = path.join(RESUME_DIR, `${resumeId}.doc`);
     let filePath = null;
-
-    console.log("미리보기 요청된 원본 resumeId:", encodedResumeId);
-    console.log("디코딩된 resumeId:", resumeId);
-    console.log("파일 경로 확인: DOCX ->", docxFilePath);
-    console.log("파일 경로 확인: DOC  ->", docFilePath);
 
     if (fs.existsSync(docxFilePath)) {
         filePath = docxFilePath;
@@ -623,7 +626,6 @@ app.get('/api/previewResume/:resumeId', (req, res) => {
             console.error('파일 읽기 오류:', err);
             return res.status(500).send('파일을 읽을 수 없습니다.');
         }
-
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         res.send(data);
     });
@@ -713,19 +715,10 @@ app.delete('/api/deletePjDevHistData', async (req, res) => {
 });
 
 
-// JSON 요청 본문을 파싱하기 위한 미들웨어
-app.use(express.json());
 
-// CORS 설정
-app.use(cors());
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-console.log("📌 등록된 라우트 목록:");
-app._router.stack.forEach((middleware) => {
-    if (middleware.route) {
-        console.log(middleware.route.path);
-    }
-});
+// console.log("📌 등록된 라우트 목록:");
+// app._router.stack.forEach((middleware) => {
+//     if (middleware.route) {
+//         console.log(middleware.route.path);
+//     }
+// });

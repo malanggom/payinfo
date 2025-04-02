@@ -13,11 +13,11 @@
 
         <!-- 모달 바디 -->
         <div class="modal-body d-flex flex-column" ref="modalBody">
-          <form class="form d-flex flex-column flex-grow-1" autocomplete="off">
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
-              <div class="d-flex justify-content-center w-100">
-                <div class="col-10 d-flex align-items-center form-status-bg w-100">
-                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap w-100">
+          <form class="modal-height-fix100 form d-flex flex-column flex-grow-1" autocomplete="off">
+            <div class="modal-height-fix100 b-line pt-4 pb-4 flex-column d-flex justify-content-center">
+              <div class="modal-height-fix100 d-flex justify-content-center w-100">
+                <div class="modal-height-fix100 col-10 d-flex align-items-center form-status-bg w-100">
+                  <div class="modal-height-fix100 d-flex justify-content-between form-control form-status toggleTextWrap w-100">
                     <!-- 미리보기 컨테이너 -->
                     <div id="docx-container">
                       <p v-if="!resumeUrl">미리보기 할 이력서가 없습니다.</p>
@@ -37,14 +37,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, watch } from 'vue';
 import eventbus from '@/eventbus/eventbus';
 
 // docx-preview.js 라이브러리 불러오기
 import * as docx from 'docx-preview'; // docx-preview.js가 제대로 로드되었는지 확인
 
 const showModal = ref(false);
-const resumeUrl = ref(null);
+const resumeUrl = ref("");
 
 const closeModal = () => {
   showModal.value = false; // 모달 닫기
@@ -100,36 +100,68 @@ const openModalPreviewResume = async (resumeId) => {
         return;
       }
 
-      container.innerHTML = ""; // 기존 내용 초기화
+      // 강제로 표시 (CSS에서 덮어씌우지 못하게)
+      container.style.removeProperty("display"); // 기존 display 속성 제거
+      container.style.setProperty("display", "block", "important"); // 강제 적용
+
+      // 기존 내용 초기화 후 DOCX 렌더링
+      container.innerHTML = "";
       docx.renderAsync(blob, container).then(() => {
         console.log("✅ DOCX 문서가 렌더링되었습니다.");
+
+        // 📌 패딩 제거 (300ms 후)
+        setTimeout(() => {
+          const wrapper = document.querySelector(".docx-wrapper");
+          const section = document.querySelector(".docx");
+
+          if (wrapper) wrapper.style.padding = "0";
+          if (section) section.style.padding = "0";
+        }, 300);
+
+        // 📌 가로 페이지 감지 후 스타일 적용 (500ms 후)
+        setTimeout(() => {
+          const sections = document.querySelectorAll(".docx-section");
+
+          sections.forEach(section => {
+            const width = parseFloat(section.style.width);
+            const height = parseFloat(section.style.height);
+
+            if (!width || !height) return; // width, height가 없으면 스킵
+
+            if (width > height) {
+              // 가로 페이지면 landscape 클래스 추가
+              section.classList.add("landscape");
+            }
+          });
+        }, 500);
       }).catch(err => {
         console.error("🚨 DOCX 렌더링 중 오류 발생:", err);
       });
     }, 300); // 300ms 정도 지연
 
-    console.log("🔍 showModal 값:", showModal.value);
-    console.log("🔍 #docx-container 존재 여부:", document.getElementById("docx-container"));
-
-
-    // 이제 docx-container를 찾을 수 있음
-    const container = document.getElementById("docx-container");
-    if (!container) {
-      console.error("🚨 'docx-container' 요소를 찾을 수 없습니다. HTML을 확인하세요.");
-      return;
-    }
-
-    container.innerHTML = ""; // 기존 내용 초기화
-    docx.renderAsync(blob, container).then(() => {
-      console.log("✅ DOCX 문서가 렌더링되었습니다.");
-    }).catch(err => {
-      console.error("🚨 DOCX 렌더링 중 오류 발생:", err);
-    });
-
   } catch (error) {
     console.error("🚨 오류 발생:", error);
   }
 };
+
+// 모달의 display 상태를 동적으로 변경
+watch(showModal, (newValue) => {
+  const modalElement = document.querySelector(".modal");
+  if (!modalElement) return;
+
+  if (newValue) {
+    modalElement.style.display = "block";
+    setTimeout(() => {
+      modalElement.classList.add("show");
+    }, 10);
+  } else {
+    modalElement.classList.remove("show");
+    setTimeout(() => {
+      modalElement.style.display = "none";
+    }, 300);
+  }
+});
+
 
 onMounted(() => {
   eventbus.SearchResultEvent.add('openModalPreviewResume', (resumeId) => {
@@ -140,15 +172,37 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.modal {
+  display: block; /* 모달을 보이게 하기 위해 설정 */
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 요소 배치 */
+  height: 100%; /* 모달 높이 설정 */
+}
+
+.modal-body {
+  flex-grow: 1; /* 몸체가 남은 공간을 차지하도록 설정 */
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
+  overflow-x: hidden; /* 수평 스크롤 숨김 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0px;
+}
+
+.modal-height-fix100{
+  height: 100%;
+}
+
 #docx-container {
-  display: block !important;
-  height: 400px; /* 고정 높이로 설정 */
+  display: block;
+  height: 100%; /* 고정 높이로 설정 */
   width: 100%; /* 부모 너비를 가득 채우도록 설정 */
   overflow-y: auto; /* 세로 스크롤 활성화 */
   background: white; /* 흰 배경 */
   padding: 15px;
-  border: 2px solid red; /* 보이도록 빨간 테두리 추가 */
-  border-radius: 5px;
   text-align: center;
 }
 /* 모달 배경 */
@@ -160,5 +214,9 @@ onMounted(() => {
 .custom-modal {
   max-width: 900px;
   width: 80%;
+}
+
+.docx-wrapper, .docx {
+  padding: 0 !important;
 }
 </style>
