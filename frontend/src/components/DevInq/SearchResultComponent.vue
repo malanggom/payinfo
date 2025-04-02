@@ -72,9 +72,6 @@ export default defineComponent({
     };
 
     const gridOptions = {
-      autoSizeStrategy: {
-        type: 'fitCellContents',
-      },
       localeText: {
         contains: '포함',
         notContains: '포함하지 않음',
@@ -105,10 +102,10 @@ export default defineComponent({
     };
 
     const columnDefs = ref([
-      {headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, sortable: false, cellClass: 'checkboxCentered'},
+      {headerName: '선택', checkboxSelection: true, minWidth: 60, filter: false, sortable: false, cellClass: 'checkboxCentered'},
       {headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {
-        headerName: '이력서', field: 'resumeIcon', minWidth: 120, filter: false, sortable: false,
+        headerName: '이력서', field: 'resumeIcon', minWidth: 80, filter: false, sortable: false,
         cellRenderer: (params) => {
           const resumeId = params.data.RESUME; // resumeId 확인
           return `<img src="${params.data.resumeImage}" style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;" onclick="downloadResume('${resumeId}')"/>
@@ -118,35 +115,44 @@ export default defineComponent({
         },
       },
       {
+        headerName: '생년월일',
+        field: "BRDT",
+        minWidth: 130,
+        filter: "agNumberColumnFilter",
+        filterParams: numberFilterParams
+      },
+      {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
+      {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, cellStyle: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }},
+      {headerName: '운영체제', field: "OS", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '데이터베이스', field: "DB", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '툴', field: "TOOL", minWidth: 90, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '프레임워크', field: "FRMW", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '라이브러리', field: "LBRR", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {
         headerName: '프로젝트투입상태',
         field: "PJ_INP_STTS",
-        minWidth: 200,
+        minWidth: 190,
         filter: "agTextColumnFilter",
         filterParams: {buttons: ["reset", "apply"]},
       },
       {
         headerName: '계약횟수',
         field: "CTRT_NMTM",
-        minWidth: 140,
+        minWidth: 130,
         filter: "agNumberColumnFilter",
         filterParams: numberFilterParams
       },
-      {
-        headerName: '생년월일',
-        field: "BRDT",
-        minWidth: 140,
-        filter: "agNumberColumnFilter",
-        filterParams: numberFilterParams
-      },
-      {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '성별', field: "GNDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {
         headerName: '총경력기간',
         field: "T_CR_PER",
-        minWidth: 170,
+        minWidth: 150,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
@@ -154,7 +160,7 @@ export default defineComponent({
       {
         headerName: '휴대전화번호',
         field: "MBL_TELNO",
-        minWidth: 190,
+        minWidth: 160,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
@@ -162,111 +168,69 @@ export default defineComponent({
       {
         headerName: '컨택방법',
         field: "CONTT_MTHD",
-        minWidth: 140,
+        minWidth: 130,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
       {
         headerName: '인터뷰요청일',
         field: "NTRV_DMND_DT",
-        minWidth: 190,
+        minWidth: 160,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
       {
         headerName: '투입가능일',
         field: "INP_PSBLTY_DT",
-        minWidth: 170,
+        minWidth: 150,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
       {
         headerName: '소속회사',
         field: "OGDP_CO",
-        minWidth: 140,
+        minWidth: 130,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
-      {headerName: '일련번호', field: "SN", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '일련번호', field: "SN", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {
         headerName: '3.3%여부',
         field: "WHTAX_YN",
-        minWidth: 170,
+        minWidth: 150,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
       {
         headerName: '사업자여부',
         field: "BZMN_YN",
-        minWidth: 170,
+        minWidth: 150,
         filter: "agTextColumnFilter",
         filterParams: textFilterParams
       },
       {
         headerName: '자사정규직여부',
         field: "KDS_EMP_YN",
-        minWidth: 190,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '계약회사정규직여부',
-        field: "CTRT_CO_EMP_YN",
-        minWidth: 210,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '대금수령날짜',
-        field: "CLCT_PICKUP_DT",
-        minWidth: 190,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '지급일자',
-        field: "GIVE_DT",
-        minWidth: 140,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '계좌번호', field: "ACTNO", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '부서', field: "DEPT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '월요청단가',
-        field: "MM_DMND_UNTPRC",
         minWidth: 170,
-        filter: "agNumberColumnFilter",
-        filterParams: numberFilterParams
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
       },
+      {headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", minWidth: 200,
+        filter: "agTextColumnFilter",
+        filterParams: textFilterParams
+      },
+      {headerName: '대금수령날짜', field: "CLCT_PICKUP_DT", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '지급일자', field: "GIVE_DT", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '계좌번호', field: "ACTNO", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '부서', field: "DEPT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '월요청단가', field: "MM_DMND_UNTPRC", minWidth: 150, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '주소', field: "ADDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '직책', field: "JBTTL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '소개자', field: "BRKR", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '카카오톡닉네임',
-        field: "KAKAO_NICK",
-        minWidth: 190,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '계약이력존재여부',
-        field: "CTRT_HSTRY_YN",
-        minWidth: 200,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
+      {headerName: '카카오톡닉네임', field: "KAKAO_NICK", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '계약이력존재여부', field: "CTRT_HSTRY_YN", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '병역', field: "MS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '운영체제', field: "OS", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '데이터베이스', field: "DB", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '툴', field: "TOOL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '프레임워크', field: "FRMW", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '라이브러리', field: "LBRR", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
     ]);
 
     const rowSelection = ref("multiple");
