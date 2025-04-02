@@ -31,10 +31,12 @@ export { handlers }; // handlers를 export
 
 export default {
     SearchResultEvent: {
+        // eventType에 맞는 핸들러 추가
         add(eventType, handler) {
-            if (handlers[eventType]) {
-                handlers[eventType].push(handler);
+            if (!handlers[eventType]) {
+                handlers[eventType] = [];
             }
+            handlers[eventType].push(handler);
         },
         remove(eventType, handler) {
             if (handlers[eventType]) {
@@ -86,10 +88,13 @@ export default {
             handlers.openModalUpdate.forEach(handler => handler());
             console.log("openmodalupdate종료");
         },
-        openModalPreviewResume(){
-            console.log("openModalPreviewResume시작");
-            handlers.openModalPreviewResume.forEach(handler => handler());
-            console.log("openModalPreviewResume종료");
+        openModalPreviewResume(resumeId) {
+            console.log("openModalPreviewResume 시작", resumeId);
+            // 등록된 핸들러에게 resumeId 전달
+            if (handlers.openModalPreviewResume) {
+                handlers.openModalPreviewResume.forEach(handler => handler(resumeId));
+            }
+            console.log("openModalPreviewResume 종료");
         },
         resetKorButton() { // 초기화 함수 추가
             handlers.resetKorButton.forEach(handler => handler());

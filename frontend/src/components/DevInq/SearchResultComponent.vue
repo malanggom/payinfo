@@ -669,17 +669,8 @@ export default defineComponent({
         console.error('이력서 ID가 없습니다.');
         return;
       }
-      else {
-        openModalPreviewResume();
-        console.log("미리보기 체크 resumeId:",resumeId);
-        // const url = `http://localhost:8080/api/previewResume/${resumeId}`;
-        // const link = document.createElement('a');
-        // link.href = url;
-        // link.setAttribute('download', resumeId);
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-      }
+      console.log("미리보기 체크 resumeId:", resumeId);
+      eventbus.SearchResultEvent.openModalPreviewResume(resumeId); // resumeId 전달
     };
 
     // 이벤트 수신 등록

@@ -9,11 +9,6 @@ const path = require('path'); // 이 부분이 필요함
 const app = express();
 const port = 8080;
 
-// JSON 요청 본문을 파싱하기 위한 미들웨어
-app.use(express.json());
-
-// CORS 설정
-app.use(cors());
 
 // Oracle Instant Client 경로 설정
 oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-windows.x64-23.4.0.24.05\\instantclient_23_4' });
@@ -601,15 +596,36 @@ app.get('/api/downloadResume/:resumeId', (req, res) => {
 });
 
 app.get('/api/previewResume/:resumeId', (req, res) => {
-    const resumeId = decodeURIComponent(req.params.resumeId); // URL 디코딩
-    const filePath = path.join(RESUME_DIR, `${resumeId}.docx`); // 파일 경로 설정
+    console.log("✅ /api/previewResume 라우트 실행됨!");
+    console.log("요청된 resumeId:", req.params.resumeId);
+    const encodedResumeId = req.params.resumeId;
+    const resumeId = decodeURIComponent(encodedResumeId);  // 🔹 디코딩 추가
+    const docxFilePath = path.join(RESUME_DIR, `${resumeId}.docx`);
+    const docFilePath = path.join(RESUME_DIR, `${resumeId}.doc`);
+    let filePath = null;
 
-    // 파일 전송
-    res.download(filePath, (err) => {
+    console.log("미리보기 요청된 원본 resumeId:", encodedResumeId);
+    console.log("디코딩된 resumeId:", resumeId);
+    console.log("파일 경로 확인: DOCX ->", docxFilePath);
+    console.log("파일 경로 확인: DOC  ->", docFilePath);
+
+    if (fs.existsSync(docxFilePath)) {
+        filePath = docxFilePath;
+    } else if (fs.existsSync(docFilePath)) {
+        filePath = docFilePath;
+    } else {
+        return res.status(404).send('이력서를 찾을 수 없습니다.');
+    }
+
+    // 파일 읽어서 클라이언트에 전송
+    fs.readFile(filePath, (err, data) => {
         if (err) {
-            console.error('File download error:', err);
-            res.status(404).send('이력서를 찾을 수 없습니다.'); // 404로 변경
+            console.error('파일 읽기 오류:', err);
+            return res.status(500).send('파일을 읽을 수 없습니다.');
         }
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        res.send(data);
     });
 });
 
@@ -696,6 +712,20 @@ app.delete('/api/deletePjDevHistData', async (req, res) => {
     }
 });
 
+
+// JSON 요청 본문을 파싱하기 위한 미들웨어
+app.use(express.json());
+
+// CORS 설정
+app.use(cors());
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
+});
+
+console.log("📌 등록된 라우트 목록:");
+app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+        console.log(middleware.route.path);
+    }
 });
