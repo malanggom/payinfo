@@ -1,8 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import SearchBarNameComponent from "@/components/common/SearchBarNameComponent.vue";
 import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 
+const searchName = ref('')
 </script>
 
 <template>
@@ -18,8 +20,8 @@ import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
         </div>
       </div>
       <div class="flex">
-        <SearchBarComponent class="mgLR10"/>
-        <SearchBtnComponent class="mgLR10"/>
+        <SearchBarComponent v-model:searchName="searchName" class="mgLR10"/>
+        <SearchBtnComponent :searchName="searchName" class="mgLR10"/>
       </div>
     </div>
   </div>

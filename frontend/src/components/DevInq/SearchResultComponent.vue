@@ -161,16 +161,18 @@ export default defineComponent({
     const rowSelection = ref("multiple");
     const rowData = ref([]);
 
-    const fetchData = async () => {
+    const fetchData = async (type, filter) => {
+      const name = filter || '';
+
       try {
-        const response = await fetch('http://localhost:8080/api/getDevData');
+        const response = await fetch(`http://localhost:8080/api/getDevData?name=${encodeURIComponent(name)}`);
         const data = await response.json();
 
         const translatedData = data.result.row.map(item => ({
           DEV_NO: item.DEV_NO,
           NM: item.NM,
-          resumeImage: '/downloadResume.png', // 이미지 URL 추가 (아이콘 이미지 경로)
-          resumePreviewImage: '/resumePreview.png', // 이미지 URL 추가 (아이콘 이미지 경로)
+          resumeImage: '/downloadResume.png',
+          resumePreviewImage: '/resumePreview.png',
           PJ_INP_STTS: item.PJ_INP_STTS,
           CTRT_NMTM: item.CTRT_NMTM,
           BRDT: item.BRDT,
@@ -215,10 +217,12 @@ export default defineComponent({
           ACBG: item.ACBG,
           RESUME: item.RESUME,
         }));
-        console.log(data.result.row);
+
         rowData.value = translatedData;
-        gridApi.value.refreshCells();
         searchPerformed.value = true;
+
+        console.log("서버 응답 결과:", data);           // 전체 응답
+        console.log("검색 결과 row:", data.result.row); // 실제 row
       } catch (error) {
         console.error('개발자 데이터 로드 오류:', error);
         rowData.value = [];
@@ -304,7 +308,6 @@ export default defineComponent({
         }
         pagingPanel.insertBefore(deleteRows, editRows.nextSibling);
       }
-      eventbus.SearchResultEvent.add('search', fetchData);
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
       eventbus.SearchResultEvent.add('reset', resetFilter);
       eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
@@ -560,18 +563,14 @@ export default defineComponent({
       eventbus.SearchResultEvent.openModalPreviewResume(resumeId); // resumeId 전달
     };
 
-    // 이벤트 수신 등록
-    const handleRefreshData = () => {
-      alert("fetchData 실행잘됨");
-      fetchData(); // 데이터 새로 고침
-    };
-
     onMounted(() => {
-      eventbus.SearchResultEvent.add('refreshData', handleRefreshData); // 이벤트 핸들러 등록
+      eventbus.SearchResultEvent.add('search', fetchData); // 기존 이벤트 등록
+
+      fetchData(); // 🔥 초기 전체 데이터 로드 (name 없이)
     });
 
     onBeforeUnmount(() => {
-      eventbus.SearchResultEvent.remove('refreshData', handleRefreshData); // 이벤트 핸들러 해제
+      eventbus.SearchResultEvent.remove('search', fetchData);
     });
 
     return {

@@ -3,11 +3,14 @@
 import eventbus from '@/eventbus/eventbus'
 
 export default {
-  emits: ['search'], // 이벤트 정의
+  props: {
+    searchName: String, // ✅ props로 searchName을 받음
+  },
+  emits: ['searchName'], // 이벤트 정의
   methods: {
-    handleRemove: function() { // 화살표 함수가 아닌 일반 함수로 변경
-      eventbus.SearchResultEvent.fetchData(); // 이벤트 호출
-      console.log("검색");
+    handleRemove: function() {
+      eventbus.SearchResultEvent.fetchData('searchName', this.searchName);
+      console.log("검색:", this.searchName);
     }
   }
 };

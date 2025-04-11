@@ -38,9 +38,24 @@ app.get('/', (req, res) => {
 app.get('/api/getDevData', async (req, res) => {
     let connection;
 
+    // 이름 파라미터 받기
+    const searchName = req.query.name;
+    console.log('✅ searchName:', searchName);
+
     try {
         connection = await oracledb.getConnection(dbConfig);
-        const result = await connection.execute('SELECT * FROM C##SYSON.DEV');
+
+        let baseQuery = 'SELECT * FROM C##SYSON.DEV';
+        let binds = [];
+
+        if (searchName) {
+            baseQuery += ' WHERE NM LIKE :name';
+            binds = [`%${searchName}%`]; // 부분일치 검색
+        }
+
+        console.log('✅ 최종 쿼리:', baseQuery);
+        console.log('✅ 바인딩 값:', binds);
+        const result = await connection.execute(baseQuery, binds);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'No data found' });
@@ -95,7 +110,8 @@ app.get('/api/getDevData', async (req, res) => {
                 RESUME: row[44],
             };
         });
-
+        console.log('✅ 쿼리 결과 row 수:', result.rows.length);
+        console.log('✅ 쿼리 결과:', result.rows);
         res.json({ result: { row: data } });
     } catch (err) {
         console.error("데이터베이스 연결에러: ", err);
