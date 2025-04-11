@@ -2,7 +2,7 @@
   "dependencies": {
     "ag-grid-charts-enterprise": "^32.2.2",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "oracledb": "^6.6.0"
   }
 }

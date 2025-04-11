@@ -1,5 +1,5 @@
 <template>
-  <div class="ag-theme-quartz pl10" style="width: 100%; height: 98%;">
+  <div class="ag-theme-quartz" style="width: 100%; height: 98%;">
     <dev-pj-history-add-btn-component ref="devPjHistoryAddBtn" @open-modal="pjOpenModal"></dev-pj-history-add-btn-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"

@@ -50,7 +50,6 @@ import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
 .search__conditions__component{
   border: 1px solid #c9d6df;
   border-radius: 10px;
-  margin-left: 10px;
   background-color: white;
   display: grid;
   grid-template-rows: 25px 1fr 50px;

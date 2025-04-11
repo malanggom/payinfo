@@ -1,5 +1,5 @@
 <template>
-  <div class="ag-theme-quartz pl10" style="width: 100%; height: 98%;">
+  <div class="ag-theme-quartz" style="width: 100%; height: 100%;">
     <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
     <dev-update-btn-component ref="devUpdateBtn" @open-modal="openModalUpdate"></dev-update-btn-component>
     <preview-resume-component ref="previewResumeBtn" @open-modal="openModalPreviewResume"></preview-resume-component>
@@ -114,16 +114,10 @@ export default defineComponent({
              onclick="previewResume('${resumeId}')"/>`;
         },
       },
-      {
-        headerName: '생년월일',
-        field: "BRDT",
-        minWidth: 130,
-        filter: "agNumberColumnFilter",
-        filterParams: numberFilterParams
-      },
+      {headerName: '생년월일', field: "BRDT", minWidth: 130, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams, cellStyle: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }},
+      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '운영체제', field: "OS", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '데이터베이스', field: "DB", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -132,93 +126,24 @@ export default defineComponent({
       {headerName: '라이브러리', field: "LBRR", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '프로젝트투입상태',
-        field: "PJ_INP_STTS",
-        minWidth: 190,
-        filter: "agTextColumnFilter",
-        filterParams: {buttons: ["reset", "apply"]},
-      },
-      {
-        headerName: '계약횟수',
-        field: "CTRT_NMTM",
-        minWidth: 130,
-        filter: "agNumberColumnFilter",
-        filterParams: numberFilterParams
-      },
+      {headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 190, filter: "agTextColumnFilter", filterParams: {buttons: ["reset", "apply"]},},
+      {headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 130, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '성별', field: "GNDR", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '총경력기간',
-        field: "T_CR_PER",
-        minWidth: 150,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
+      {headerName: '총경력기간', field: "T_CR_PER", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '지역', field: "RGN", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '휴대전화번호',
-        field: "MBL_TELNO",
-        minWidth: 160,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
+      {headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '이메일', field: "EML", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '컨택방법',
-        field: "CONTT_MTHD",
-        minWidth: 130,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '인터뷰요청일',
-        field: "NTRV_DMND_DT",
-        minWidth: 160,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '투입가능일',
-        field: "INP_PSBLTY_DT",
-        minWidth: 150,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '소속회사',
-        field: "OGDP_CO",
-        minWidth: 130,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
+      {headerName: '컨택방법', field: "CONTT_MTHD", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '인터뷰요청일', field: "NTRV_DMND_DT", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '투입가능일', field: "INP_PSBLTY_DT", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '소속회사', field: "OGDP_CO", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '일련번호', field: "SN", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {
-        headerName: '3.3%여부',
-        field: "WHTAX_YN",
-        minWidth: 150,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '사업자여부',
-        field: "BZMN_YN",
-        minWidth: 150,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {
-        headerName: '자사정규직여부',
-        field: "KDS_EMP_YN",
-        minWidth: 170,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
-      {headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", minWidth: 200,
-        filter: "agTextColumnFilter",
-        filterParams: textFilterParams
-      },
+      {headerName: '3.3%여부', field: "WHTAX_YN", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '사업자여부', field: "BZMN_YN", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '자사정규직여부', field: "KDS_EMP_YN", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '계약회사정규직여부', field: "CTRT_CO_EMP_YN", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '대금수령날짜', field: "CLCT_PICKUP_DT", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '지급일자', field: "GIVE_DT", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '은행', field: "BANK", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -317,14 +242,13 @@ export default defineComponent({
     //셀 업데이트
     const cellValueUpdate = () => {
       const selectedRows = gridApi.value.getSelectedRows();
-      console.log("selectedRows:",selectedRows);
-      if(selectedRows.length > 1){
+      console.log("selectedRows:", selectedRows);
+      if (selectedRows.length > 1) {
         return 0;
         //alert 개발자를 한명만 선택해주세요. 발생
-      }else if(selectedRows.length < 1){
+      } else if (selectedRows.length < 1) {
         return 2;
-      }
-      else{
+      } else {
         //openModalUpdate();실행
         return 1;
       }
@@ -356,11 +280,11 @@ export default defineComponent({
           if (!searchPerformed.value) {
             alert("검색을 먼저 수행해 주세요.");
             gridApi.value.setFilterModel(null);
-          } else if(searchPerformed.value && cellValueUpdate() === 0) {
+          } else if (searchPerformed.value && cellValueUpdate() === 0) {
             alert("개발자를 한명만 선택해주세요.");
-          } else if(searchPerformed.value && cellValueUpdate() === 2){
+          } else if (searchPerformed.value && cellValueUpdate() === 2) {
             alert("개발자를 선택하지 않았습니다. 개발자를 선택해주세요.");
-          } else if(searchPerformed.value && cellValueUpdate() === 1){
+          } else if (searchPerformed.value && cellValueUpdate() === 1) {
             openModalUpdate();
           }
         }
@@ -615,9 +539,8 @@ export default defineComponent({
       if (!resumeId) {
         console.error('이력서 ID가 없습니다.');
         return;
-      }
-      else{
-        console.log("resumeId:",resumeId);
+      } else {
+        console.log("resumeId:", resumeId);
         const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
         const link = document.createElement('a');
         link.href = url;
