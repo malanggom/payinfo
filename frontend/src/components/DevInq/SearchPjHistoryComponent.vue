@@ -200,104 +200,99 @@ export default defineComponent({
     const previousFilters = ref([]);
 
     const onFilterChanged = async () => {
-      if (!searchPerformed.value) {
-        alert("검색을 먼저 수행해 주세요.");
-        gridApi.value.setFilterModel(null);
-      }else {
-        const grf = eventbus.SearchPjHistoryResultEvent.getRegisteredFilters();
-        const filterModels = gridApi.value.getFilterModel();
-        const filterModelKeys = Object.keys(filterModels);
+      const grf = eventbus.SearchPjHistoryResultEvent.getRegisteredFilters();
+      const filterModels = gridApi.value.getFilterModel();
+      const filterModelKeys = Object.keys(filterModels);
 
-        Object.keys(filterModels).forEach(key => {
-          const filterObject = filterModels[key];
-          const existsInGrf = grf.some(item => {
-            return (
-                item.KeyName === key &&
-                item.type === filterObject.type &&
-                item.filter === filterObject.filter
-            );
-          });
-
-          let grfFiltersCondition = false;
-          let grfFiltersConditionCheck = true;
-          if (existsInGrf) {
-            return;
-          }
-          for (let i = 0; i < grf.length; i++) {
-            for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-              if (grf[i].KeyName === key &&
-                  grf[i].type === filterObject.conditions[j].type &&
-                  grf[i].filter === filterObject.conditions[j].filter) {
-                grfFiltersCondition = true;
-                break;
-              }
-            }
-          }
-
-          if (filterObject?.conditions && filterObject.conditions.length > 0) {
-            const currentCondition = filterObject.conditions[0];
-            const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-            const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
-
-            if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-              eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
-
-            }
-            if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-              eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (grfFiltersCondition === true) {
-              eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-              eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-              eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-          } else {
-            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-          }
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+        const existsInGrf = grf.some(item => {
+          return (
+              item.KeyName === key &&
+              item.type === filterObject.type &&
+              item.filter === filterObject.filter
+          );
         });
-        previousFilterKeys.value.forEach((key) => {
-          const previousFilter = previousFilters.value[key];
-          const currentFilterModel = filterModels[key];
 
-          if(currentFilterModel === undefined) {
-            if (previousFilter) {
-              if (Array.isArray(previousFilter.conditions)) {
-                previousFilter.conditions.forEach(condition => {
-                  eventbus.SearchPjHistoryResultEvent.removeFilter(key, condition.type, condition.filter);
-                  eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                  eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
-                });
-              } else {
-                eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-              }
+        let grfFiltersCondition = false;
+        let grfFiltersConditionCheck = true;
+        if (existsInGrf) {
+          return;
+        }
+        for (let i = 0; i < grf.length; i++) {
+          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
+            if (grf[i].KeyName === key &&
+                grf[i].type === filterObject.conditions[j].type &&
+                grf[i].filter === filterObject.conditions[j].filter) {
+              grfFiltersCondition = true;
+              break;
             }
           }
-          if (currentFilterModel !== undefined) {
-            if (!filterModelKeys.includes(key)) {
-              eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter); // 버튼 삭제 요청
-            }
+        }
 
-            if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
+
+          if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+
+          }
+          if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
+            eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (grfFiltersCondition === true) {
+            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
+            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+        } else {
+          eventbus.SearchPjHistoryResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        }
+      });
+      previousFilterKeys.value.forEach((key) => {
+        const previousFilter = previousFilters.value[key];
+        const currentFilterModel = filterModels[key];
+
+        if(currentFilterModel === undefined) {
+          if (previousFilter) {
+            if (Array.isArray(previousFilter.conditions)) {
+              previousFilter.conditions.forEach(condition => {
+                eventbus.SearchPjHistoryResultEvent.removeFilter(key, condition.type, condition.filter);
+                eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, condition.type, condition.filter);
+                eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+              });
+            } else {
               eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
             }
           }
-        });
-        previousFilterKeys.value = filterModelKeys;
-        previousFilters.value = filterModels;
-      }
+        }
+        if (currentFilterModel !== undefined) {
+          if (!filterModelKeys.includes(key)) {
+            eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter); // 버튼 삭제 요청
+          }
+
+          if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
+            eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+          }
+        }
+      });
+      previousFilterKeys.value = filterModelKeys;
+      previousFilters.value = filterModels;
     };
 
     const onCellValueChanged = async (event) => {
@@ -323,9 +318,6 @@ export default defineComponent({
       if(registeredFilters.length === 0){
         if(searchPerformed.value){
           alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
-        }
-        if(!searchPerformed.value){
-          alert("검색을 먼저 수행해 주세요.");
         }
       }else{
         registeredFilters.forEach(filter => {

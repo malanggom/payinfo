@@ -36,7 +36,7 @@ export default defineComponent({
   },
   setup() {
     const gridApi = shallowRef();
-    const searchPerformed = ref(false);
+    const searchPerformed = ref(true);
 
     const defaultColDef = ref({
       editable: true,
@@ -219,7 +219,6 @@ export default defineComponent({
         }));
 
         rowData.value = translatedData;
-        searchPerformed.value = true;
 
         console.log("서버 응답 결과:", data);           // 전체 응답
         console.log("검색 결과 row:", data.result.row); // 실제 row
@@ -267,12 +266,7 @@ export default defineComponent({
         addRows.style.cursor = "pointer";
         addRows.style.marginLeft = "10px";
         addRows.onclick = () => {
-          if (!searchPerformed.value) {
-            alert("검색을 먼저 수행해 주세요.");
-            gridApi.value.setFilterModel(null);
-          } else {
-            openModal();
-          }
+          openModal();
         }
         pagingPanel.insertBefore(addRows, pagingPanel.firstChild);
 
@@ -281,10 +275,7 @@ export default defineComponent({
         editRows.style.cursor = "pointer"; // 커서 스타일 설정
         editRows.style.marginLeft = "10px"; // 여백 추가
         editRows.onclick = () => {
-          if (!searchPerformed.value) {
-            alert("검색을 먼저 수행해 주세요.");
-            gridApi.value.setFilterModel(null);
-          } else if (searchPerformed.value && cellValueUpdate() === 0) {
+          if (searchPerformed.value && cellValueUpdate() === 0) {
             alert("개발자를 한명만 선택해주세요.");
           } else if (searchPerformed.value && cellValueUpdate() === 2) {
             alert("개발자를 선택하지 않았습니다. 개발자를 선택해주세요.");
@@ -299,17 +290,11 @@ export default defineComponent({
         deleteRows.style.cursor = "pointer";
         deleteRows.style.marginLeft = "10px";
         deleteRows.onclick = () => {
-          if (!searchPerformed.value) {
-            alert("검색을 먼저 수행해 주세요.");
-            gridApi.value.setFilterModel(null);
-          } else {
-            eventbus.SearchResultEvent.deleteRowBtnClick();
-          }
+          eventbus.SearchResultEvent.deleteRowBtnClick();
         }
         pagingPanel.insertBefore(deleteRows, editRows.nextSibling);
       }
       eventbus.SearchResultEvent.add('removeFilter', removeFilter);
-      eventbus.SearchResultEvent.add('reset', resetFilter);
       eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
@@ -318,104 +303,99 @@ export default defineComponent({
     const previousFilters = ref([]);
 
     const onFilterChanged = async () => {
-      if (!searchPerformed.value) {
-        alert("검색을 먼저 수행해 주세요.");
-        gridApi.value.setFilterModel(null);
-      } else {
-        const grf = eventbus.SearchResultEvent.getRegisteredFilters();
-        const filterModels = gridApi.value.getFilterModel();
-        const filterModelKeys = Object.keys(filterModels);
+      const grf = eventbus.SearchResultEvent.getRegisteredFilters();
+      const filterModels = gridApi.value.getFilterModel();
+      const filterModelKeys = Object.keys(filterModels);
 
-        Object.keys(filterModels).forEach(key => {
-          const filterObject = filterModels[key];
-          const existsInGrf = grf.some(item => {
-            return (
-                item.KeyName === key &&
-                item.type === filterObject.type &&
-                item.filter === filterObject.filter
-            );
-          });
-
-          let grfFiltersCondition = false;
-          let grfFiltersConditionCheck = true;
-          if (existsInGrf) {
-            return;
-          }
-          for (let i = 0; i < grf.length; i++) {
-            for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-              if (grf[i].KeyName === key &&
-                  grf[i].type === filterObject.conditions[j].type &&
-                  grf[i].filter === filterObject.conditions[j].filter) {
-                grfFiltersCondition = true;
-                break;
-              }
-            }
-          }
-
-          if (filterObject?.conditions && filterObject.conditions.length > 0) {
-            const currentCondition = filterObject.conditions[0];
-            const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-            const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
-
-            if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-              eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
-
-            }
-            if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
-              alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-              eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (grfFiltersCondition === true) {
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-
-            if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-              eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-            }
-          } else {
-            eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
-          }
+      Object.keys(filterModels).forEach(key => {
+        const filterObject = filterModels[key];
+        const existsInGrf = grf.some(item => {
+          return (
+              item.KeyName === key &&
+              item.type === filterObject.type &&
+              item.filter === filterObject.filter
+          );
         });
 
-        previousFilterKeys.value.forEach((key) => {
-          const previousFilter = previousFilters.value[key];
-          const currentFilterModel = filterModels[key];
-
-          if (currentFilterModel === undefined) {
-            if (previousFilter) {
-              if (Array.isArray(previousFilter.conditions)) {
-                previousFilter.conditions.forEach(condition => {
-                  eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
-                  eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                  eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
-                });
-              } else {
-                eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-              }
+        let grfFiltersCondition = false;
+        let grfFiltersConditionCheck = true;
+        if (existsInGrf) {
+          return;
+        }
+        for (let i = 0; i < grf.length; i++) {
+          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
+            if (grf[i].KeyName === key &&
+                grf[i].type === filterObject.conditions[j].type &&
+                grf[i].filter === filterObject.conditions[j].filter) {
+              grfFiltersCondition = true;
+              break;
             }
           }
-          if (currentFilterModel !== undefined) {
-            if (!filterModelKeys.includes(key)) {
-              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
-            }
+        }
 
-            if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
+        if (filterObject?.conditions && filterObject.conditions.length > 0) {
+          const currentCondition = filterObject.conditions[0];
+          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
+          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
+
+          if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
+            eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+
+          }
+          if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
+            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
+            eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (grfFiltersCondition === true) {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+
+          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
+            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+          }
+        } else {
+          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        }
+      });
+
+      previousFilterKeys.value.forEach((key) => {
+        const previousFilter = previousFilters.value[key];
+        const currentFilterModel = filterModels[key];
+
+        if (currentFilterModel === undefined) {
+          if (previousFilter) {
+            if (Array.isArray(previousFilter.conditions)) {
+              previousFilter.conditions.forEach(condition => {
+                eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
+                eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
+                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+              });
+            } else {
               eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
               eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
             }
           }
-        });
-        previousFilterKeys.value = filterModelKeys;
-        previousFilters.value = filterModels;
-      }
+        }
+        if (currentFilterModel !== undefined) {
+          if (!filterModelKeys.includes(key)) {
+            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+          }
+
+          if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
+            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+          }
+        }
+      });
+      previousFilterKeys.value = filterModelKeys;
+      previousFilters.value = filterModels;
     };
 
     const onCellValueChanged = async (event) => {
@@ -435,22 +415,30 @@ export default defineComponent({
       }
     };
 
+    const resetKorButton = () =>{
+      gridApi.value.setFilterModel(null);
+      console.log("리셋완료");
+    };
+
+    eventbus.SearchResultEvent.add('resetKorButton',resetKorButton);
+
     const resetFilter = () => {
       const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
-      gridApi.value.setFilterModel(null);
+      console.log("현재 등록된 필터:", registeredFilters); // 로그 추가
+
+      // 필터가 없을 경우
       if (registeredFilters.length === 0) {
         if (searchPerformed.value) {
           alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
         }
-        if (!searchPerformed.value) {
-          alert("검색을 먼저 수행해 주세요.");
-        }
       } else {
+        // 필터가 있을 경우 초기화
         registeredFilters.forEach(filter => {
           eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
           eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
         });
-        eventbus.SearchResultEvent.resetKorButton();
+        eventbus.SearchResultEvent.resetKorButton(); // 초기화 이벤트 호출
+        console.log("필터 초기화 완료");
       }
     };
 
@@ -465,6 +453,11 @@ export default defineComponent({
           const previousConditions = currentFilter.conditions.slice();
 
           currentFilter.conditions = currentFilter.conditions.filter(condition => {
+            if (!condition) {
+              // condition이 undefined인 경우 필터에서 제거
+              console.warn("유효하지 않은 조건:", condition);
+              return false;
+            }
 
             adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
 
