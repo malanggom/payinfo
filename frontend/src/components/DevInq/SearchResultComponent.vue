@@ -492,11 +492,16 @@ export default defineComponent({
     };
 
     const deleteRowBtnClick = async () => {
+      if (!gridApi.value) {
+        alert("그리드가 아직 초기화되지 않았습니다.");
+        return;
+      }
+
       const selectedNodes = gridApi.value.getSelectedNodes();
-      // 선택된 노드가 없을 경우 경고 메시지 출력
-      if (selectedNodes.length === 0) {
+
+      if (!selectedNodes || selectedNodes.length === 0) {
         alert("삭제할 개발자를 선택해주세요.");
-        return; // 함수 종료
+        return;
       }
 
       // 삭제 확인
