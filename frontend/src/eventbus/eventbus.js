@@ -1,10 +1,10 @@
-let handlers = {
+let resultHandlers = {
     deleteRow: [],
     search: [],
     reset: [],
     removeFilter: [],
     filterUpdate: [],
-    resetKorButton: [], // 초기화 이벤트 추가
+    resetKorButton: [],
     resetButtons: [],
     refreshData: [],
     registeredFilters: [],
@@ -12,169 +12,173 @@ let handlers = {
     openModalUpdate: [],
     openModalPreviewResume: [],
     removeButton: [],
-    activeFilters: [], // 활성 필터 목록 추가
+    activeFilters: [],
+};
+
+let pjHandlers = {
     pjDeleteRow: [],
     pjSearch: [],
     pjReset: [],
     pjRemoveFilter: [],
     pjFilterUpdate: [],
-    pjResetKorButton: [], // 초기화 이벤트 추가
+    pjResetKorButton: [],
     pjResetButtons: [],
     pjRegisteredFilters: [],
     pjOpenModal: [],
     pjRemoveButton: [],
-    pjActiveFilters: [] // 활성 필터 목록 추가
-
+    pjActiveFilters: [],
 };
 
-export { handlers }; // handlers를 export
+export { resultHandlers, pjHandlers };  // 각각을 export
 
 export default {
     SearchResultEvent: {
         // eventType에 맞는 핸들러 추가
         add(eventType, handler) {
-            if (!handlers[eventType]) {
-                handlers[eventType] = [];
+            if (!resultHandlers[eventType]) {
+                resultHandlers[eventType] = [];
             }
-            handlers[eventType].push(handler);
+            resultHandlers[eventType].push(handler);
         },
         remove(eventType, handler) {
-            if (handlers[eventType]) {
-                handlers[eventType] = handlers[eventType].filter(h => h !== handler);
+            if (resultHandlers[eventType]) {
+                resultHandlers[eventType] = resultHandlers[eventType].filter(h => h !== handler);
             }
         },
         deleteRowBtnClick() {
-            handlers.deleteRow.forEach(handler => handler());
+            resultHandlers.deleteRow.forEach(handler => handler());
         },
         fetchData(type, filter) {
-            handlers.search.forEach(handler => handler(type, filter));
+            resultHandlers.search.forEach(handler => handler(type, filter));
         },
         resetFilter() {
-            handlers.reset.forEach(handler => handler());
-            handlers.removeButton.forEach(handler => handler());
+            resultHandlers.reset.forEach(handler => handler());
+            resultHandlers.removeButton.forEach(handler => handler());
         },
         removeButton(KeyName, type, filter) {
-            handlers.removeButton.forEach(handler => handler(KeyName, type, filter));
+            resultHandlers.removeButton.forEach(handler => handler(KeyName, type, filter));
         },
         filterUpdate(KeyName, type, filter) {
-            handlers.registeredFilters.push({ KeyName, type, filter });
-            // console.log('After filterUpdate:', handlers.registeredFilters); // 추가된 후 상태 출력
-            handlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
+            resultHandlers.registeredFilters.push({ KeyName, type, filter });
+            resultHandlers.filterUpdate.forEach(handler => handler(KeyName, type, filter));
         },
         getRegisteredFilters() {
-            return handlers.registeredFilters;
+            return resultHandlers.registeredFilters;
         },
         removeFilter(keyName, type, filter) {
             console.log(`removeFilter 호출됨: KeyName=${keyName}, type=${type}, filter=${filter}`);
-            handlers.registeredFilters = handlers.registeredFilters.filter(
+            resultHandlers.registeredFilters = resultHandlers.registeredFilters.filter(
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
-            console.log('등록된 필터 상태:', handlers.registeredFilters); // 상태 확인 로그
-            handlers.removeFilter.forEach(handler => handler(keyName, type, filter));
+            console.log('등록된 필터 상태:', resultHandlers.registeredFilters);
+            resultHandlers.removeFilter.forEach(handler => handler(keyName, type, filter));
         },
         removeActiveFilter(keyName, type, filter) {
-            handlers.activeFilters = handlers.activeFilters.filter(
+            resultHandlers.activeFilters = resultHandlers.activeFilters.filter(
                 activeFilter => !(activeFilter.keyName === keyName && activeFilter.type === type && activeFilter.filter === filter)
             );
             console.log(`활성 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
         openModal() {
             console.log("openmodal시작");
-            handlers.openModal.forEach(handler => handler());
+            resultHandlers.openModal.forEach(handler => handler());
             console.log("openmodal종료");
         },
         openModalUpdate() {
             console.log("openmodalupdate시작");
-            handlers.openModalUpdate.forEach(handler => handler());
+            resultHandlers.openModalUpdate.forEach(handler => handler());
             console.log("openmodalupdate종료");
         },
         openModalPreviewResume(resumeId) {
             console.log("openModalPreviewResume 시작", resumeId);
-            // 등록된 핸들러에게 resumeId 전달
-            if (handlers.openModalPreviewResume) {
-                handlers.openModalPreviewResume.forEach(handler => handler(resumeId));
+            if (resultHandlers.openModalPreviewResume) {
+                resultHandlers.openModalPreviewResume.forEach(handler => handler(resumeId));
             }
             console.log("openModalPreviewResume 종료");
         },
         resetKorButton() { // 초기화 함수 추가
-            handlers.resetKorButton.forEach(handler => handler());
+            resultHandlers.resetKorButton.forEach(handler => handler());
         },
         removeRegisteredFilter(keyName, type, filter) {
-            handlers.registeredFilters = handlers.registeredFilters.filter(
+            resultHandlers.registeredFilters = resultHandlers.registeredFilters.filter(
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
             console.log(`등록된 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
-        // 등록된 필터 업데이트 메서드 추가
         updateRegisteredFilters(updatedFilters) {
-            handlers.registeredFilters = updatedFilters;
-            console.log('등록된 필터가 업데이트되었습니다:', handlers.registeredFilters);
+            resultHandlers.registeredFilters = updatedFilters;
+            console.log('등록된 필터가 업데이트되었습니다:', resultHandlers.registeredFilters);
         },
         refreshData() {
-            handlers.search.forEach(handler => handler());
+            resultHandlers.search.forEach(handler => handler());
         },
-    },SearchPjHistoryResultEvent: {
+    },
+
+    SearchPjHistoryResultEvent: {
         add(eventType, handler) {
-            if (handlers[eventType]) {
-                handlers[eventType].push(handler);
+            console.log("핸들러 등록 시도:", eventType);
+            console.log("handler:", handler);
+            if (!pjHandlers[eventType]) {
+                pjHandlers[eventType] = [];
             }
+            pjHandlers[eventType].push(handler);
+            console.log("현재 pjHandlers[eventType]:", pjHandlers[eventType]);
         },
         remove(eventType, handler) {
-            if (handlers[eventType]) {
-                handlers[eventType] = handlers[eventType].filter(h => h !== handler);
+            if (pjHandlers[eventType]) {
+                pjHandlers[eventType] = pjHandlers[eventType].filter(h => h !== handler);
             }
         },
         pjDevHistDeleteRowBtnClick() {
-            handlers.pjDeleteRow.forEach(handler => handler());
+            pjHandlers.pjDeleteRow.forEach(handler => handler());
         },
         fetchData(type, filter) {
-            handlers.pjSearch.forEach(handler => handler(type, filter));
+            console.log("📤 fetchData 호출됨:", type, filter);
+            pjHandlers.pjSearch.forEach(handler => handler(type, filter));
         },
-        PjResetFilter() {
-            handlers.pjReset.forEach(handler => handler());
-            handlers.pjRemoveButton.forEach(handler => handler());
+        pjResetFilter() {
+            pjHandlers.pjReset.forEach(handler => handler());
+            pjHandlers.pjRemoveButton.forEach(handler => handler());
         },
-        removeButton(KeyName, type, filter) {
-            handlers.pjRemoveButton.forEach(handler => handler(KeyName, type, filter));
+        pjRemoveButton(KeyName, type, filter) {
+            pjHandlers.pjRemoveButton.forEach(handler => handler(KeyName, type, filter));
         },
-        filterUpdate(KeyName, type, filter) {
-            handlers.pjRegisteredFilters.push({KeyName, type, filter});
-            // console.log('After filterUpdate:', handlers.registeredFilters); // 추가된 후 상태 출력
-            handlers.pjFilterUpdate.forEach(handler => handler(KeyName, type, filter));
+        pjFilterUpdate(KeyName, type, filter) {
+            pjHandlers.pjRegisteredFilters.push({ KeyName, type, filter });
+            pjHandlers.pjFilterUpdate.forEach(handler => handler(KeyName, type, filter));
         },
-        getRegisteredFilters() {
-            return handlers.pjRegisteredFilters;
+        pjGetRegisteredFilters() {
+            return pjHandlers.pjRegisteredFilters;
         },
-        removeFilter(keyName, type, filter) {
+        pjRemoveFilter(keyName, type, filter) {
             console.log(`removeFilter 호출됨: KeyName=${keyName}, type=${type}, filter=${filter}`);
-            handlers.pjRegisteredFilters = handlers.pjRegisteredFilters.filter(
+            pjHandlers.pjRegisteredFilters = pjHandlers.pjRegisteredFilters.filter(
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
-            console.log('등록된 필터 상태:', handlers.pjRegisteredFilters); // 상태 확인 로그
-            handlers.pjRemoveFilter.forEach(handler => handler(keyName, type, filter));
+            console.log('등록된 필터 상태:', pjHandlers.pjRegisteredFilters);
+            pjHandlers.pjRemoveFilter.forEach(handler => handler(keyName, type, filter));
         },
-        removeActiveFilter(keyName, type, filter) {
-            handlers.pjActiveFilters = handlers.pjActiveFilters.filter(
+        pjRemoveActiveFilter(keyName, type, filter) {
+            pjHandlers.pjActiveFilters = pjHandlers.pjActiveFilters.filter(
                 activeFilter => !(activeFilter.keyName === keyName && activeFilter.type === type && activeFilter.filter === filter)
             );
             console.log(`활성 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
         pjOpenModal() {
-            handlers.pjOpenModal.forEach(handler => handler());
+            pjHandlers.pjOpenModal.forEach(handler => handler());
         },
         resetKorButton() { // 초기화 함수 추가
-            handlers.pjResetKorButton.forEach(handler => handler());
+            pjHandlers.pjResetKorButton.forEach(handler => handler());
         },
-        removeRegisteredFilter(keyName, type, filter) {
-            handlers.pjRegisteredFilters = handlers.pjRegisteredFilters.filter(
+        pjRemoveRegisteredFilter(keyName, type, filter) {
+            pjHandlers.pjRegisteredFilters = pjHandlers.pjRegisteredFilters.filter(
                 handler => !(handler.KeyName === keyName && handler.type === type && handler.filter === filter)
             );
             console.log(`등록된 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
-        // 등록된 필터 업데이트 메서드 추가
-        updateRegisteredFilters(updatedFilters) {
-            handlers.pjRegisteredFilters = updatedFilters;
-            console.log('등록된 필터가 업데이트되었습니다:', handlers.pjRegisteredFilters);
+        pjUpdateRegisteredFilters(updatedFilters) {
+            pjHandlers.pjRegisteredFilters = updatedFilters;
+            console.log('등록된 필터가 업데이트되었습니다:', pjHandlers.pjRegisteredFilters);
         },
     }
-}
+};

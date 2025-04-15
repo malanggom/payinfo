@@ -120,10 +120,12 @@ export default defineComponent({
     const rowSelection = ref("multiple");
     const rowData = ref([]);
 
-    const fetchData = async () => {
+    const fetchData = async (_type, _filter) => {
+      console.log("🔍 fetchData 실행됨 with", _type, _filter);
       try {
         const response = await fetch('http://localhost:8080/api/getPjHistData');
         const data = await response.json();
+        console.log("📦 받아온 데이터:", data);
 
         const translatedData = data.result.row.map(item => ({
           DEV_NO: item.DEV_NO,
@@ -154,7 +156,6 @@ export default defineComponent({
         rowData.value = [];
       }
     };
-
     const pjOpenModal = () => {
       eventbus.SearchPjHistoryResultEvent.pjOpenModal();
     };
@@ -173,9 +174,9 @@ export default defineComponent({
           secondPanel.insertBefore(addRows, secondPanel.firstChild);
 
           const editRows = document.createElement("span");
-          editRows.textContent = "수정"; // span의 텍스트 설정
-          editRows.style.cursor = "pointer"; // 커서 스타일 설정
-          editRows.style.marginLeft = "10px"; // 여백 추가
+          editRows.textContent = "수정";
+          editRows.style.cursor = "pointer";
+          editRows.style.marginLeft = "10px";
           editRows.onclick = () => {};
           secondPanel.insertBefore(editRows, addRows.nextSibling);
 
@@ -183,16 +184,17 @@ export default defineComponent({
           deleteRows.textContent = "삭제";
           deleteRows.style.cursor = "pointer";
           deleteRows.style.marginLeft = "10px";
-          deleteRows.onclick = () => {
-            eventbus.SearchPjHistoryResultEvent.pjDevHistDeleteRowBtnClick();
-          };
+          deleteRows.onclick = deleteRowBtnClick;
           secondPanel.insertBefore(deleteRows, editRows.nextSibling);
         }
       }
-      eventbus.SearchPjHistoryResultEvent.add('search', fetchData);
-      eventbus.SearchPjHistoryResultEvent.add('removeFilter', removeFilter);
-      eventbus.SearchPjHistoryResultEvent.add('reset', resetFilter);
+
+      // 이벤트 등록
+      eventbus.SearchPjHistoryResultEvent.add("pjSearch", fetchData);
+      eventbus.SearchPjHistoryResultEvent.add('pjRemoveFilter', removeFilter);
+      eventbus.SearchPjHistoryResultEvent.add('pjReset', resetFilter);
       eventbus.SearchPjHistoryResultEvent.add('pjDeleteRow', deleteRowBtnClick);
+
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
 
@@ -200,97 +202,60 @@ export default defineComponent({
     const previousFilters = ref([]);
 
     const onFilterChanged = async () => {
-      const grf = eventbus.SearchPjHistoryResultEvent.getRegisteredFilters();
+      const grf = eventbus.SearchPjHistoryResultEvent.pjGetRegisteredFilters();
       const filterModels = gridApi.value.getFilterModel();
       const filterModelKeys = Object.keys(filterModels);
 
+      // 필터 조건이 등록된 필터와 동일한지 비교
       Object.keys(filterModels).forEach(key => {
         const filterObject = filterModels[key];
-        const existsInGrf = grf.some(item => {
-          return (
-              item.KeyName === key &&
-              item.type === filterObject.type &&
-              item.filter === filterObject.filter
-          );
+        const existsInGrf = grf.some(item => item.KeyName === key && item.type === filterObject.type && item.filter === filterObject.filter);
+
+        if (existsInGrf) return;
+
+        grf.forEach(grfItem => {
+          if (filterObject?.conditions) {
+            filterObject.conditions.forEach(condition => {
+              if (grfItem.KeyName === key && grfItem.type === condition.type && grfItem.filter === condition.filter) {
+                eventbus.SearchPjHistoryResultEvent.pjFilterUpdate(key, condition.type, condition.filter);
+              }
+            });
+          }
         });
 
-        let grfFiltersCondition = false;
-        let grfFiltersConditionCheck = true;
-        if (existsInGrf) {
-          return;
-        }
-        for (let i = 0; i < grf.length; i++) {
-          for (let j = 0; j < (filterObject.conditions ? filterObject.conditions.length : 0); j++) {
-            if (grf[i].KeyName === key &&
-                grf[i].type === filterObject.conditions[j].type &&
-                grf[i].filter === filterObject.conditions[j].filter) {
-              grfFiltersCondition = true;
-              break;
-            }
-          }
-        }
-
-        if (filterObject?.conditions && filterObject.conditions.length > 0) {
-          const currentCondition = filterObject.conditions[0];
-          const currentCondition1 = filterObject.conditions.length > 1 ? filterObject.conditions[1] : null;
-          const duplicateConditionsFilters = currentCondition1 && currentCondition.filter === currentCondition1.filter && currentCondition.type === currentCondition1.type;
-
-          if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
-            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-            eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
-
-          }
-          if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
-            alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-            eventbus.SearchPjHistoryResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-          if (grfFiltersCondition === true) {
-            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-          if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-            eventbus.SearchPjHistoryResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
-          }
-
-        } else {
-          eventbus.SearchPjHistoryResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+        // 필터 추가
+        if (!existsInGrf) {
+          const currentCondition = filterObject?.conditions ? filterObject.conditions[0] : null;
+          eventbus.SearchPjHistoryResultEvent.pjFilterUpdate(key, currentCondition.type, currentCondition.filter);
         }
       });
+
+      // 이전 필터와 비교하여 필터 모델 업데이트
       previousFilterKeys.value.forEach((key) => {
         const previousFilter = previousFilters.value[key];
         const currentFilterModel = filterModels[key];
 
-        if(currentFilterModel === undefined) {
+        // 필터가 변경되었을 경우 처리
+        if (!currentFilterModel) {
           if (previousFilter) {
             if (Array.isArray(previousFilter.conditions)) {
               previousFilter.conditions.forEach(condition => {
-                eventbus.SearchPjHistoryResultEvent.removeFilter(key, condition.type, condition.filter);
-                eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+                eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, condition.type, condition.filter);
               });
-            } else {
-              eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
             }
           }
-        }
-        if (currentFilterModel !== undefined) {
+        } else {
           if (!filterModelKeys.includes(key)) {
-            eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter); // 버튼 삭제 요청
+            eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
           }
 
+          // 필터 타입이 달라졌을 경우 처리
           if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
-            eventbus.SearchPjHistoryResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchPjHistoryResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
           }
         }
       });
+
       previousFilterKeys.value = filterModelKeys;
       previousFilters.value = filterModels;
     };
@@ -299,32 +264,26 @@ export default defineComponent({
       try {
         const response = await fetch('http://localhost:8080/api/update/PjDevHistoryData', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(event.data),
         });
-        if (!response.ok) {
-          throw new Error('Failed to update data');
-        }
+        if (!response.ok) throw new Error('Failed to update data');
       } catch (error) {
         console.error('프로젝트 데이터 수정에러:', error);
       }
     };
 
     const resetFilter = () => {
-      const registeredFilters = eventbus.SearchPjHistoryResultEvent.getRegisteredFilters();
+      const registeredFilters = eventbus.SearchPjHistoryResultEvent.pjGetRegisteredFilters();
       gridApi.value.setFilterModel(null);
-      if(registeredFilters.length === 0){
-        if(searchPerformed.value){
-          alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
-        }
-      }else{
+
+      if (registeredFilters.length === 0 && searchPerformed.value) {
+        alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
+      } else {
         registeredFilters.forEach(filter => {
-          eventbus.SearchPjHistoryResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
-          eventbus.SearchPjHistoryResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
+          eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(filter.KeyName, filter.type, filter.filter);
         });
-        eventbus.SearchPjHistoryResultEvent.resetKorButton();
+        eventbus.SearchPjHistoryResultEvent.pjResetKorButton();
       }
     };
 
@@ -333,30 +292,19 @@ export default defineComponent({
 
       if (filterModel[KeyName]) {
         const currentFilter = filterModel[KeyName];
-        let adjustedFilterType;
+        let adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[currentFilter.type] || currentFilter.type;
 
         if (Array.isArray(currentFilter.conditions)) {
-          const previousConditions = currentFilter.conditions.slice();
-
           currentFilter.conditions = currentFilter.conditions.filter(condition => {
-
-            adjustedFilterType = filterTypeMap[filterType] || filterTypeMap[condition.type] || condition.type;
-
             const shouldKeep = !(adjustedFilterType === filterTypeMap[condition.type] && condition.filter === filterValue);
-            console.log(`조건 유지 여부: ${shouldKeep}`);
-
             return shouldKeep;
           });
 
           if (currentFilter.conditions.length === 0) {
-            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+            eventbus.SearchPjHistoryResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
-          if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
-            gridApi.value.setFilterModel(filterModel);
-            if (previousConditions.length !== currentFilter.conditions.length) {
-              eventbus.SearchPjHistoryResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
-            }
-          }
+
+          gridApi.value.setFilterModel(filterModel);
         } else {
           const currentFilterType = filterTypeMap[currentFilter.type] || currentFilter.type;
           const targetFilterType = filterTypeMap[filterType] || filterType;
@@ -364,7 +312,7 @@ export default defineComponent({
           if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
             delete filterModel[KeyName];
             gridApi.value.setFilterModel(filterModel);
-            eventbus.SearchPjHistoryResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+            eventbus.SearchPjHistoryResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
         }
       }
@@ -378,9 +326,7 @@ export default defineComponent({
       try {
         const response = await fetch('http://localhost:8080/api/deletePjDevHistData', {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ devNoList }),
         });
 

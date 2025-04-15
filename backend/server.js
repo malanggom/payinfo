@@ -111,7 +111,6 @@ app.get('/api/getDevData', async (req, res) => {
             };
         });
         console.log('✅ 쿼리 결과 row 수:', result.rows.length);
-        console.log('✅ 쿼리 결과:', result.rows);
         res.json({ result: { row: data } });
     } catch (err) {
         console.error("데이터베이스 연결에러: ", err);

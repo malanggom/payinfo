@@ -114,11 +114,10 @@ export default defineComponent({
              onclick="previewResume('${resumeId}')"/>`;
         },
       },
+      {headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '생년월일', field: "BRDT", minWidth: 130, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '운영체제', field: "OS", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '데이터베이스', field: "DB", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '툴', field: "TOOL", minWidth: 90, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -126,6 +125,8 @@ export default defineComponent({
       {headerName: '라이브러리', field: "LBRR", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '통신', field: "CMNCT", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '기타', field: "ETC", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '기종', field: "MDL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '운영체제', field: "OS", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '프로젝트투입상태', field: "PJ_INP_STTS", minWidth: 190, filter: "agTextColumnFilter", filterParams: {buttons: ["reset", "apply"]},},
       {headerName: '계약횟수', field: "CTRT_NMTM", minWidth: 130, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '학력', field: "ACBG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -133,7 +134,6 @@ export default defineComponent({
       {headerName: '직위', field: "JBPS", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '총경력기간', field: "T_CR_PER", minWidth: 150, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '지역', field: "RGN", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '이메일', field: "EML", minWidth: 120, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '컨택방법', field: "CONTT_MTHD", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '인터뷰요청일', field: "NTRV_DMND_DT", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -423,7 +423,9 @@ export default defineComponent({
     eventbus.SearchResultEvent.add('resetKorButton',resetKorButton);
 
     const resetFilter = () => {
+      console.log("아예안나옴??:"); // 로그 추가
       const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      console.log("아예안나옴:"); // 로그 추가
       console.log("현재 등록된 필터:", registeredFilters); // 로그 추가
 
       // 필터가 없을 경우
@@ -597,6 +599,7 @@ export default defineComponent({
 .centered {
   .ag-header-cell-label {
     justify-content: center !important;
+    align-items: center !important;
   }
 }
 
