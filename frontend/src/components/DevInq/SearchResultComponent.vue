@@ -618,6 +618,10 @@ export default defineComponent({
   align-items: center; /* 세로 중앙 정렬 */
 }
 
+.checkboxCentered .ag-selection-checkbox {
+  margin: 0 auto;
+}
+
 .pl10 {
   padding-left: 10px;
 }
