@@ -1694,13 +1694,13 @@ const indvInfoCheckCompletion = () => {
   const {
     NM, BRKR, KAKAO_NICK, BRDT, SN, AGE,
     MBL_TELNO, EML,
-    RGN, ADDR, NTRV_DMND_DT, INP_PSBLTY_DT, MM_DMND_UNTPRC
+    RGN, ADDR, MM_DMND_UNTPRC
   } = formData.value;
 
   console.log('개인정보 현재 입력값:', formData.value); // 전체 입력값 출력
 
   if (NM && BRKR && KAKAO_NICK && BRDT && SN && AGE &&
-      MBL_TELNO && EML && RGN && ADDR && NTRV_DMND_DT && INP_PSBLTY_DT && MM_DMND_UNTPRC) {
+      MBL_TELNO && EML && RGN && ADDR && MM_DMND_UNTPRC) {
     indvInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
     indvInfoIsVisible.value = false; // 지급 정보를 숨김
   } else {

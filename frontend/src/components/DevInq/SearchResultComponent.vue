@@ -601,15 +601,16 @@ export default defineComponent({
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-quartz.css";
 
+.headerColor {
+  background-color: #e8e8e8 !important;
+}
+
+/* Aggrid의 선택 컬럼 행들의 체크박스를 가로 가운데 정렬*/
 .centered {
   .ag-header-cell-label {
     justify-content: center !important;
     align-items: center !important;
   }
-}
-
-.headerColor {
-  background-color: #e8e8e8 !important;
 }
 
 .checkboxCentered {
@@ -621,6 +622,7 @@ export default defineComponent({
 .checkboxCentered .ag-selection-checkbox {
   margin: 0 auto;
 }
+/* 가로 가운데 정렬 종료*/
 
 .pl10 {
   padding-left: 10px;
