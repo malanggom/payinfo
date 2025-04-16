@@ -1926,7 +1926,13 @@ const openModalHandler = () => {
     ETC: "",
     AGE: "",
     ACBG: selectedAcbg.value
-  }; // 초기화
+  };
+
+  emailParts.value = ["", ""];
+  phoneParts.value = ["", "", ""];
+  selectedYear.value = 0;
+  selectedMonth.value = 0;
+
   // 입력 상태 초기화
   indvInfoInputStatus.value = '입력중'; // 개인정보 상태
   ctrtSttsInputStatus.value = '입력중'; // 계약상태 상태
