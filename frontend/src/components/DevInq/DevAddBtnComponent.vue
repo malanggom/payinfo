@@ -130,20 +130,22 @@
                 <!-- 생년월일 입력란 -->
                 <div class="date-wrap col-12">
                   <div class="col-10 date">
-                    <div class="form-group col-5 d-flex flex-column align-items-center mb-0">
+                    <div class="form-group col-5 d-flex flex-column align-items-center input mb-0">
                       <input
-                          type="date"
+                          type="text"
                           id="brdt"
-                          class="form-control input date-default text-center"
+                          class="form-control input-radius text-center"
                           aria-describedby="passwordHelpInline"
-                          v-model="formattedBirthDate"
-                          @change="(event) => updateBirthDate(event.target.value)" required
+                          v-model="formData.BRDT" required
+                          maxlength="6"
+                          placeholder="6자리 입력"
+                          @input="handleInputBrdt"
                           @focusout="indvInfoCheckCompletion"
                           @blur="indvInfoCheckCompletion">
                     </div>
                     <!-- 구분 기호 -->
                     <div class="col-1 d-flex justify-content-center align-items-center mb-0">
-                      <span class="m0">-</span> <!-- 구분 기호 -->
+                      <span class="m0">-</span>
                     </div>
                     <!-- 일련번호 -->
                     <div class="form-group col-5 d-flex flex-column align-items-center input mb-0">
@@ -486,8 +488,10 @@
                       <input type="text"
                              id="mmDmndUntprc"
                              class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"
+                             aria-describedby="passwordHelpInline"
+                             v-model="formData.MM_DMND_UNTPRC"
                              maxlength="4"
+                             @input="handleInputMmDmndUntprc"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                       <span class="position-absolute"
@@ -789,9 +793,13 @@
                 <div class="input-wrap">
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text" id="ctrtNmtm" class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline" v-model="formData.CTRT_NMTM" required
-                             @input="ctrtSttsSetIsTyping(true)"
+                      <input type="text"
+                             id="ctrtNmtm"
+                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                             aria-describedby="passwordHelpInline"
+                             v-model="formData.CTRT_NMTM" required
+                             maxlength="2"
+                             @input="handleInputCtrtNmtm"
                              @focusout="ctrtSttsCheckCompletion"
                              @blur="ctrtSttsCheckCompletion">
                       <span class="position-absolute"
@@ -917,7 +925,6 @@
                   <div class="col-10">
                     <input type="text" id="ogdpCo" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.OGDP_CO"
-                           @input="ctrtSttsSetIsTyping(true)"
                            @focusout="ctrtSttsCheckCompletion"
                            @blur="ctrtSttsCheckCompletion">
                   </div>
@@ -935,7 +942,6 @@
                   <div class="col-10">
                     <input type="text" id="dept" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.DEPT"
-                           @input="ctrtSttsSetIsTyping(true)"
                            @focusout="ctrtSttsCheckCompletion"
                            @blur="ctrtSttsCheckCompletion">
                   </div>
@@ -1282,7 +1288,6 @@
                   <div class="col-10">
                     <input type="text" id="bank" class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline" v-model="formData.BANK"
-                           @input="paymentSetIsTyping(true)"
                            @focusout="paymentCheckCompletion"
                            @blur="paymentCheckCompletion">
                   </div>
@@ -1298,9 +1303,13 @@
                 <!-- 계좌번호 입력란 -->
                 <div class="input-wrap">
                   <div class="col-10">
-                    <input type="text" id="actNo" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.ACTNO"
-                           @input="paymentSetIsTyping(true)"
+                    <input type="text"
+                           id="actNo"
+                           class="form-control flex-all-center w-100 input text-center"
+                           aria-describedby="passwordHelpInline"
+                           maxlength="20"
+                           v-model="formData.ACTNO"
+                           @input="handleInputActno"
                            @focusout="paymentCheckCompletion"
                            @blur="paymentCheckCompletion">
                   </div>
@@ -1633,40 +1642,40 @@ const ctrtSttsHandleClick = () => {
   ctrtSttsToggleState(); // 클릭 상태 전환 메서드 호출
   scrollChecks(); // 상태 변경 후 체크
 };
-
-// 생년월일 업데이트
-const updateBirthDate = (value) => {
-  if (!value) {
-    console.error('잘못된 날짜 형식: 값이 정의되지 않음');
-    return; // 값이 없으면 함수 종료
-  }
-
-  const dateParts = value.split('-'); // YYYY-MM-DD 형식에서 '-'로 분리
-  if (dateParts.length === 3) {
-    const year = dateParts[0].slice(2); // 연도의 뒤 두 자리 (YY)
-    const month = dateParts[1]; // 월
-    const day = dateParts[2]; // 일
-
-    // YYMMDD 형식으로 저장
-    formData.value.BRDT = `${year}${month}${day}`; // 예: '250320'로 저장
-  } else {
-    console.error('잘못된 날짜 형식:', value); // 오류 메시지
-  }
-};
-
-// 생년월일을 YYYY-MM-DD 형식으로 유지하기 위한 computed 속성
-const formattedBirthDate = computed({
-  get: () => {
-    const brdt = formData.value.BRDT;
-    if (brdt.length === 6) {
-      return `20${brdt.slice(0, 2)}-${brdt.slice(2, 4)}-${brdt.slice(4, 6)}`; // YYYY-MM-DD 형식으로 변환
-    }
-    return '';
-  },
-  set: (value) => {
-    updateBirthDate(value); // 생년월일 업데이트
-  }
-});
+//
+// // 생년월일 업데이트
+// const updateBirthDate = (value) => {
+//   if (!value) {
+//     console.error('잘못된 날짜 형식: 값이 정의되지 않음');
+//     return; // 값이 없으면 함수 종료
+//   }
+//
+//   const dateParts = value.split('-'); // YYYY-MM-DD 형식에서 '-'로 분리
+//   if (dateParts.length === 3) {
+//     const year = dateParts[0].slice(2); // 연도의 뒤 두 자리 (YY)
+//     const month = dateParts[1]; // 월
+//     const day = dateParts[2]; // 일
+//
+//     // YYMMDD 형식으로 저장
+//     formData.value.BRDT = `${year}${month}${day}`; // 예: '250320'로 저장
+//   } else {
+//     console.error('잘못된 날짜 형식:', value); // 오류 메시지
+//   }
+// };
+//
+// // 생년월일을 YYYY-MM-DD 형식으로 유지하기 위한 computed 속성
+// const formattedBirthDate = computed({
+//   get: () => {
+//     const brdt = formData.value.BRDT;
+//     if (brdt.length === 6) {
+//       return `20${brdt.slice(0, 2)}-${brdt.slice(2, 4)}-${brdt.slice(4, 6)}`; // YYYY-MM-DD 형식으로 변환
+//     }
+//     return '';
+//   },
+//   set: (value) => {
+//     updateBirthDate(value); // 생년월일 업데이트
+//   }
+// });
 
 // 인터뷰 요청일을 YYYY-MM-DD 형식으로 유지하기 위해 computed 속성 사용
 const formattedInterviewDate = computed({
@@ -1725,19 +1734,7 @@ const indvInfoCheckCompletion = () => {
 //개인정보 입력완료, 입력중 동작 종료
 
 //계약상태 입력완료, 입력중 동작 시작
-const ctrtSttsIsTyping = ref(false); // 입력 중 상태
-
-const ctrtSttsSetIsTyping = (value) => {
-  ctrtSttsIsTyping.value = value; // 입력 중 상태 설정
-};
-
 const ctrtSttsCheckCompletion = () => {
-  // 포커스가 벗어났을 때만 체크
-  if (ctrtSttsIsTyping.value) {
-    ctrtSttsIsTyping.value = false; // 입력 종료 상태로 변경
-    return; // 입력 중이면 체크하지 않음
-  }
-
   const { CTRT_NMTM, OGDP_CO, DEPT } = formData.value;
 
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
@@ -1780,19 +1777,7 @@ const hldTechCheckCompletion = () => {
 //보유기술 입력완료, 입력중 동작 종료
 
 //지급정보 입력완료, 입력중 동작 시작
-const paymentIsTyping = ref(false); // 입력 중 상태
-
-const paymentSetIsTyping = (value) => {
-  paymentIsTyping.value = value; // 입력 중 상태 설정
-};
-
 const paymentCheckCompletion = () => {
-  // 포커스가 벗어났을 때만 체크
-  if (paymentIsTyping.value) {
-    paymentIsTyping.value = false; // 입력 종료 상태로 변경
-    return; // 입력 중이면 체크하지 않음
-  }
-
   const {CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO} = formData.value;
 
   console.log('현재 입력값:', formData.value); // 전체 입력값 출력
@@ -1829,10 +1814,53 @@ const handleInputAge = (event) => {
 };
 
 // 일련번호 입력값 검증 및 개인 정보 체크 함수 호출
+const handleInputBrdt = (event) => {
+  const input = event.target.value;
+  formData.value.BRDT = sanitizeNumericInput(input, 6);
+  event.target.value = formData.value.BRDT;
+
+};
+
+// 일련번호 입력값 검증 및 개인 정보 체크 함수 호출
 const handleInputSn = (event) => {
   const input = event.target.value;
   formData.value.SN = sanitizeNumericInput(input, 7);
   event.target.value = formData.value.SN;
+
+};
+
+const handleInputMmDmndUntprc = (event) => {
+  const input = event.target.value;
+  formData.value.MM_DMND_UNTPRC = sanitizeNumericInput(input, 4);
+  event.target.value = formData.value.MM_DMND_UNTPRC;
+
+};
+
+const handleInputCtrtNmtm = (event) => {
+  const input = event.target.value;
+  formData.value.CTRT_NMTM = sanitizeNumericInput(input, 2);
+  event.target.value = formData.value.CTRT_NMTM;
+
+};
+
+// 숫자와 하이픈(-)만 남기고 한글 및 기타 문자 제거하는 함수
+const sanitizeNumericInputHypen = (value, maxLength = null) => {
+  let sanitized = value
+      .replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')     // 한글 제거
+      .replace(/[^\d-]/g, '');              // 숫자(0-9)와 하이픈(-) 외 제거
+
+  // maxLength가 지정되면 자르기
+  if (maxLength) {
+    sanitized = sanitized.slice(0, maxLength);
+  }
+
+  return sanitized;
+};
+
+const handleInputActno = (event) => {
+  const input = event.target.value;
+  formData.value.ACTNO = sanitizeNumericInputHypen(input, 20);
+  event.target.value = formData.value.ACTNO;
 
 };
 
