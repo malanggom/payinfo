@@ -204,16 +204,28 @@
                       </button>
                       <ul class="dropdown-menu">
                         <li>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('N/A')">N/A</button>
+                        </li>
+                        <li>
                           <button class="dropdown-item" type="button" @click="selectAcbg('고졸')">고졸</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectAcbg('대학교')">대학교</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('대졸(2,3년제)')">대졸(2,3년제)</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectAcbg('대학원')">대학원</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('대졸(4년제)')">대졸(4년제)</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectAcbg('기타')">기타</button>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('석사')">석사</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('박사')">박사</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('중졸')">중졸</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectAcbg('검정고시')">검정고시</button>
                         </li>
                       </ul>
                     </div>
@@ -367,6 +379,9 @@
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu">
+                        <li>
+                          <button class="dropdown-item" type="button" @click="selectWhtax('N/A')">N/A</button>
+                        </li>
                         <li>
                           <button class="dropdown-item" type="button" @click="selectWhtax('3.3%')">3.3%</button>
                         </li>
@@ -1336,7 +1351,7 @@ const isToggled = ref(false); // 클릭 상태를 관리하는 변수
 
 // 개인정보 입력 기본 값
 const selectedGndr = ref('남'); // 성벽
-const selectedAcbg = ref('고졸'); // 학력
+const selectedAcbg = ref('대졸(4년제)'); // 학력
 const selectedMs = ref('현역'); // 병역
 const selectedWhtaxbzmn = ref('3.3%'); // 소득구분
 const years = Array.from({length: 36}, (_, i) => i); // 총 경력기간 드롭다운
