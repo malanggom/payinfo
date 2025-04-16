@@ -39,9 +39,12 @@
                 <!-- 이름 입력란 -->
                 <div class="input-wrap">
                   <div class="col-10">
-                    <input type="text" id="name" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.NM" required
-                           @input="indvInfoSetIsTyping(true)"
+                    <input type="text"
+                           id="name"
+                           class="form-control flex-all-center w-100 input text-center"
+                           aria-describedby="passwordHelpInline"
+                           v-model="formData.NM" required
+                           maxlength="14"
                            @focusout="indvInfoCheckCompletion"
                            @blur="indvInfoCheckCompletion">
                   </div>
@@ -55,9 +58,12 @@
                 <!-- 소개자 입력란 -->
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
-                    <input type="text" id="brkr" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.BRKR"
-                           @input="indvInfoSetIsTyping(true)"
+                    <input type="text"
+                           id="brkr"
+                           class="form-control flex-all-center w-100 input text-center"
+                           aria-describedby="passwordHelpInline"
+                           v-model="formData.BRKR"
+                           maxlength="14"
                            @focusout="indvInfoCheckCompletion"
                            @blur="indvInfoCheckCompletion">
                   </div>
@@ -71,9 +77,12 @@
                 <!-- 카카오톡 닉네임 입력란 -->
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-8로 설정 -->
-                    <input type="text" id="KakaoNick" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.KAKAO_NICK"
-                           @input="indvInfoSetIsTyping(true)"
+                    <input type="text"
+                           id="KakaoNick"
+                           class="form-control flex-all-center w-100 input text-center"
+                           aria-describedby="passwordHelpInline"
+                           v-model="formData.KAKAO_NICK"
+                           maxlength="200"
                            @focusout="indvInfoCheckCompletion"
                            @blur="indvInfoCheckCompletion">
                   </div>
@@ -129,7 +138,6 @@
                           aria-describedby="passwordHelpInline"
                           v-model="formattedBirthDate"
                           @change="(event) => updateBirthDate(event.target.value)" required
-                          @input="indvInfoSetIsTyping(true)"
                           @focusout="indvInfoCheckCompletion"
                           @blur="indvInfoCheckCompletion">
                     </div>
@@ -141,14 +149,14 @@
                     <div class="form-group col-5 d-flex flex-column align-items-center input mb-0">
                       <!-- 일련번호를 col-5로 설정 -->
                       <input
-                          placeholder="7자리 입력"
                           type="text"
                           id="sn"
                           class="form-control input-radius text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formData.SN" required
                           maxlength="7"
-                          @input="handleInput"
+                          placeholder="7자리 입력"
+                          @input="handleInputSn"
                           @focusout="indvInfoCheckCompletion"
                           @blur="indvInfoCheckCompletion">
                     </div>
@@ -165,9 +173,14 @@
                 <!-- 나이 입력란 -->
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10"> <!-- 너비를 col-10으로 설정 -->
-                    <input type="text" id="age" class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline" v-model="formData.AGE"
-                           @input="indvInfoSetIsTyping(true)"
+                    <input type="text"
+                           id="age"
+                           class="form-control flex-all-center w-100 input text-center"
+                           aria-describedby="passwordHelpInline"
+                           v-model="formData.AGE"
+                           maxlength="2"
+                           placeholder="2자리 입력"
+                           @input="handleInputAge"
                            @focusout="indvInfoCheckCompletion"
                            @blur="indvInfoCheckCompletion">
                   </div>
@@ -262,8 +275,12 @@
                 <div class="input-wrap">
                   <div class="col-10 d-flex align-items-center justify-content-between"> <!-- col-10으로 설정하고 세로 정렬 -->
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 첫 번째 입력란 -->
-                      <input type="text" id="mblTelno" class="form-control input text-center"
+                      <input type="text"
+                             id="mblTelno"
+                             class="form-control input text-center"
                              v-model="phoneParts[0]"
+                             maxlength="3"
+                             placeholder="3자리 입력"
                              @input="updateMblTelno"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
@@ -273,8 +290,12 @@
                       <span class="m0">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 두 번째 입력란 -->
-                      <input type="text" id="mblTelno2" class="form-control input text-center"
+                      <input type="text"
+                             id="mblTelno2"
+                             class="form-control input text-center"
                              v-model="phoneParts[1]"
+                             maxlength="4"
+                             placeholder="4자리 입력"
                              @input="updateMblTelno"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
@@ -284,8 +305,12 @@
                       <span class="m0">-</span> <!-- 구분 기호 -->
                     </div>
                     <div class="form-group col-3 d-flex flex-column align-items-center mb-0"> <!-- 세 번째 입력란 -->
-                      <input type="text" id="mblTelno3" class="form-control input text-center"
+                      <input type="text"
+                             id="mblTelno3"
+                             class="form-control input text-center"
                              v-model="phoneParts[2]"
+                             maxlength="4"
+                             placeholder="4자리 입력"
                              @input="updateMblTelno"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
@@ -370,7 +395,6 @@
 
                       <input type="text" id="rgn" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.RGN"
-                             @input="indvInfoSetIsTyping(true)"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                     </div>
@@ -382,7 +406,6 @@
 
                       <input type="text" id="addr" class="form-control input text-center"
                              aria-describedby="passwordHelpInline" v-model="formData.ADDR"
-                             @input="indvInfoSetIsTyping(true)"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                     </div>
@@ -404,7 +427,6 @@
                           class="date-default input form-control text-center"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedInterviewDate"
-                          @input="indvInfoSetIsTyping(true)"
                           @focusout="indvInfoCheckCompletion"
                           @blur="indvInfoCheckCompletion">
                     </div>
@@ -428,7 +450,6 @@
                           class="date-default input form-control text-center pl28 pr8"
                           aria-describedby="passwordHelpInline"
                           v-model="formattedPossibilityDate"
-                          @input="indvInfoSetIsTyping(true)"
                           @focusout="indvInfoCheckCompletion"
                           @blur="indvInfoCheckCompletion">
                     </div>
@@ -447,10 +468,11 @@
                 <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
                   <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
                     <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text" id="mmDmndUntprc"
+                      <input type="text"
+                             id="mmDmndUntprc"
                              class="form-control flex-all-center w-100 input text-center pl40 pr40"
                              aria-describedby="passwordHelpInline" v-model="formData.MM_DMND_UNTPRC"
-                             @input="indvInfoSetIsTyping(true)"
+                             maxlength="4"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                       <span class="position-absolute"
@@ -1668,13 +1690,6 @@ const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번�
 // 이메일 부분을 저장할 배열
 const emailParts = ref(['', '']); // 이메일 앞부분과 도메인을 저장
 
-//개인정보 입력완료, 입력중 동작 시작
-const indvInfoIsTyping = ref(false); // 입력 중 상태
-
-const indvInfoSetIsTyping = (value) => {
-  indvInfoIsTyping.value = value; // 입력 중 상태 설정
-};
-
 const indvInfoCheckCompletion = () => {
   const {
     NM, BRKR, KAKAO_NICK, BRDT, SN, AGE,
@@ -1777,17 +1792,33 @@ const paymentCheckCompletion = () => {
 };
 //지급정보 입력완료, 입력중 동작 종료
 
-// 입력값 검증 및 개인 정보 체크 함수
-const handleInput = (event) => {
+// 숫자만 남기고 한글 및 기타 문자 제거하는 함수
+const sanitizeNumericInput = (value, maxLength = null) => {
+  let sanitized = value
+      .replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '') // 한글 제거
+      .replace(/[^\d]/g, '');            // 숫자 이외 제거
+
+  // maxLength가 지정되면 자르기
+  if (maxLength) {
+    sanitized = sanitized.slice(0, maxLength);
+  }
+
+  return sanitized;
+};
+
+const handleInputAge = (event) => {
   const input = event.target.value;
-  // 숫자만 남기고 나머지 지우기
-  const numericInput = input.replace(/[^\d]/g, ''); // 숫자가 아닌 문자 제거
+  formData.value.AGE = sanitizeNumericInput(input, 2);
+  event.target.value = formData.value.AGE;
 
-  // 7자리까지만 허용
-  formData.value.SN = numericInput.slice(0, 7);
+};
 
-  // 개인 정보 체크 함수 호출
-  indvInfoCheckCompletion();
+// 일련번호 입력값 검증 및 개인 정보 체크 함수 호출
+const handleInputSn = (event) => {
+  const input = event.target.value;
+  formData.value.SN = sanitizeNumericInput(input, 7);
+  event.target.value = formData.value.SN;
+
 };
 
 const hasPadding = ref(true); // 패딩 상태 관리
@@ -1811,7 +1842,6 @@ const scrollChecks = () => {
   }
   console.log("현재 패딩 상태:", hasPadding.value);
 };
-
 
 const submitForm = async (event) => {
   // 현재 폼 요소를 가져옴
