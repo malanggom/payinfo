@@ -27,6 +27,7 @@ let pjHandlers = {
     pjOpenModal: [],
     pjRemoveButton: [],
     pjActiveFilters: [],
+    selectDeveloper: [],  // ✅ 여기에 추가
 };
 
 export { resultHandlers, pjHandlers };  // 각각을 export
@@ -128,6 +129,9 @@ export default {
             if (pjHandlers[eventType]) {
                 pjHandlers[eventType] = pjHandlers[eventType].filter(h => h !== handler);
             }
+        },
+        selectDeveloper(id) {
+            pjHandlers.selectDeveloper.forEach(handler => handler(id)); // ✅ 이 부분 추가
         },
         pjDevHistDeleteRowBtnClick() {
             pjHandlers.pjDeleteRow.forEach(handler => handler());

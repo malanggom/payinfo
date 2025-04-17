@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef } from "vue";
+import { defineComponent, ref, shallowRef, onMounted, onBeforeUnmount } from "vue";
 import DevPjHistoryAddBtnComponent from './DevPjHistoryAddBtnComponent.vue';
 import { AgGridVue } from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
@@ -65,9 +65,6 @@ export default defineComponent({
     };
 
     const gridOptions = {
-      autoSizeStrategy: {
-        type: 'fitCellContents',
-      },
       localeText: {
         contains: '포함',
         notContains: '포함하지 않음',
@@ -98,24 +95,25 @@ export default defineComponent({
     };
 
     const columnDefs = ref([
-      { headerName: '선택', checkboxSelection: true, minWidth: 100, filter: false, cellClass: 'checkboxCentered' },
-      { headerName: '프로젝트지원상태', field: "DEV_PJ_PRGRS_STTS", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '프로젝트지원날짜', field: "DEV_PJ_PRGRS_DT", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '프로젝트시작일자', field: "DEV_PJ_BGNG_DT", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '프로젝트종료일자', field: "DEV_PJ_END_DT", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '고객사명', field: "CUST_NM", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '수행사명', field: "SUBGC_NM", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '계약회사명', field: "CTRT_CO_NM", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '하청업체명', field: "SBCN_NM", minWidth: 170, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '프로젝트장소', field: "PJ_PLC", minWidth: 190, filter: "agTextColumnFilter", filterParams: textFilterParams },
-      { headerName: '프로젝트투입등급', field: "PJ_INP_GRADE", minWidth: 200, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '선택', checkboxSelection: true, minWidth: 60, filter: false, sortable: false, cellClass: 'checkboxCentered'},
+      { headerName: '이력서', field: 'resumeIcon', minWidth: 80, filter: false, sortable: false },
+      { headerName: '프로젝트지원상태', field: "DEV_PJ_PRGRS_STTS", minWidth: 180, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '프로젝트지원날짜', field: "DEV_PJ_PRGRS_DT", minWidth: 180, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '프로젝트시작일자', field: "DEV_PJ_BGNG_DT", minWidth: 180, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '프로젝트종료일자', field: "DEV_PJ_END_DT", minWidth: 180, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '고객사명', field: "CUST_NM", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '수행사명', field: "SUBGC_NM", minWidth: 130, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '계약회사명', field: "CTRT_CO_NM", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '하청업체명', field: "SBCN_NM", minWidth: 140, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '프로젝트장소', field: "PJ_PLC", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams },
+      { headerName: '프로젝트투입등급', field: "PJ_INP_GRADE", minWidth: 180, filter: "agTextColumnFilter", filterParams: textFilterParams },
       { headerName: '직책', field: "JBTTL", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams },
       { headerName: '체제비', field: "SYST_FEE", minWidth: 120, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
-      { headerName: '계약회사정규직원금', field: "CTRT_CO_EMP_PRNC", minWidth: 210, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
+      { headerName: '계약회사정규직원금', field: "CTRT_CO_EMP_PRNC", minWidth: 190, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
       { headerName: '3.3%원금', field: "WHTAX_PRNC", minWidth: 140, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
       { headerName: '부가세원금', field: "VAT_PRNC", minWidth: 140, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
-      { headerName: '자사정규직원금', field: "KDS_EMP_PRNC", minWidth: 190, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
-      { headerName: '프로젝트별월요청단가', field: "PJ_MM_DMND_UNTPRC", minWidth: 220, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
+      { headerName: '자사정규직원금', field: "KDS_EMP_PRNC", minWidth: 170, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
+      { headerName: '프로젝트별월요청단가', field: "PJ_MM_DMND_UNTPRC", minWidth: 210, filter: "agNumberColumnFilter", filterParams: numberFilterParams },
     ]);
     const rowSelection = ref("multiple");
     const rowData = ref([]);
@@ -123,7 +121,7 @@ export default defineComponent({
     const fetchData = async (_type, _filter) => {
       console.log("🔍 fetchData 실행됨 with", _type, _filter);
       try {
-        const response = await fetch('http://localhost:8080/api/getPjHistData');
+        const response = await fetch(`http://localhost:8080/api/getPjHistData?devNo=${_filter.devNo}`);
         const data = await response.json();
         console.log("📦 받아온 데이터:", data);
 
@@ -148,6 +146,7 @@ export default defineComponent({
           KDS_EMP_PRNC: item.KDS_EMP_PRNC,
           PJ_MM_DMND_UNTPRC: item.PJ_MM_DMND_UNTPRC,
         }));
+
         rowData.value = translatedData;
         gridApi.value.refreshCells();
         searchPerformed.value = true;
@@ -156,6 +155,7 @@ export default defineComponent({
         rowData.value = [];
       }
     };
+
     const pjOpenModal = () => {
       eventbus.SearchPjHistoryResultEvent.pjOpenModal();
     };
@@ -339,6 +339,73 @@ export default defineComponent({
       }
     };
 
+    const selectedDeveloperId = ref(null);
+
+    const fetchProjectHistoryFromServer = async (filter) => {
+      try {
+        const query = filter?.devNo ? `?devNo=${filter.devNo}` : '';
+        const response = await fetch(`http://localhost:8080/api/getPjHistData${query}`);
+        const data = await response.json();
+
+        console.log("📦 받아온 데이터:", data);
+
+        return data.result.row.map(item => ({
+          DEV_NO: item.DEV_NO,
+          PJ_NO: item.PJ_NO,
+          DEV_PJ_PRGRS_STTS: item.DEV_PJ_PRGRS_STTS,
+          DEV_PJ_PRGRS_DT: item.DEV_PJ_PRGRS_DT,
+          DEV_PJ_BGNG_DT: item.DEV_PJ_BGNG_DT,
+          DEV_PJ_END_DT: item.DEV_PJ_END_DT,
+          CUST_NM: item.CUST_NM,
+          SUBGC_NM: item.SUBGC_NM,
+          CTRT_CO_NM: item.CTRT_CO_NM,
+          SBCN_NM: item.SBCN_NM,
+          PJ_PLC: item.PJ_PLC,
+          PJ_INP_GRADE: item.PJ_INP_GRADE,
+          JBTTL: item.JBTTL,
+          SYST_FEE: item.SYST_FEE,
+          CTRT_CO_EMP_PRNC: item.CTRT_CO_EMP_PRNC,
+          WHTAX_PRNC: item.WHTAX_PRNC,
+          VAT_PRNC: item.VAT_PRNC,
+          KDS_EMP_PRNC: item.KDS_EMP_PRNC,
+          PJ_MM_DMND_UNTPRC: item.PJ_MM_DMND_UNTPRC,
+        }));
+      } catch (error) {
+        console.error("❌ 프로젝트 이력 데이터 로드 실패:", error);
+        return [];
+      }
+    };
+
+    const handleSearch = async (type, filter) => {
+      try {
+        console.log("🔍 프로젝트 이력 검색 요청:", filter);
+
+        const allHistoryData = await fetchProjectHistoryFromServer();
+
+        const filteredData = allHistoryData.filter(item => {
+          return String(item.DEV_NO) === String(filter.devNo);
+        });
+
+        console.log("✅ 필터링 결과 수:", filteredData.length);
+
+        rowData.value = filteredData;
+        gridApi.value.refreshCells();
+        searchPerformed.value = true;
+      } catch (err) {
+        console.error("❗ 검색 처리 중 오류:", err);
+        rowData.value = [];
+      }
+    };
+
+
+    onMounted(() => {
+      eventbus.SearchPjHistoryResultEvent.add('pjSearch', handleSearch);
+    });
+
+    onBeforeUnmount(() => {
+      eventbus.SearchPjHistoryResultEvent.remove('pjSearch', handleSearch);
+    });
+
     return {
       columnDefs,
       gridApi,
@@ -352,6 +419,7 @@ export default defineComponent({
       resetFilter,
       removeFilter,
       textFilterParams,
+      selectedDeveloperId,
     };
   },
 });

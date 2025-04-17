@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal">
       <div class="modal-content">
         <!-- 모달 헤더 -->
- 0       <div class="modal-header d-flex align-items-center">
+        <div class="modal-header d-flex align-items-center">
           <div class="flex-grow-1 text-center">
             <h1 class="modal-title fs-4" id="resumePreviewLabel">기술경력서 미리보기</h1>
           </div>

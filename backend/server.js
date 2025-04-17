@@ -128,10 +128,21 @@ app.get('/api/getDevData', async (req, res) => {
 
 app.get('/api/getPjHistData', async (req, res) => {
     let connection;
+    const devNo = req.query.devNo;  // 👈 devNo 파라미터 받기
 
     try {
         connection = await oracledb.getConnection(dbConfig);
-        const result = await connection.execute('SELECT * FROM C##SYSON.DEV_PJ');
+
+        let query = 'SELECT * FROM C##SYSON.DEV_PJ';
+        let binds = [];
+
+        // 🔥 devNo 파라미터가 있을 경우 필터 추가
+        if (devNo) {
+            query += ' WHERE DEV_NO = :devNo';
+            binds = [devNo];
+        }
+
+        const result = await connection.execute(query, binds);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'No data found' });
@@ -139,25 +150,25 @@ app.get('/api/getPjHistData', async (req, res) => {
 
         const data = result.rows.map(row => {
             return {
-                DEV_NO: row[0],                  // 개발자번호
-                PJ_NO: row[1],                   // 프로젝트번호
-                DEV_PJ_PRGRS_STTS: row[2],       // 개발자별프로젝트지원상태
-                DEV_PJ_PRGRS_DT: row[3],         // 개발자별프로젝트지원날짜
-                DEV_PJ_BGNG_DT: row[4],          // 개발자별프로젝트시작일자
-                DEV_PJ_END_DT: row[5],           // 개발자별프로젝트종료일자
-                CUST_NM: row[6],                 // 고객사명
-                SUBGC_NM: row[7],                // 수행사명
-                CTRT_CO_NM: row[8],              // 계약회사명
-                SBCN_NM: row[9],                 // 하청업체명
-                PJ_PLC: row[10],                 // 프로젝트장소
-                PJ_INP_GRADE: row[11],           // 프로젝트투입등급
-                JBTTL: row[12],                  // 직책
-                SYST_FEE: row[13],               // 체제비
-                CTRT_CO_EMP_PRNC: row[14],       // 계약회사정규직원금
-                WHTAX_PRNC: row[15],             // 3.3%원금
-                VAT_PRNC: row[16],               // 부가세원금
-                KDS_EMP_PRNC: row[17],           // 자사정규직원금
-                PJ_MM_DMND_UNTPRC: row[18],      // 프로젝트별월요청단가
+                DEV_NO: row[0],
+                PJ_NO: row[1],
+                DEV_PJ_PRGRS_STTS: row[2],
+                DEV_PJ_PRGRS_DT: row[3],
+                DEV_PJ_BGNG_DT: row[4],
+                DEV_PJ_END_DT: row[5],
+                CUST_NM: row[6],
+                SUBGC_NM: row[7],
+                CTRT_CO_NM: row[8],
+                SBCN_NM: row[9],
+                PJ_PLC: row[10],
+                PJ_INP_GRADE: row[11],
+                JBTTL: row[12],
+                SYST_FEE: row[13],
+                CTRT_CO_EMP_PRNC: row[14],
+                WHTAX_PRNC: row[15],
+                VAT_PRNC: row[16],
+                KDS_EMP_PRNC: row[17],
+                PJ_MM_DMND_UNTPRC: row[18],
             };
         });
 

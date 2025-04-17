@@ -14,8 +14,8 @@ export default {
       eventbus.SearchResultEvent.fetchData('searchName', this.searchName);
       console.log("데이터 가져오기 실행");
 // 1. SearchPjHistoryResultEvent.dispatch() 사용
-      eventbus.SearchPjHistoryResultEvent.fetchData("search", { name: this.searchName });
-      console.log("검색 이름 전송:", this.searchName);
+//       eventbus.SearchPjHistoryResultEvent.fetchData("search", { name: this.searchName });
+//       console.log("검색 이름 전송:", this.searchName);
     }
   }
 };
