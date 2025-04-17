@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal">
       <div class="modal-content">
         <!-- 모달 헤더 -->
-        <div class="modal-header d-flex align-items-center">
+ 0       <div class="modal-header d-flex align-items-center">
           <div class="flex-grow-1 text-center">
             <h1 class="modal-title fs-4" id="resumePreviewLabel">기술경력서 미리보기</h1>
           </div>
@@ -118,7 +118,6 @@ const openModalPreviewResume = async (resumeId) => {
           if (section) section.style.padding = "0";
         }, 300);
 
-        // 📌 가로 페이지 감지 후 스타일 적용 (500ms 후)
         setTimeout(() => {
           const sections = document.querySelectorAll(".docx-section");
 
@@ -126,11 +125,16 @@ const openModalPreviewResume = async (resumeId) => {
             const width = parseFloat(section.style.width);
             const height = parseFloat(section.style.height);
 
-            if (!width || !height) return; // width, height가 없으면 스킵
+            if (!width || !height) return;
 
             if (width > height) {
-              // 가로 페이지면 landscape 클래스 추가
-              section.classList.add("landscape");
+              // 가로 페이지 감지 시 회전 처리
+              const wrapper = document.createElement('div');
+              wrapper.classList.add('docx-section-wrapper', 'landscape-wrapper');
+              section.classList.add('landscape');
+
+              section.parentNode.insertBefore(wrapper, section);
+              wrapper.appendChild(section);
             }
           });
         }, 500);
@@ -185,11 +189,15 @@ onMounted(() => {
 .modal-body {
   flex-grow: 1; /* 몸체가 남은 공간을 차지하도록 설정 */
   overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
-  overflow-x: hidden; /* 수평 스크롤 숨김 */
+  overflow-x: auto !important; /* 수평 스크롤 숨김 */
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 0px;
+}
+
+.form-control.form-status {
+  overflow-x: auto !important;
 }
 
 .modal-height-fix100{
@@ -200,6 +208,9 @@ onMounted(() => {
   display: block;
   height: 100%; /* 고정 높이로 설정 */
   width: 100%; /* 부모 너비를 가득 채우도록 설정 */
+  min-width: 1200px; /* landscape가 문제 없도록 */
+  overflow-x: auto;
+  white-space: nowrap; /* 회전된 섹션이 옆으로 밀려도 줄바꿈 X */
   overflow-y: auto; /* 세로 스크롤 활성화 */
   background: white; /* 흰 배경 */
   padding: 15px;
@@ -212,11 +223,52 @@ onMounted(() => {
 
 /* 모달 스타일 */
 .custom-modal {
-  max-width: 900px;
-  width: 80%;
+  max-width: 95vw;
+  width: 95vw;
 }
 
 .docx-wrapper, .docx {
   padding: 0 !important;
 }
+
+/* 기본 페이지 스타일 */
+.docx-section {
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* 가로 방향 페이지일 때 */
+.docx-section.landscape {
+  transform: rotate(90deg);
+  transform-origin: left top;
+  width: auto !important;
+  height: auto !important;
+  margin: 30px auto;
+}
+
+.docx-section-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+.landscape-wrapper {
+  min-width: 1200px; /* 회전된 A4 기준 너비 정도 */
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.landscape {
+  transform: rotate(90deg);
+  transform-origin: left top;
+  /* 회전한 상태에 맞게 크기 조정 */
+  width: auto !important;
+  height: auto !important;
+  display: inline-block;
+}
+
 </style>
