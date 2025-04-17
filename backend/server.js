@@ -183,11 +183,11 @@ app.post('/api/addDeveloper', async (req, res) => {
     const developerData = req.body; // 요청 본문에서 데이터 받기
 
     // Boolean 값 처리
-    developerData.WHTAX_YN = developerData.WHTAX_YN ? 1 : 0;
-    developerData.BZMN_YN = developerData.BZMN_YN ? 1 : 0;
-    developerData.KDS_EMP_YN = developerData.KDS_EMP_YN ? 1 : 0;
-    developerData.CTRT_CO_EMP_YN = developerData.CTRT_CO_EMP_YN ? 1 : 0;
-    developerData.CTRT_HSTRY_YN = developerData.CTRT_HSTRY_YN ? 1 : 0;
+    developerData.WHTAX_YN = developerData.WHTAX_YN.toString() === 'Y' ? 'Y' : 'N';
+    developerData.BZMN_YN = developerData.BZMN_YN.toString() === 'Y' ? 'Y' : 'N';
+    developerData.KDS_EMP_YN = developerData.KDS_EMP_YN.toString() === 'Y' ? 'Y' : 'N';
+    developerData.CTRT_CO_EMP_YN = developerData.CTRT_CO_EMP_YN.toString() === 'Y' ? 'Y' : 'N';
+    developerData.CTRT_HSTRY_YN = developerData.CTRT_HSTRY_YN.toString() === 'Y' ? 'Y' : 'N';
 
     // INSERT 쿼리
     const insertQuery = `

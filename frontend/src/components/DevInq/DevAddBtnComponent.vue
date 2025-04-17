@@ -295,7 +295,7 @@
                              v-model="phoneParts[0]"
                              maxlength="3"
                              placeholder="3자리 입력"
-                             @input="updateMblTelno"
+                             @input="handlePhoneInput(0, $event)"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                     </div>
@@ -310,7 +310,7 @@
                              v-model="phoneParts[1]"
                              maxlength="4"
                              placeholder="4자리 입력"
-                             @input="updateMblTelno"
+                             @input="handlePhoneInput(1, $event)"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                     </div>
@@ -325,7 +325,7 @@
                              v-model="phoneParts[2]"
                              maxlength="4"
                              placeholder="4자리 입력"
-                             @input="updateMblTelno"
+                             @input="handlePhoneInput(2, $event)"
                              @focusout="indvInfoCheckCompletion"
                              @blur="indvInfoCheckCompletion">
                     </div>
@@ -376,19 +376,19 @@
                     <div class="dropdown">
                       <button id="whtaxbzmnYn" class="btn btn-outline-primary dropdown-toggle" type="button"
                               data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedWhtaxbzmn || '3.3%' }}</span>
+                        <span class="dropdown-default text-center">{{ selectedWhtaxbzmn || 'N/A' }}</span>
                         <!-- 기본값 설정 -->
                         <span class="caret"></span> <!-- 화살표 -->
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectWhtax('N/A')">N/A</button>
+                          <button class="dropdown-item" type="button" @click="selectWhtaxBzmn('N/A')">N/A</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectWhtax('3.3%')">3.3%</button>
+                          <button class="dropdown-item" type="button" @click="selectWhtaxBzmn('3.3%')">3.3%</button>
                         </li>
                         <li>
-                          <button class="dropdown-item" type="button" @click="selectBzmn('사업자')">사업자</button>
+                          <button class="dropdown-item" type="button" @click="selectWhtaxBzmn('사업자')">사업자</button>
                         </li>
                       </ul>
                     </div>
@@ -1362,7 +1362,7 @@ const isToggled = ref(false); // 클릭 상태를 관리하는 변수
 const selectedGndr = ref('남'); // 성벽
 const selectedAcbg = ref('대졸(4년제)'); // 학력
 const selectedMs = ref('현역'); // 병역
-const selectedWhtaxbzmn = ref('3.3%'); // 소득구분
+const selectedWhtaxbzmn = ref('N/A'); // 소득구분
 const years = Array.from({length: 36}, (_, i) => i); // 총 경력기간 드롭다운
 const months = Array.from({length: 13}, (_, i) => i); // 총 경력기간 드롭다운
 const selectedYear = ref(0); // 총 경력기간
@@ -1397,14 +1397,14 @@ const formData = ref({
   MBL_TELNO: "",
   EML: "",
   CONTT_MTHD: selectedConttMthd.value,
-  NTRV_DMND_DT: "",
-  INP_PSBLTY_DT: "",
+  NTRV_DMND_DT: "N/A",
+  INP_PSBLTY_DT: "N/A",
   OGDP_CO: "",
   SN: "",
-  WHTAX_YN: "",
-  BZMN_YN: "",
-  KDS_EMP_YN: selectedKdsEmpYn.value,
-  CTRT_CO_EMP_YN: selectedCtrtCoEmpYn.value,
+  WHTAX_YN: "N/A",
+  BZMN_YN: "N/A",
+  KDS_EMP_YN: "N",
+  CTRT_CO_EMP_YN: "N",
   CLCT_PICKUP_DT: selectedClctPickupDt.value,
   GIVE_DT: selectedGiveDt.value,
   BANK: "",
@@ -1453,32 +1453,36 @@ const selectMs = (ms) => {
 const selectMblTelno = () => {
   formData.value.MBL_TELNO = `${phoneParts.value[0]}-${phoneParts.value[1]}-${phoneParts.value[2]}`;
 };
-
-// 전화번호 입력란에서 값이 변경될 때마다 호출
-const updateMblTelno = () => {
-  selectMblTelno();
-};
+//
+// // 전화번호 입력란에서 값이 변경될 때마다 호출
+// const updateMblTelno = () => {
+//   selectMblTelno();
+// };
 
 // 이메일 선택
 const selectEml = () => {
   formData.value.EML = `${emailParts.value[0]}@${emailParts.value[1]}`;
 };
 
-// 전화번호 입력란에서 값이 변경될 때마다 호출
+// 이메일 입력란에서 값이 변경될 때마다 호출
 const updateEml = () => {
   selectEml();
 };
 
 // 소득구분 선택
-const selectWhtax = (whtax) => {
-  selectedWhtaxbzmn.value = whtax;
-  formData.value.WHTAX_YN = 'y';
-  formData.value.BZMN_YN = 'n';
-};
-const selectBzmn = (bzmn) => {
-  selectedWhtaxbzmn.value = bzmn;
-  formData.value.WHTAX_YN = 'n';
-  formData.value.BZMN_YN = 'y';
+const selectWhtaxBzmn = (type) => {
+  selectedWhtaxbzmn.value = type;
+
+  if(type === 'N/A'){
+    formData.value.WHTAX_YN = 'N/A';
+    formData.value.BZMN_YN = 'N/A';
+  }else if(type === '3.3%'){
+    formData.value.WHTAX_YN = 'Y';
+    formData.value.BZMN_YN = 'N';
+  }else if(type === '사업자'){
+    formData.value.WHTAX_YN = 'N';
+    formData.value.BZMN_YN = 'Y';
+  }
 };
 
 // 총 경력기간 선택
@@ -1680,26 +1684,60 @@ const ctrtSttsHandleClick = () => {
 // 인터뷰 요청일을 YYYY-MM-DD 형식으로 유지하기 위해 computed 속성 사용
 const formattedInterviewDate = computed({
   get: () => {
-    if (formData.value.NTRV_DMND_DT) {
-      return `${formData.value.NTRV_DMND_DT.slice(0, 4)}-${formData.value.NTRV_DMND_DT.slice(4, 6)}-${formData.value.NTRV_DMND_DT.slice(6, 8)}`;
+    const raw = formData.value.NTRV_DMND_DT;
+    if (!raw || raw === 'N/A') return '';
+
+    if (raw === '즉시') {
+      // '즉시'면 오늘 날짜 문자열을 반환해서 input에 표시
+      const today = new Date();
+      return today.toISOString().split('T')[0]; // YYYY-MM-DD 형식
     }
-    return '';
+
+    return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
   },
   set: (value) => {
-    formData.value.NTRV_DMND_DT = value.replace(/-/g, ''); // YYYY-MM-DD에서 YYYYMMDD로 변환
+    if (!value) {
+      formData.value.NTRV_DMND_DT = 'N/A';
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+
+    if (value === today) {
+      formData.value.NTRV_DMND_DT = '즉시';
+    } else {
+      formData.value.NTRV_DMND_DT = value.replace(/-/g, ''); // YYYYMMDD
+    }
   }
 });
 
 // 투입 가능일을 YYYY-MM-DD 형식으로 유지하기 위해 computed 속성 사용
 const formattedPossibilityDate = computed({
   get: () => {
-    if (formData.value.INP_PSBLTY_DT) {
-      return `${formData.value.INP_PSBLTY_DT.slice(0, 4)}-${formData.value.INP_PSBLTY_DT.slice(4, 6)}-${formData.value.INP_PSBLTY_DT.slice(6, 8)}`;
+    const raw = formData.value.INP_PSBLTY_DT;
+    if (!raw || raw === 'N/A') return '';
+
+    if (raw === '즉시') {
+      // '즉시'면 오늘 날짜 문자열을 반환해서 input에 표시
+      const today = new Date();
+      return today.toISOString().split('T')[0]; // YYYY-MM-DD 형식
     }
-    return '';
+
+    return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
   },
   set: (value) => {
-    formData.value.INP_PSBLTY_DT = value.replace(/-/g, ''); // YYYY-MM-DD에서 YYYYMMDD로 변환
+    if (!value) {
+      formData.value.INP_PSBLTY_DT = 'N/A';
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+
+    if (value === today) {
+      formData.value.INP_PSBLTY_DT = '즉시';
+    } else {
+      formData.value.INP_PSBLTY_DT = value.replace(/-/g, ''); // YYYYMMDD
+    }
   }
 });
 
@@ -1709,6 +1747,7 @@ const showModal = ref(false);
 const closeModal = () => {
   showModal.value = false; // 모달 닫기
 };
+
 // 전화번호 부분을 저장할 배열
 const phoneParts = ref(['', '', '']); // 첫 번째, 두 번째, 세 번째 번호를 저장
 // 이메일 부분을 저장할 배열
@@ -1829,6 +1868,20 @@ const handleInputSn = (event) => {
 
 };
 
+//휴대폰 한글 관련 함수
+const handlePhoneInput = (index, event) => {
+  const input = event.target.value;
+  const maxLengths = [3, 4, 4];
+
+  const cleanedPhone = sanitizeNumericInput(input, maxLengths[index]);
+  phoneParts.value[index] = cleanedPhone;
+
+  // DOM에 강제로 반영 (한 글자만 입력되는 문제 방지)
+  event.target.value = cleanedPhone;
+
+  selectMblTelno();
+};
+
 const handleInputMmDmndUntprc = (event) => {
   const input = event.target.value;
   formData.value.MM_DMND_UNTPRC = sanitizeNumericInput(input, 4);
@@ -1938,14 +1991,14 @@ const openModalHandler = () => {
     MBL_TELNO: "",
     EML: "",
     CONTT_MTHD: selectedConttMthd.value, // 초기화
-    NTRV_DMND_DT: "",
-    INP_PSBLTY_DT: "",
+    NTRV_DMND_DT: "N/A",
+    INP_PSBLTY_DT: "N/A",
     OGDP_CO: "",
     SN: "",
-    WHTAX_YN: "",
-    BZMN_YN: "",
-    KDS_EMP_YN: selectedKdsEmpYn.value,
-    CTRT_CO_EMP_YN: selectedCtrtCoEmpYn.value,
+    WHTAX_YN: "N/A",
+    BZMN_YN: "N/A",
+    KDS_EMP_YN: "N",
+    CTRT_CO_EMP_YN: "N",
     CLCT_PICKUP_DT: selectedClctPickupDt.value, // 초기화
     GIVE_DT: selectedGiveDt.value, // 초기화
     BANK: "",
