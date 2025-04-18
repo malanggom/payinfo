@@ -337,12 +337,6 @@ app.post('/api/addDevPjHistory', async (req, res) => {
 
     const projectData = req.body; // 요청 본문에서 데이터 받기
 
-    // Boolean 값 처리 (필요한 경우)
-    projectData.WHTAX_PRNC = projectData.WHTAX_PRNC ? 1 : 0;
-    projectData.VAT_PRNC = projectData.VAT_PRNC ? 1 : 0;
-    projectData.KDS_EMP_PRNC = projectData.KDS_EMP_PRNC ? 1 : 0;
-    projectData.CTRT_CO_EMP_PRNC = projectData.CTRT_CO_EMP_PRNC ? 1 : 0;
-
     // INSERT 쿼리
     const insertQuery = `
         INSERT INTO C##SYSON.DEV_PJ (
