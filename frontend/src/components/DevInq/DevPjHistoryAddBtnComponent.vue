@@ -33,7 +33,7 @@
               <div v-if="pjInfoIsVisible" class="d-flex row justify-content-center mt20">
                 <!-- 프로젝트지원상태 레이블 -->
                 <div class="label-wrap col-10 mt-2">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="devPjPrgrsStts" class="col-form-label">프로젝트지원상태</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -64,7 +64,7 @@
 
                 <!-- 프로젝트지원날짜 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="devPjPrgrsDt" class="col-form-label">프로젝트지원날짜</label>
                   </div>
                 </div>
@@ -78,7 +78,6 @@
                              class="date-default input form-control text-center pl28 pr8"
                              aria-describedby="passwordHelpInline"
                              v-model="formattedPossibilityDate"
-                             @focusout="pjInfoCheckCompletion"
                              @blur="pjInfoCheckCompletion">
                     </div>
                   </div>
@@ -86,7 +85,7 @@
 
                 <!-- 프로젝트시작일자 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="devPjBgngDt" class="col-form-label">프로젝트시작일자</label>
                   </div>
                 </div>
@@ -100,7 +99,6 @@
                            class="date-default input form-control text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formattedStartDate"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                     </div>
                   </div>
@@ -108,7 +106,7 @@
 
                 <!-- 프로젝트종료일자 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="devPjEndDt" class="col-form-label">프로젝트종료일자</label>
                   </div>
                 </div>
@@ -121,8 +119,7 @@
                            id="devPjEndDt"
                              class="date-default input form-control text-center"
                              aria-describedby="passwordHelpInline"
-                           v-model="formattedEndDate"
-                             @focusout="pjInfoCheckCompletion"
+                             v-model="formattedEndDate"
                              @blur="pjInfoCheckCompletion">
                     </div>
                   </div>
@@ -130,7 +127,7 @@
 
                 <!-- 고객사명 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="custNm" class="col-form-label">고객사명</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -143,14 +140,13 @@
                            class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formData.CUST_NM"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                   </div>
                 </div>
 
                 <!-- 수행사명 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="subgcNm" class="col-form-label">수행사명</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -163,14 +159,13 @@
                            class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formData.SUBGC_NM"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                   </div>
                 </div>
 
                 <!-- 계약회사명 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="ctrtCoNm" class="col-form-label">계약회사명</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -183,14 +178,13 @@
                            class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formData.CTRT_CO_NM"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                   </div>
                 </div>
 
                 <!-- 하청업체명 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="sbcnNm" class="col-form-label">하청업체명</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -203,14 +197,13 @@
                            class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formData.SBCN_NM"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                   </div>
                 </div>
 
                 <!-- 프로젝트장소 레이블 -->
                 <div class="label-wrap col-10">
-                  <div class="label-w100">
+                  <div class="label">
                     <label for="pjPlc" class="col-form-label">프로젝트장소</label> <!-- 레이블 -->
                   </div>
                 </div>
@@ -223,7 +216,6 @@
                            class="form-control flex-all-center w-100 input text-center"
                            aria-describedby="passwordHelpInline"
                            v-model="formData.PJ_PLC"
-                           @focusout="pjInfoCheckCompletion"
                            @blur="pjInfoCheckCompletion">
                   </div>
                 </div>
@@ -254,7 +246,7 @@
                 <div v-if="pjInputInfoIsVisible" class="d-flex row justify-content-center mt20">
                   <!-- 프로젝트투입등급 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="devPjInpGrd" class="col-form-label">프로젝트투입등급</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -281,7 +273,7 @@
 
                   <!-- 직책 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="jbttl" class="col-form-label">직책</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -309,7 +301,7 @@
 
                   <!-- 체제비 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="systFee" class="col-form-label">체제비</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -324,7 +316,6 @@
                                aria-describedby="passwordHelpInline"
                                v-model="formData.SYST_FEE"
                                maxlength="3"
-                               @focusout="pjInputInfoCheckCompletion"
                                @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -334,7 +325,7 @@
 
                   <!-- 계약회사정규직원금 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="ctrtCoEmpPrnc" class="col-form-label">계약회사정규직원금</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -349,7 +340,6 @@
                              aria-describedby="passwordHelpInline"
                              v-model="formData.CTRT_CO_EMP_PRNC"
                              maxlength="3"
-                             @focusout="pjInputInfoCheckCompletion"
                              @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -359,7 +349,7 @@
 
                   <!-- 3.3%원금 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="whtaxPrnc" class="col-form-label">3.3%원금</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -374,7 +364,6 @@
                              aria-describedby="passwordHelpInline"
                              v-model="formData.WHTAX_PRNC"
                              maxlength="3"
-                             @focusout="pjInputInfoCheckCompletion"
                              @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -384,7 +373,7 @@
 
                   <!-- 부가세원금 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="vatPrnc" class="col-form-label">부가세원금</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -399,7 +388,6 @@
                              aria-describedby="passwordHelpInline"
                              v-model="formData.VAT_PRNC"
                              maxlength="3"
-                             @focusout="pjInputInfoCheckCompletion"
                              @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -409,7 +397,7 @@
 
                   <!-- 자사정규직원금 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="kdsEmpPrnc" class="col-form-label">자사정규직원금</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -424,7 +412,6 @@
                              aria-describedby="passwordHelpInline"
                              v-model="formData.KDS_EMP_PRNC"
                              maxlength="3"
-                             @focusout="pjInputInfoCheckCompletion"
                              @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -434,7 +421,7 @@
 
                   <!-- 월요청단가 레이블 -->
                   <div class="label-wrap col-10">
-                    <div class="label-w100">
+                    <div class="label">
                       <label for="mmDmndUntprc" class="col-form-label">월요청단가</label> <!-- 레이블 -->
                     </div>
                   </div>
@@ -449,7 +436,6 @@
                              aria-describedby="passwordHelpInline"
                              v-model="formData.PJ_MM_DMND_UNTPRC"
                              maxlength="4"
-                             @focusout="pjInputInfoCheckCompletion"
                              @blur="pjInputInfoCheckCompletion">
                         <span class="position-absolute"
                               style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
@@ -853,12 +839,6 @@ onUnmounted(() => {
 .label-date-wrap {
   display: flex;
   justify-content: space-between;
-}
-
-.label-w100 {
-  display: flex;
-  justify-content: center;
-  width: 100px;
 }
 
 .label {
