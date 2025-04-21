@@ -106,7 +106,7 @@
         </div>
       </nav>
     </aside>
-    <section>
+    <section :class="sectionClass">
       <router-view/>
     </section>
   </main>
@@ -134,8 +134,21 @@ export default {
     isActiveRoute(tab, routes) {
       // 현재 경로가 routes 중 하나면 true
       return routes.includes(this.$route.path);
+    },
+  },
+  computed: {
+    sectionClass() {
+      const path = this.$route.path;
+
+      if (path === '/devinq') {
+        return 'section-dev';
+      } else if (path === '/pjinq') {
+        return 'section-pj';
+      } else {
+        return 'section-default';
+      }
     }
-  }
+  },
 }
 </script>
 
@@ -150,9 +163,23 @@ aside{
   background-color:#2c3e50;
 }
 
-section{
+.section-dev{
   display: grid;
   grid-template-rows: 0.2fr 50px 0.4fr 0.4fr;
+  padding: 10px;
+  background-color:#f6f6f6;
+}
+
+.section-pj{
+  display: grid;
+  grid-template-rows: 0.2fr 0.8fr;
+  padding: 10px;
+  background-color:#f6f6f6;
+}
+
+.section-default{
+  display: grid;
+  grid-template-rows: 0.2fr 0.8fr;
   padding: 10px;
   background-color:#f6f6f6;
 }

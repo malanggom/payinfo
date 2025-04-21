@@ -41,9 +41,9 @@ export default defineComponent({
       console.log("선택된 DEV_NO:", this.selectedDevNo);
 
       // ✅ DEV_NO를 프로젝트 히스토리 컴포넌트로 전달
-      eventbus.SearchPjHistoryResultEvent.selectDeveloper(this.selectedDevNo);
+      eventbus.SearchPjHistoryResultEvent.devPjSelectDeveloper(this.selectedDevNo);
       // 이벤트버스로 전달
-      eventbus.SearchPjHistoryResultEvent.fetchData("search", { devNo: this.selectedDevNo });
+      eventbus.SearchPjHistoryResultEvent.devPjFetchData("devPjSearch", { devNo: this.selectedDevNo });
     }
   },
   data() {

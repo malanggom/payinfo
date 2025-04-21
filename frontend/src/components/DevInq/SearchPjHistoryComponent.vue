@@ -1,6 +1,6 @@
 <template>
   <div class="ag-theme-quartz" style="width: 100%; height: 98%;">
-    <dev-pj-history-add-btn-component ref="devPjHistoryAddBtn" @open-modal="pjOpenModal"></dev-pj-history-add-btn-component>
+    <dev-pj-history-add-btn-component ref="devPjHistoryAddBtn" @open-modal="devPjOpenModal"></dev-pj-history-add-btn-component>
     <ag-grid-vue
         style="width: 100%; height: 100%;"
         :columnDefs="columnDefs"
@@ -124,8 +124,8 @@ export default defineComponent({
     const rowSelection = ref("multiple");
     const rowData = ref([]);
 
-    const fetchData = async (_type, _filter) => {
-      console.log("🔍 fetchData 실행됨 with", _type, _filter);
+    const devPjFetchData = async (_type, _filter) => {
+      console.log("🔍 devPjFetchData 실행됨 with", _type, _filter);
       try {
         const response = await fetch(`http://localhost:8080/api/getPjHistData?devNo=${_filter.devNo}`);
         const data = await response.json();
@@ -162,7 +162,7 @@ export default defineComponent({
       }
     };
 
-    const pjOpenModal = (devNo) => {
+    const devPjOpenModal = (devNo) => {
       const devNoToUse = devNo || selectedDevNo.value;
       devPjHistoryAddBtn.value.open(devNoToUse);
     };
@@ -181,7 +181,7 @@ export default defineComponent({
           addRows.style.marginLeft = "10px";
           addRows.onclick = () => {
             console.log("현재 선택된 devNo:", selectedDevNo.value); // ✅ ref 값으로 접근
-            eventbus.SearchPjHistoryResultEvent.pjOpenModal(selectedDevNo.value);
+            eventbus.SearchPjHistoryResultEvent.devPjOpenModal(selectedDevNo.value);
           };
           secondPanel.insertBefore(addRows, secondPanel.firstChild);
 
@@ -196,16 +196,16 @@ export default defineComponent({
           deleteRows.textContent = "삭제";
           deleteRows.style.cursor = "pointer";
           deleteRows.style.marginLeft = "10px";
-          deleteRows.onclick = deleteRowBtnClick;
+          deleteRows.onclick = devPjHistDeleteRowBtnClick;
           secondPanel.insertBefore(deleteRows, editRows.nextSibling);
         }
       }
 
       // 이벤트 등록
-      eventbus.SearchPjHistoryResultEvent.add("pjSearch", fetchData);
-      eventbus.SearchPjHistoryResultEvent.add('pjRemoveFilter', removeFilter);
-      eventbus.SearchPjHistoryResultEvent.add('pjReset', resetFilter);
-      eventbus.SearchPjHistoryResultEvent.add('pjDeleteRow', deleteRowBtnClick);
+      eventbus.SearchPjHistoryResultEvent.add("devPjSearch", devPjFetchData);
+      eventbus.SearchPjHistoryResultEvent.add('devPjRemoveFilter', devPjRemoveFilter);
+      eventbus.SearchPjHistoryResultEvent.add('devPjReset', devPjResetFilter);
+      eventbus.SearchPjHistoryResultEvent.add('devPjDeleteRow', devPjHistDeleteRowBtnClick);
 
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
@@ -214,7 +214,7 @@ export default defineComponent({
     const previousFilters = ref([]);
 
     const onFilterChanged = async () => {
-      const grf = eventbus.SearchPjHistoryResultEvent.pjGetRegisteredFilters();
+      const grf = eventbus.SearchPjHistoryResultEvent.devPjGetRegisteredFilters();
       const filterModels = gridApi.value.getFilterModel();
       const filterModelKeys = Object.keys(filterModels);
 
@@ -229,7 +229,7 @@ export default defineComponent({
           if (filterObject?.conditions) {
             filterObject.conditions.forEach(condition => {
               if (grfItem.KeyName === key && grfItem.type === condition.type && grfItem.filter === condition.filter) {
-                eventbus.SearchPjHistoryResultEvent.pjFilterUpdate(key, condition.type, condition.filter);
+                eventbus.SearchPjHistoryResultEvent.devPjFilterUpdate(key, condition.type, condition.filter);
               }
             });
           }
@@ -238,7 +238,7 @@ export default defineComponent({
         // 필터 추가
         if (!existsInGrf) {
           const currentCondition = filterObject?.conditions ? filterObject.conditions[0] : null;
-          eventbus.SearchPjHistoryResultEvent.pjFilterUpdate(key, currentCondition.type, currentCondition.filter);
+          eventbus.SearchPjHistoryResultEvent.devPjFilterUpdate(key, currentCondition.type, currentCondition.filter);
         }
       });
 
@@ -252,18 +252,18 @@ export default defineComponent({
           if (previousFilter) {
             if (Array.isArray(previousFilter.conditions)) {
               previousFilter.conditions.forEach(condition => {
-                eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, condition.type, condition.filter);
+                eventbus.SearchPjHistoryResultEvent.devPjRemoveFilter(key, condition.type, condition.filter);
               });
             }
           }
         } else {
           if (!filterModelKeys.includes(key)) {
-            eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.devPjRemoveFilter(key, previousFilter.type, previousFilter.filter);
           }
 
           // 필터 타입이 달라졌을 경우 처리
           if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
-            eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
+            eventbus.SearchPjHistoryResultEvent.devPjRemoveFilter(key, previousFilter.type, previousFilter.filter);
           }
         }
       });
@@ -285,21 +285,21 @@ export default defineComponent({
       }
     };
 
-    const resetFilter = () => {
-      const registeredFilters = eventbus.SearchPjHistoryResultEvent.pjGetRegisteredFilters();
+    const devPjResetFilter = () => {
+      const registeredFilters = eventbus.SearchPjHistoryResultEvent.devPjGetRegisteredFilters();
       gridApi.value.setFilterModel(null);
 
       if (registeredFilters.length === 0 && searchPerformed.value) {
         alert('필터가 입력되지 않았습니다. 필터를 입력하세요.');
       } else {
         registeredFilters.forEach(filter => {
-          eventbus.SearchPjHistoryResultEvent.pjRemoveFilter(filter.KeyName, filter.type, filter.filter);
+          eventbus.SearchPjHistoryResultEvent.devPjRemoveFilter(filter.KeyName, filter.type, filter.filter);
         });
-        eventbus.SearchPjHistoryResultEvent.pjResetKorButton();
+        eventbus.SearchPjHistoryResultEvent.devPjResetKorButton();
       }
     };
 
-    const removeFilter = (KeyName, filterType, filterValue) => {
+    const devPjRemoveFilter = (KeyName, filterType, filterValue) => {
       const filterModel = gridApi.value.getFilterModel();
 
       if (filterModel[KeyName]) {
@@ -313,7 +313,7 @@ export default defineComponent({
           });
 
           if (currentFilter.conditions.length === 0) {
-            eventbus.SearchPjHistoryResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
+            eventbus.SearchPjHistoryResultEvent.devPjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
 
           gridApi.value.setFilterModel(filterModel);
@@ -324,13 +324,13 @@ export default defineComponent({
           if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
             delete filterModel[KeyName];
             gridApi.value.setFilterModel(filterModel);
-            eventbus.SearchPjHistoryResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
+            eventbus.SearchPjHistoryResultEvent.devPjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
         }
       }
     };
 
-    const deleteRowBtnClick = async () => {
+    const devPjHistDeleteRowBtnClick = async () => {
       const selectedNodes = gridApi.value.getSelectedNodes();
       const selectedData = selectedNodes.map(node => node.data);
       const devNoList = selectedData.map(row => row.DEV_NO);
@@ -388,7 +388,7 @@ export default defineComponent({
       }
     };
 
-    const handleSearch = async (type, filter) => {
+    const devPjHandleSearch = async (type, filter) => {
       try {
         console.log("🔍 프로젝트 이력 검색 요청:", filter);
 
@@ -411,14 +411,14 @@ export default defineComponent({
 
 
     onMounted(() => {// ✅ 이벤트 수신도 setup 안에서 등록
-      eventbus.SearchPjHistoryResultEvent.add('pjSearch', handleSearch);
-      eventbus.SearchPjHistoryResultEvent.add("selectDeveloper", setDevNo);
-      eventbus.SearchPjHistoryResultEvent.add("pjOpenModal", pjOpenModal);
+      eventbus.SearchPjHistoryResultEvent.add('devPjSearch', devPjHandleSearch);
+      eventbus.SearchPjHistoryResultEvent.add("devPjSelectDeveloper", setDevNo);
+      eventbus.SearchPjHistoryResultEvent.add("devPjOpenModal", devPjOpenModal);
       console.log("🧾 devPjHistoryAddBtn:", devPjHistoryAddBtn.value); // 확인용
     });
 
     onBeforeUnmount(() => {
-      eventbus.SearchPjHistoryResultEvent.remove('pjSearch', handleSearch);
+      eventbus.SearchPjHistoryResultEvent.remove('devPjSearch', devPjHandleSearch);
     });
 
     return {
@@ -430,15 +430,17 @@ export default defineComponent({
       gridOptions,
       onGridReady,
       onCellValueChanged,
-      deleteRowBtnClick,
-      resetFilter,
-      removeFilter,
+      devPjHistDeleteRowBtnClick,
+      devPjResetFilter,
+      devPjRemoveFilter,
       textFilterParams,
       selectedDeveloperId,
       selectedDevNo,
       setDevNo,
       devPjHistoryAddBtn,
-      pjOpenModal,
+      devPjOpenModal,
+      devPjFetchData,
+      devPjHandleSearch,
     };
   },
 });

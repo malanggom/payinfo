@@ -187,6 +187,76 @@ app.get('/api/getPjHistData', async (req, res) => {
     }
 });
 
+app.get('/api/getPjData', async (req, res) => {
+    let connection;
+
+    // 프로젝트이름 파라미터 받기
+    const searchPJName = req.query.name;
+    console.log('✅ searchPJName:', searchPJName);
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        let baseQuery = 'SELECT * FROM C##SYSON.PJ';
+        let binds = [];
+
+        if (searchPJName) {
+            baseQuery += ' WHERE PJ_NM LIKE :name';
+            binds = [`%${searchPJName}%`]; // 부분일치 검색
+        }
+
+        console.log('✅ 최종 쿼리:', baseQuery);
+        console.log('✅ 바인딩 값:', binds);
+        const result = await connection.execute(baseQuery, binds);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No data found' });
+        }
+
+        const data = result.rows.map(row => {
+            return {
+                PJ_NO: row[0],
+                PJ_NM: row[1],
+                PJ_STTS: row[2],
+                PJ_BGNG_DT: row[3],
+                PJ_END_DT: row[4],
+                CUST_NM: row[5],
+                SUBGC_NM: row[6],
+                CTRT_CO_NM: row[7],
+                PJ_GRADE: row[8],
+                PERSONNEL: row[9],
+                UNITPRICE: row[10],
+                SYST_FEE: row[11],
+                KDS_EMP_PRNC: row[12],
+                CTRT_CO_EMP_PRNC: row[13],
+                PJ_SKILL: row[14],
+                TASK_AREA: row[15],
+                DTL_TASK: row[16],
+                PJ_JBTTL: row[17],
+                PJ_SPRT_PER: row[18],
+                PJ_PLC: row[19],
+                PRF_CR: row[20],
+                RCRT_CLSF: row[21],
+                PRFR_TRTM: row[22],
+                PJ_ETC: row[23],
+            };
+        });
+        console.log('✅ 쿼리 결과 row 수:', result.rows.length);
+        res.json({ result: { row: data } });
+    } catch (err) {
+        console.error("데이터베이스 연결에러: ", err);
+        res.status(500).json({ error: '데이터베이스 연결에러 메시지', details: err.message });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
 // POST 요청을 처리할 엔드포인트 추가
 app.post('/api/addDeveloper', async (req, res) => {
     let connection;

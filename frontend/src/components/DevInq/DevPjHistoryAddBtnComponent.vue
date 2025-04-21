@@ -536,7 +536,10 @@ export default defineComponent({
       formData.value.DEV_NO = devNo;
     };
 
-    defineExpose({ open }); // 이걸 꼭 해야 부모가 호출 가능함!
+// ✅ expose 하기!
+    defineExpose({
+      open
+    }); // 이걸 꼭 해야 부모가 호출 가능함!
 
     //프로젝트 정보 함수
     const pjInfoTogglePaymentInputStatus = () => {
@@ -731,7 +734,7 @@ export default defineComponent({
 
     // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
     onMounted(async() => {
-      eventbus.SearchPjHistoryResultEvent.add('pjOpenModal', (devNo) => openModalHandler(devNo));
+      eventbus.SearchPjHistoryResultEvent.add('devPjOpenModal', (devNo) => openModalHandler(devNo));
       await nextTick(); // DOM 업데이트 후
       scrollChecks(); // 초기 상태 체크
       console.log('컴포넌트 마운트 시 devNo:', props.devNo);
@@ -739,7 +742,7 @@ export default defineComponent({
 
     // 컴포넌트가 언마운트될 때 핸들러 제거
     onUnmounted(() => {
-      eventbus.SearchPjHistoryResultEvent.remove('pjOpenModal', openModalHandler); // 모달 열기 이벤트 제거
+      eventbus.SearchPjHistoryResultEvent.remove('devPjOpenModal', openModalHandler); // 모달 열기 이벤트 제거
     });
 
     return {
