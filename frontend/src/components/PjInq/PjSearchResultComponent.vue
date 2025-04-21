@@ -22,9 +22,9 @@
 
 <script>
 import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount} from "vue";
-import DevAddBtnComponent from './DevAddBtnComponent.vue';
-import DevUpdateBtnComponent from './DevUpdateBtnComponent.vue';
-import PreviewResumeComponent from './PreviewResumeComponent.vue';
+import DevAddBtnComponent from '../DevInq/DevAddBtnComponent.vue';
+import DevUpdateBtnComponent from '../DevInq/DevUpdateBtnComponent.vue';
+import PreviewResumeComponent from '../DevInq/PreviewResumeComponent.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
 

@@ -30,6 +30,12 @@ export default defineComponent({
   setup() {
     const gridApi = shallowRef();
     const searchPerformed = ref(false);
+    const selectedDevNo = ref(null); // ✅ ref로 정의해서 setup 안에서 사용 가능하게
+
+    const setDevNo = (devNo) => {
+      selectedDevNo.value = devNo;
+      console.log("선택된 DEV_NO:", devNo);
+    };
 
     const defaultColDef = ref({
       editable: true,
@@ -156,9 +162,12 @@ export default defineComponent({
       }
     };
 
-    const pjOpenModal = () => {
-      eventbus.SearchPjHistoryResultEvent.pjOpenModal();
+    const pjOpenModal = (devNo) => {
+      const devNoToUse = devNo || selectedDevNo.value;
+      devPjHistoryAddBtn.value.open(devNoToUse);
     };
+
+    const devPjHistoryAddBtn = ref(null);
 
     const onGridReady = async (params) => {
       gridApi.value = params.api;
@@ -170,7 +179,10 @@ export default defineComponent({
           addRows.textContent = "프로젝트추가";
           addRows.style.cursor = "pointer";
           addRows.style.marginLeft = "10px";
-          addRows.onclick = pjOpenModal;
+          addRows.onclick = () => {
+            console.log("현재 선택된 devNo:", selectedDevNo.value); // ✅ ref 값으로 접근
+            eventbus.SearchPjHistoryResultEvent.pjOpenModal(selectedDevNo.value);
+          };
           secondPanel.insertBefore(addRows, secondPanel.firstChild);
 
           const editRows = document.createElement("span");
@@ -398,8 +410,11 @@ export default defineComponent({
     };
 
 
-    onMounted(() => {
+    onMounted(() => {// ✅ 이벤트 수신도 setup 안에서 등록
       eventbus.SearchPjHistoryResultEvent.add('pjSearch', handleSearch);
+      eventbus.SearchPjHistoryResultEvent.add("selectDeveloper", setDevNo);
+      eventbus.SearchPjHistoryResultEvent.add("pjOpenModal", pjOpenModal);
+      console.log("🧾 devPjHistoryAddBtn:", devPjHistoryAddBtn.value); // 확인용
     });
 
     onBeforeUnmount(() => {
@@ -420,6 +435,10 @@ export default defineComponent({
       removeFilter,
       textFilterParams,
       selectedDeveloperId,
+      selectedDevNo,
+      setDevNo,
+      devPjHistoryAddBtn,
+      pjOpenModal,
     };
   },
 });

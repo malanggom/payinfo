@@ -17,7 +17,7 @@ PjInqView.vue
 <script setup lang="js">
   import MenuNameComponent from '@/components/PjInq/MenuNameComponent.vue'
   import SearchBarComponent from "@/components/PjInq/SearchBarArea.vue";
-  import SearchResultComponent from "@/components/PjInq/SearchResultComponent.vue";
+  import SearchResultComponent from "@/components/PjInq/PjSearchResultComponent.vue";
 </script>
 ===========================================================================
 스크립트 종료

@@ -168,8 +168,8 @@ export default {
             );
             console.log(`활성 필터 '${keyName}'이(가) 제거되었습니다.`);
         },
-        pjOpenModal() {
-            pjHandlers.pjOpenModal.forEach(handler => handler());
+        pjOpenModal(devNo) {
+            pjHandlers.pjOpenModal.forEach(handler => handler(devNo)); // ⬅️ devNo 전달
         },
         resetKorButton() { // 초기화 함수 추가
             pjHandlers.pjResetKorButton.forEach(handler => handler());

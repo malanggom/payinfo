@@ -461,273 +461,315 @@
   <div v-if="showModal" class="modal-backdrop fade show"></div>
 </template>
 
-<script setup>
-import {ref, onMounted, onUnmounted, nextTick, computed} from 'vue';
+<script>
+import {ref, onMounted, onUnmounted, nextTick, computed, defineComponent, defineExpose} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
 
-// 프로젝트 정보 토글 초기 값
-const pjInfoIsVisible = ref(true);
-const pjInfoInputStatus = ref('입력중'); // 초기 상태
-const pjInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
+export default defineComponent({
+  props: {
+    devNo: Number,
+  },
+  setup(props) {
+    // 프로젝트 정보 토글 초기 값
+    const pjInfoIsVisible = ref(true);
+    const pjInfoInputStatus = ref('입력중'); // 초기 상태
+    const pjInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-// 프로젝트 투입정보 토글 초기 값
-const pjInputInfoIsVisible = ref(true);
-const pjInputInfoInputStatus = ref('입력중'); // 초기 상태
-const pjInputInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
+    // 프로젝트 투입정보 토글 초기 값
+    const pjInputInfoIsVisible = ref(true);
+    const pjInputInfoInputStatus = ref('입력중'); // 초기 상태
+    const pjInputInfoIsToggled = ref(false); // 클릭 상태를 관리하는 변수
 
-const formData = ref({
-  DEV_NO: "",
-  PJ_NO: "",
-  DEV_PJ_PRGRS_STTS: "N/A",
-  DEV_PJ_PRGRS_DT: "",
-  DEV_PJ_BGNG_DT: "",
-  DEV_PJ_END_DT: "",
-  CUST_NM: "",
-  SUBGC_NM: "",
-  CTRT_CO_NM: "",
-  SBCN_NM: "",
-  PJ_PLC: "",
-  PJ_INP_GRADE: "N/A",
-  JBTTL: "N/A",
-  SYST_FEE: "",
-  CTRT_CO_EMP_PRNC: "",
-  WHTAX_PRNC: "",
-  VAT_PRNC: "",
-  KDS_EMP_PRNC: "",
-  PJ_MM_DMND_UNTPRC: "",
-});
+    const formData = ref({
+      DEV_NO: props.devNo || "",
+      PJ_NO: "",
+      DEV_PJ_PRGRS_STTS: "N/A",
+      DEV_PJ_PRGRS_DT: "",
+      DEV_PJ_BGNG_DT: "",
+      DEV_PJ_END_DT: "",
+      CUST_NM: "",
+      SUBGC_NM: "",
+      CTRT_CO_NM: "",
+      SBCN_NM: "",
+      PJ_PLC: "",
+      PJ_INP_GRADE: "N/A",
+      JBTTL: "N/A",
+      SYST_FEE: "",
+      CTRT_CO_EMP_PRNC: "",
+      WHTAX_PRNC: "",
+      VAT_PRNC: "",
+      KDS_EMP_PRNC: "",
+      PJ_MM_DMND_UNTPRC: "",
+    });
 
-const selectedDevPjPrgrsStts = ref('N/A'); // 초기값
-const selectedDevPjInpGrd = ref('N/A'); // 초기값
-const selectedJbttl = ref('N/A'); // 초기값
+    const selectedDevPjPrgrsStts = ref('N/A'); // 초기값
+    const selectedDevPjInpGrd = ref('N/A'); // 초기값
+    const selectedJbttl = ref('N/A'); // 초기값
 
-// 프로젝트지원상태 선택 메서드
-const selectDevPjPrgrsStts = (devPjPrgrsStts) => {
-  selectedDevPjPrgrsStts.value = devPjPrgrsStts; // 선택된 프로젝트지원상태로 변경
-  formData.value.PJ_INP_STTS = devPjPrgrsStts; // 선택된 프로젝트지원상태를 formData에 반영
-};
+    // 프로젝트지원상태 선택 메서드
+    const selectDevPjPrgrsStts = (devPjPrgrsStts) => {
+      selectedDevPjPrgrsStts.value = devPjPrgrsStts; // 선택된 프로젝트지원상태로 변경
+      formData.value.PJ_INP_STTS = devPjPrgrsStts; // 선택된 프로젝트지원상태를 formData에 반영
+    };
 
-// 프로젝트투입등급 선택 메서드
-const selectDevPjInpGrd = (grade) => {
-  selectedDevPjInpGrd.value = grade; // 선택된 등급으로 변경
-  formData.value.GRD = grade; // 선택된 등급을 formData에 반영
-};
+    // 프로젝트투입등급 선택 메서드
+    const selectDevPjInpGrd = (grade) => {
+      selectedDevPjInpGrd.value = grade; // 선택된 등급으로 변경
+      formData.value.GRD = grade; // 선택된 등급을 formData에 반영
+    };
 
-// 직책 선택 메서드
-const selectJbttl = (jbttl) => {
-  selectedJbttl.value = jbttl; // 선택된 직책으로 변경
-  formData.value.JBTTL = jbttl; // 선택된 직책을 formData에 반영
-};
+    // 직책 선택 메서드
+    const selectJbttl = (jbttl) => {
+      selectedJbttl.value = jbttl; // 선택된 직책으로 변경
+      formData.value.JBTTL = jbttl; // 선택된 직책을 formData에 반영
+    };
 
-// 모달 상태 관리
-const showModal = ref(false);
+    // 모달 상태 관리
+    const showModal = ref(false);
 
-const closeModal = () => {
-  showModal.value = false; // 모달 닫기
-};
+    const closeModal = () => {
+      showModal.value = false; // 모달 닫기
+    };
 
-//프로젝트 정보 함수
-const pjInfoTogglePaymentInputStatus = () => {
-  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
-  if (pjInfoIsVisible.value === true) {
-    pjInfoIsVisible.value = false;
-  } else {
-    pjInfoIsVisible.value = true;
-  }
-};
+    const open = (devNo) => {
+      formData.value.DEV_NO = devNo;
+    };
 
-const pjInfoToggleState = () => {
-  pjInfoIsToggled.value = !pjInfoIsToggled.value; // 클릭할 때마다 상태 반전
-};
+    defineExpose({ open }); // 이걸 꼭 해야 부모가 호출 가능함!
 
-const pjInfoHandleClick = () => {
-  pjInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
-  pjInfoToggleState(); // 클릭 상태 전환 메서드 호출
-  scrollChecks(); // 상태 변경 후 체크
-};
-
-//프로젝트 투입정보 함수
-const pjInputInfoTogglePaymentInputStatus = () => {
-  // 입력 완료 상태 전환 로직 (필요에 따라 정의)
-  if (pjInputInfoIsVisible.value === true) {
-    pjInputInfoIsVisible.value = false;
-  } else {
-    pjInputInfoIsVisible.value = true;
-  }
-};
-
-const pjInputInfoToggleState = () => {
-  pjInputInfoIsToggled.value = !pjInputInfoIsToggled.value; // 클릭할 때마다 상태 반전
-};
-
-const pjInputInfoHandleClick = () => {
-  pjInputInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
-  pjInputInfoToggleState(); // 클릭 상태 전환 메서드 호출
-  scrollChecks(); // 상태 변경 후 체크
-};
-
-const pjInfoCheckCompletion = () => {
-  const { DEV_PJ_PRGRS_DT, DEV_PJ_BGNG_DT, DEV_PJ_END_DT,
-    CUST_NM, SUBGC_NM, CTRT_CO_NM, SBCN_NM, PJ_PLC
-  } = formData.value;
-
-  console.log('프로젝트 정보 현재 입력값:', formData.value); // 전체 입력값 출력
-
-  if ( DEV_PJ_PRGRS_DT && DEV_PJ_BGNG_DT && DEV_PJ_END_DT &&
-      CUST_NM && SUBGC_NM && CTRT_CO_NM && SBCN_NM && PJ_PLC) {
-    pjInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    pjInfoIsVisible.value = false; // 지급 정보를 숨김
-  } else {
-    pjInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
-  }
-};
-//프로젝트 정보 입력완료, 입력중 동작 종료
-
-//프로젝트 투입정보 입력완료, 입력중 동작 시작
-const pjInputInfoCheckCompletion = () => {
-  const { PJ_INP_GRADE, JBTTL, SYST_FEE,
-    CTRT_CO_EMP_PRNC, WHTAX_PRNC, VAT_PRNC,
-    KDS_EMP_PRNC, PJ_MM_DMND_UNTPRC
-  } = formData.value;
-
-  console.log('프로젝트 투입정보 입력값:', formData.value); // 전체 입력값 출력
-
-  // 모든 입력란이 채워졌는지 확인
-  if (PJ_INP_GRADE && JBTTL && SYST_FEE &&
-      CTRT_CO_EMP_PRNC && WHTAX_PRNC && VAT_PRNC &&
-      KDS_EMP_PRNC && PJ_MM_DMND_UNTPRC) {
-    pjInputInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
-    pjInputInfoIsVisible.value = false; // 지급 정보를 숨김
-  } else {
-    pjInputInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
-  }
-};
-//프로젝트 투입정보 입력완료, 입력중 동작 종료
-
-const hasPadding = ref(true); // 패딩 상태 관리
-
-// 스크롤 체크 함수
-const scrollChecks = () => {
-  console.log("프로젝트정보 상태:", pjInfoIsVisible.value);
-  console.log("프로젝트투입정보 상태:", pjInputInfoIsVisible.value);
-  // 모든 섹션이 접혀 있을 때
-  if (
-      pjInfoIsVisible.value === true ||
-      pjInputInfoIsVisible.value === true
-  ) {
-    hasPadding.value = false; // 패딩 추가
-  } else {
-    hasPadding.value = true; //
-  }
-  console.log("현재 패딩 상태:", hasPadding.value);
-};
-
-const submitForm = async (event) => {
-  // 현재 폼 요소를 가져옴
-  const form = event.target;
-
-  // 기본 유효성 검사
-  if (!form.checkValidity()) {
-    // 유효하지 않은 필드에 포커스를 맞춤
-    const invalidField = form.querySelector(':invalid');
-    if (invalidField) {
-      invalidField.focus(); // 첫 번째 유효하지 않은 필드에 포커스
-    }
-    return; // 유효하지 않으면 실행 중단
-  }
-  console.log('제출할 프로젝트 formData:', formData.value); // 제출할 때 formData 상태 출력
-  try {
-    const response = await axios.post('http://localhost:8080/api/addDevPjHistory', formData.value);
-    alert(response.data.message); // 성공 메시지 표시
-
-    // 데이터 새로 고침 이벤트 발생
-    console.log("refreshData 호출 전"); // 디버깅 로그
-    eventbus.SearchResultEvent.refreshData(); // 이벤트 발생
-    console.log("refreshData 호출 후"); // 디버깅 로그
-    closeModal();
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || error.message || '프로젝트 추가에 실패했습니다.';
-    alert(`오류: ${errorMessage}`);
-    closeModal();
-  }
-};
-
-// YYYYMMDD ↔ YYYY-MM-DD 변환을 위한 computed 팩토리 함수
-const useFormattedDate = (key) => {
-  return computed({
-    get: () => {
-      const raw = formData.value[key];
-      if (!raw || raw === 'N/A') return '';
-
-      if (raw === '즉시') {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
+    //프로젝트 정보 함수
+    const pjInfoTogglePaymentInputStatus = () => {
+      // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+      if (pjInfoIsVisible.value === true) {
+        pjInfoIsVisible.value = false;
+      } else {
+        pjInfoIsVisible.value = true;
       }
+    };
 
-      return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
-    },
-    set: (value) => {
-      if (!value) {
-        formData.value[key] = 'N/A';
-        return;
+    const pjInfoToggleState = () => {
+      pjInfoIsToggled.value = !pjInfoIsToggled.value; // 클릭할 때마다 상태 반전
+    };
+
+    const pjInfoHandleClick = () => {
+      pjInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
+      pjInfoToggleState(); // 클릭 상태 전환 메서드 호출
+      scrollChecks(); // 상태 변경 후 체크
+    };
+
+    //프로젝트 투입정보 함수
+    const pjInputInfoTogglePaymentInputStatus = () => {
+      // 입력 완료 상태 전환 로직 (필요에 따라 정의)
+      if (pjInputInfoIsVisible.value === true) {
+        pjInputInfoIsVisible.value = false;
+      } else {
+        pjInputInfoIsVisible.value = true;
       }
+    };
 
-      const today = new Date().toISOString().split('T')[0];
-      formData.value[key] = (value === today) ? '즉시' : value.replace(/-/g, '');
-    }
-  });
-};
+    const pjInputInfoToggleState = () => {
+      pjInputInfoIsToggled.value = !pjInputInfoIsToggled.value; // 클릭할 때마다 상태 반전
+    };
 
-const formattedPossibilityDate = useFormattedDate('DEV_PJ_PRGRS_DT');
-const formattedStartDate = useFormattedDate('DEV_PJ_BGNG_DT');
-const formattedEndDate = useFormattedDate('DEV_PJ_END_DT');
+    const pjInputInfoHandleClick = () => {
+      pjInputInfoTogglePaymentInputStatus(); // 상태 전환 메서드 호출
+      pjInputInfoToggleState(); // 클릭 상태 전환 메서드 호출
+      scrollChecks(); // 상태 변경 후 체크
+    };
 
-// 모달 열기 핸들러
-const openModalHandler = () => {
-  formData.value = {
-    DEV_NO: "",
-    PJ_NO: "",
-    DEV_PJ_PRGRS_STTS: "N/A",
-    DEV_PJ_PRGRS_DT: "",
-    DEV_PJ_BGNG_DT: "",
-    DEV_PJ_END_DT: "",
-    CUST_NM: "",
-    SUBGC_NM: "",
-    CTRT_CO_NM: "",
-    SBCN_NM: "",
-    PJ_PLC: "",
-    PJ_INP_GRADE: "N/A",
-    JBTTL: "N/A",
-    SYST_FEE: "",
-    CTRT_CO_EMP_PRNC: "",
-    WHTAX_PRNC: "",
-    VAT_PRNC: "",
-    KDS_EMP_PRNC: "",
-    PJ_MM_DMND_UNTPRC: "",
-  };
+    const pjInfoCheckCompletion = () => {
+      const { DEV_PJ_PRGRS_DT, DEV_PJ_BGNG_DT, DEV_PJ_END_DT,
+        CUST_NM, SUBGC_NM, CTRT_CO_NM, SBCN_NM, PJ_PLC
+      } = formData.value;
 
-  // 입력 상태 초기화
-  pjInfoInputStatus.value = '입력중'; // 프로젝트정보 상태
-  pjInputInfoInputStatus.value = '입력중'; // 프로젝트투입정보 상태
+      console.log('프로젝트 정보 현재 입력값:', formData.value); // 전체 입력값 출력
 
-  pjInfoIsVisible.value = true; // 클릭 상태를 관리하는 변수
-  pjInputInfoIsVisible.value = true; // 클릭 상태를 관리하는 변수
+      if ( DEV_PJ_PRGRS_DT && DEV_PJ_BGNG_DT && DEV_PJ_END_DT &&
+          CUST_NM && SUBGC_NM && CTRT_CO_NM && SBCN_NM && PJ_PLC) {
+        pjInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+        pjInfoIsVisible.value = false; // 지급 정보를 숨김
+      } else {
+        pjInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
+      }
+    };
+    //프로젝트 정보 입력완료, 입력중 동작 종료
 
-  showModal.value = true; // 모달 열기
-};
+    //프로젝트 투입정보 입력완료, 입력중 동작 시작
+    const pjInputInfoCheckCompletion = () => {
+      const { PJ_INP_GRADE, JBTTL, SYST_FEE,
+        CTRT_CO_EMP_PRNC, WHTAX_PRNC, VAT_PRNC,
+        KDS_EMP_PRNC, PJ_MM_DMND_UNTPRC
+      } = formData.value;
+
+      console.log('프로젝트 투입정보 입력값:', formData.value); // 전체 입력값 출력
+
+      // 모든 입력란이 채워졌는지 확인
+      if (PJ_INP_GRADE && JBTTL && SYST_FEE &&
+          CTRT_CO_EMP_PRNC && WHTAX_PRNC && VAT_PRNC &&
+          KDS_EMP_PRNC && PJ_MM_DMND_UNTPRC) {
+        pjInputInfoInputStatus.value = '입력완료'; // 모든 필드가 채워졌을 때
+        pjInputInfoIsVisible.value = false; // 지급 정보를 숨김
+      } else {
+        pjInputInfoInputStatus.value = '입력중'; // 하나라도 비어있으면
+      }
+    };
+    //프로젝트 투입정보 입력완료, 입력중 동작 종료
+
+    const hasPadding = ref(true); // 패딩 상태 관리
+
+    // 스크롤 체크 함수
+    const scrollChecks = () => {
+      console.log("프로젝트정보 상태:", pjInfoIsVisible.value);
+      console.log("프로젝트투입정보 상태:", pjInputInfoIsVisible.value);
+      // 모든 섹션이 접혀 있을 때
+      if (
+          pjInfoIsVisible.value === true ||
+          pjInputInfoIsVisible.value === true
+      ) {
+        hasPadding.value = false; // 패딩 추가
+      } else {
+        hasPadding.value = true; //
+      }
+      console.log("현재 패딩 상태:", hasPadding.value);
+    };
+
+    const submitForm = async (event) => {
+      // 현재 폼 요소를 가져옴
+      const form = event.target;
+
+      // 기본 유효성 검사
+      if (!form.checkValidity()) {
+        // 유효하지 않은 필드에 포커스를 맞춤
+        const invalidField = form.querySelector(':invalid');
+        if (invalidField) {
+          invalidField.focus(); // 첫 번째 유효하지 않은 필드에 포커스
+        }
+        return; // 유효하지 않으면 실행 중단
+      }
+      console.log('제출할 프로젝트 formData:', formData.value); // 제출할 때 formData 상태 출력
+      try {
+        const response = await axios.post('http://localhost:8080/api/addDevPjHistory', formData.value);
+        alert(response.data.message); // 성공 메시지 표시
+
+        // 데이터 새로 고침 이벤트 발생
+        console.log("refreshData 호출 전"); // 디버깅 로그
+        eventbus.SearchResultEvent.refreshData(); // 이벤트 발생
+        console.log("refreshData 호출 후"); // 디버깅 로그
+        closeModal();
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message || '프로젝트 추가에 실패했습니다.';
+        alert(`오류: ${errorMessage}`);
+        closeModal();
+      }
+    };
+
+    // YYYYMMDD ↔ YYYY-MM-DD 변환을 위한 computed 팩토리 함수
+    const useFormattedDate = (key) => {
+      return computed({
+        get: () => {
+          const raw = formData.value[key];
+          if (!raw || raw === 'N/A') return '';
+
+          if (raw === '즉시') {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+          }
+
+          return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
+        },
+        set: (value) => {
+          if (!value) {
+            formData.value[key] = 'N/A';
+            return;
+          }
+
+          const today = new Date().toISOString().split('T')[0];
+          formData.value[key] = (value === today) ? '즉시' : value.replace(/-/g, '');
+        }
+      });
+    };
+
+    const formattedPossibilityDate = useFormattedDate('DEV_PJ_PRGRS_DT');
+    const formattedStartDate = useFormattedDate('DEV_PJ_BGNG_DT');
+    const formattedEndDate = useFormattedDate('DEV_PJ_END_DT');
+
+    // 모달 열기 핸들러
+    const openModalHandler = (devNo) => {
+      formData.value = {
+        DEV_NO: devNo || props.devNo || '',
+        PJ_NO: "",
+        DEV_PJ_PRGRS_STTS: "N/A",
+        DEV_PJ_PRGRS_DT: "",
+        DEV_PJ_BGNG_DT: "",
+        DEV_PJ_END_DT: "",
+        CUST_NM: "",
+        SUBGC_NM: "",
+        CTRT_CO_NM: "",
+        SBCN_NM: "",
+        PJ_PLC: "",
+        PJ_INP_GRADE: "N/A",
+        JBTTL: "N/A",
+        SYST_FEE: "",
+        CTRT_CO_EMP_PRNC: "",
+        WHTAX_PRNC: "",
+        VAT_PRNC: "",
+        KDS_EMP_PRNC: "",
+        PJ_MM_DMND_UNTPRC: "",
+      };
+      console.log('openmodalhandler devNo:', devNo);
+      // 입력 상태 초기화
+      pjInfoInputStatus.value = '입력중'; // 프로젝트정보 상태
+      pjInputInfoInputStatus.value = '입력중'; // 프로젝트투입정보 상태
+
+      pjInfoIsVisible.value = true; // 클릭 상태를 관리하는 변수
+      pjInputInfoIsVisible.value = true; // 클릭 상태를 관리하는 변수
+
+      showModal.value = true; // 모달 열기
+    };
 
 
-// 컴포넌트가 마운트될 때 이벤트 핸들러 추가
-onMounted(async() => {
-  eventbus.SearchPjHistoryResultEvent.add('pjOpenModal', openModalHandler); // 모달 열기 이벤트 등록
-  await nextTick(); // DOM 업데이트 후
-  scrollChecks(); // 초기 상태 체크
-});
+    // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
+    onMounted(async() => {
+      eventbus.SearchPjHistoryResultEvent.add('pjOpenModal', (devNo) => openModalHandler(devNo));
+      await nextTick(); // DOM 업데이트 후
+      scrollChecks(); // 초기 상태 체크
+      console.log('컴포넌트 마운트 시 devNo:', props.devNo);
+    });
 
-// 컴포넌트가 언마운트될 때 핸들러 제거
-onUnmounted(() => {
-  eventbus.SearchPjHistoryResultEvent.remove('pjOpenModal', openModalHandler); // 모달 열기 이벤트 제거
+    // 컴포넌트가 언마운트될 때 핸들러 제거
+    onUnmounted(() => {
+      eventbus.SearchPjHistoryResultEvent.remove('pjOpenModal', openModalHandler); // 모달 열기 이벤트 제거
+    });
+
+    return {
+      showModal,
+      closeModal,
+      hasPadding,
+      pjInfoInputStatus,
+      pjInfoIsVisible,
+      pjInfoToggleState,
+      selectedDevPjPrgrsStts,
+      formData,
+      pjInputInfoInputStatus,
+      pjInputInfoIsVisible,
+      pjInputInfoToggleState,
+      selectDevPjPrgrsStts,
+      selectDevPjInpGrd,
+      selectJbttl,
+      selectedDevPjInpGrd,
+      selectedJbttl,
+      pjInfoHandleClick,
+      pjInputInfoHandleClick,
+      pjInfoCheckCompletion,
+      pjInputInfoCheckCompletion,
+      submitForm,
+      formattedPossibilityDate,
+      formattedStartDate,
+      formattedEndDate,
+      open,
+    };
+  },
 });
 </script>
 
