@@ -332,7 +332,20 @@ export default defineComponent({
 
     const devPjHistDeleteRowBtnClick = async () => {
       const selectedNodes = gridApi.value.getSelectedNodes();
+
+      if (!selectedNodes || selectedNodes.length === 0) {
+        alert("삭제할 프로젝트 히스토리를 선택해주세요.");
+        return;
+      }
+
       const selectedData = selectedNodes.map(node => node.data);
+
+      const confirmDelete = confirm(`선택한 히스토리를 정말 삭제하시겠습니까?`);
+
+      if (!confirmDelete) {
+        return; // 사용자가 "아니오"를 선택하면 함수 종료
+      }
+
       const devNoList = selectedData.map(row => row.DEV_NO);
 
       try {
@@ -346,6 +359,9 @@ export default defineComponent({
           throw new Error('Failed to delete data');
         }
         rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+
+        // 삭제 성공 알림
+        alert(`선택한 히스토리가 삭제되었습니다.`);
       } catch (error) {
         alert("삭제할 프로젝트를 선택해주세요.");
       }

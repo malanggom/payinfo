@@ -521,13 +521,14 @@ export default defineComponent({
         return;
       }
 
-      // 삭제 확인
-      const confirmDelete = confirm("정말 삭제하시겠습니까?");
+      const selectedData = selectedNodes.map(node => node.data);
+      const devName = selectedData.map(row => row.NM);
+
+      const confirmDelete = confirm(`개발자 ${devName}를 정말 삭제하시겠습니까?`);
       if (!confirmDelete) {
         return; // 사용자가 "아니오"를 선택하면 함수 종료
       }
 
-      const selectedData = selectedNodes.map(node => node.data);
       const devNoList = selectedData.map(row => row.DEV_NO);
 
       // 삭제된 개발자의 이름을 저장할 배열
