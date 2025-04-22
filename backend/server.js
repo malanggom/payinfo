@@ -668,6 +668,74 @@ app.post('/api/update/PjDevHistoryData', async (req, res) => {
     }
 });
 
+// UPDATE 쿼리
+app.post('/api/updatePjData', async (req, res) => {
+    const {
+        PJ_NM, PJ_STTS, PJ_BGNG_DT, PJ_END_DT, CUST_NM, SUBGC_NM, CTRT_CO_NM,
+        PJ_GRADE, PERSONNEL, UNITPRICE, SYST_FEE, KDS_EMP_PRNC, CTRT_CO_EMP_PRNC,
+        PJ_SKILL, TASK_AREA, DTL_TASK, PJ_JBTTL, PJ_SPRT_PER, PJ_PLC,
+        PRF_CR, RCRT_CLSF, PRFR_TRTM, PJ_ETC, PJ_NO
+    } = req.body; // 클라이언트로부터 수정할 데이터를 받음
+
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(
+            `UPDATE C##SYSON.PJ SET
+                PJ_NM = :PJ_NM,
+                PJ_STTS = :PJ_STTS,
+                PJ_BGNG_DT = :PJ_BGNG_DT,
+                PJ_END_DT = :PJ_END_DT,
+                CUST_NM = :CUST_NM,
+                SUBGC_NM = :SUBGC_NM,
+                CTRT_CO_NM = :CTRT_CO_NM,
+                PJ_GRADE = :PJ_GRADE,
+                PERSONNEL = :PERSONNEL,
+                UNITPRICE = :UNITPRICE,
+                SYST_FEE = :SYST_FEE,
+                KDS_EMP_PRNC = :KDS_EMP_PRNC,
+                CTRT_CO_EMP_PRNC = :CTRT_CO_EMP_PRNC,
+                PJ_SKILL = :PJ_SKILL,
+                TASK_AREA = :TASK_AREA,
+                DTL_TASK = :DTL_TASK,
+                PJ_JBTTL = :PJ_JBTTL,
+                PJ_SPRT_PER = :PJ_SPRT_PER,
+                PJ_PLC = :PJ_PLC,
+                PRF_CR = :PRF_CR,
+                RCRT_CLSF = :RCRT_CLSF,
+                PRFR_TRTM = :PRFR_TRTM,
+                PJ_ETC = :PJ_ETC
+            WHERE PJ_NO = :PJ_NO`, // 수정할 데이터의 기준이 되는 PJ_NO
+            {
+                PJ_NM, PJ_STTS, PJ_BGNG_DT, PJ_END_DT, CUST_NM, SUBGC_NM, CTRT_CO_NM,
+                PJ_GRADE, PERSONNEL, UNITPRICE, SYST_FEE, KDS_EMP_PRNC, CTRT_CO_EMP_PRNC,
+                PJ_SKILL, TASK_AREA, DTL_TASK, PJ_JBTTL, PJ_SPRT_PER, PJ_PLC,
+                PRF_CR, RCRT_CLSF, PRFR_TRTM, PJ_ETC,
+                PJ_NO // WHERE 절에 사용할 DEV_NO
+            },
+            { autoCommit: true } // 자동 커밋
+        );
+
+        if (result.rowsAffected === 0) {
+            return res.status(404).json({ message: 'Data not found' });
+        }
+
+        res.status(200).json({ message: 'Data updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update data' });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close(); // 연결 종료
+            } catch (closeErr) {
+                console.error("Error closing connection:", closeErr);
+            }
+        }
+    }
+});
+
 // 이력서 파일이 저장된 디렉토리
 const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\frontend\\public\\downloads\\resumes');
 
@@ -804,6 +872,43 @@ app.delete('/api/deletePjDevHistData', async (req, res) => {
     }
 });
 
+// 프로젝트 삭제
+app.delete('/api/deletePjData', async (req, res) => {
+    const { pjNoList } = req.body;
+    console.log(pjNoList);
+
+    if (!pjNoList || !Array.isArray(pjNoList)) {
+        return res.status(400).json({ message: 'Invalid request body' });
+    }
+
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        // 바인드 변수를 올바르게 설정
+        const placeholders = pjNoList.map((_, index) => `:${index + 1}`).join(','); // 바인드 변수 자리 표시자
+        const sql = `DELETE FROM C##SYSON.PJ WHERE PJ_NO IN (${placeholders})`;
+
+        console.log('Executing SQL:', sql, 'with params:', pjNoList);
+        const result = await connection.execute(sql, pjNoList.reduce((acc, pjNo, index) => {
+            acc[index + 1] = pjNo; // 바인드 변수에 값 매핑
+            return acc;
+        }, {}), { autoCommit: true });
+
+        res.json({ message: `${result.rowsAffected} rows deleted` });
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        res.status(500).json({ message: 'Error deleting data' });
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
 
 
 // console.log("📌 등록된 라우트 목록:");

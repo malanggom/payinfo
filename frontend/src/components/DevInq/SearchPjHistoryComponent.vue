@@ -176,11 +176,16 @@ export default defineComponent({
         const secondPanel = panels[1];
         if (secondPanel) {
           const addRows = document.createElement("span");
-          addRows.textContent = "프로젝트추가";
+          addRows.textContent = "프로젝트 히스토리 추가";
           addRows.style.cursor = "pointer";
           addRows.style.marginLeft = "10px";
           addRows.onclick = () => {
-            console.log("현재 선택된 devNo:", selectedDevNo.value); // ✅ ref 값으로 접근
+            if (!searchPerformed.value) {
+              alert("먼저 개발자를 선택해주세요.");
+              return;
+            }
+
+            console.log("현재 선택된 devNo:", selectedDevNo.value);
             eventbus.SearchPjHistoryResultEvent.devPjOpenModal(selectedDevNo.value);
           };
           secondPanel.insertBefore(addRows, secondPanel.firstChild);

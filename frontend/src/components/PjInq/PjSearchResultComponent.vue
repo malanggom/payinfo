@@ -1,8 +1,7 @@
 <template>
   <div class="ag-theme-quartz" style="width: 100%; height: 100%;">
-    <dev-add-btn-component ref="devAddBtn" @open-modal="openModal"></dev-add-btn-component>
-    <dev-update-btn-component ref="devUpdateBtn" @open-modal="openModalUpdate"></dev-update-btn-component>
-    <preview-resume-component ref="previewResumeBtn" @open-modal="openModalPreviewResume"></preview-resume-component>
+    <pj-add-btn-component ref="pjAddBtn" @open-modal="pjOpenModal"></pj-add-btn-component>
+    <pj-update-btn-component ref="pjUpdateBtn" @open-modal="pjOpenModalUpdate"></pj-update-btn-component>
     <ag-grid-vue
         @rowClicked="onRowClick"
         style="width: 100%; height: 100%;"
@@ -22,33 +21,32 @@
 
 <script>
 import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount} from "vue";
-import DevAddBtnComponent from '../DevInq/DevAddBtnComponent.vue';
-import DevUpdateBtnComponent from '../DevInq/DevUpdateBtnComponent.vue';
-import PreviewResumeComponent from '../DevInq/PreviewResumeComponent.vue';
+import PjAddBtnComponent from '../PjInq/PjAddBtnComponent.vue';
+import PjUpdateBtnComponent from '../PjInq/PjUpdateBtnComponent.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
+import pjEventbus from '@/eventbus/pjEventbus'
 
 export default defineComponent({
   components: {
     "ag-grid-vue": AgGridVue,
-    DevAddBtnComponent,
-    DevUpdateBtnComponent,
-    PreviewResumeComponent,
+    PjAddBtnComponent,
+    PjUpdateBtnComponent,
   },
   methods: {
     onRowClick(event) {
-      this.selectedDevNo = event.data.DEV_NO;
-      console.log("선택된 DEV_NO:", this.selectedDevNo);
+      this.selectedPjNo = event.data.PJ_NO;
+      console.log("선택된 DEV_NO:", this.selectedPjNo);
 
       // ✅ DEV_NO를 프로젝트 히스토리 컴포넌트로 전달
-      eventbus.SearchPjHistoryResultEvent.selectDeveloper(this.selectedDevNo);
+      eventbus.SearchPjHistoryResultEvent.devPjSelectDeveloper(this.selectedPjNo);
       // 이벤트버스로 전달
-      eventbus.SearchPjHistoryResultEvent.fetchData("search", { devNo: this.selectedDevNo });
+      eventbus.SearchPjHistoryResultEvent.devPjFetchData("pjSearch", { pjNo: this.selectedPjNo });
     }
   },
   data() {
     return {
-      selectedDevNo: null // 초기값 null 또는 원하는 기본값
+      selectedPjNo: null // 초기값 null 또는 원하는 기본값
     };
   },
   setup() {
@@ -148,7 +146,7 @@ export default defineComponent({
     const rowSelection = ref("multiple");
     const rowData = ref([]);
 
-    const fetchData = async (type, filter) => {
+    const pjFetchData = async (type, filter) => {
       const name = filter || '';
 
       try {
@@ -192,19 +190,14 @@ export default defineComponent({
       }
     };
 
-    const openModal = () => {
-      eventbus.SearchResultEvent.openModal();
+    const pjOpenModal = () => {
+      pjEventbus.SearchPjResultEvent.pjOpenModal();
     };
 
-    const openModalUpdate = () => {
-      eventbus.SearchResultEvent.openModalUpdate();
-      console.log("수정모달열기",);
+    const pjOpenModalUpdate = () => {
+      pjEventbus.SearchPjResultEvent.pjOpenModalUpdate();
+      console.log("프로젝트 수정모달열기",);
     };
-
-    const openModalPreviewResume = () => {
-      eventbus.SearchResultEvent.openModalPreviewResume();
-      console.log("이력서 미리보기 열기",);
-    }
 
     //셀 업데이트
     const cellValueUpdate = () => {
@@ -212,7 +205,7 @@ export default defineComponent({
       console.log("selectedRows:", selectedRows);
       if (selectedRows.length > 1) {
         return 0;
-        //alert 개발자를 한명만 선택해주세요. 발생
+        //alert 프로젝트를 한개만 선택해주세요. 발생
       } else if (selectedRows.length < 1) {
         return 2;
       } else {
@@ -226,11 +219,11 @@ export default defineComponent({
       const pagingPanel = document.querySelector('.ag-paging-panel');
       if (pagingPanel) {
         const addRows = document.createElement("span");
-        addRows.textContent = "개발자추가";
+        addRows.textContent = "프로젝트추가";
         addRows.style.cursor = "pointer";
         addRows.style.marginLeft = "10px";
         addRows.onclick = () => {
-          openModal();
+          pjOpenModal();
         }
         pagingPanel.insertBefore(addRows, pagingPanel.firstChild);
 
@@ -240,11 +233,11 @@ export default defineComponent({
         editRows.style.marginLeft = "10px"; // 여백 추가
         editRows.onclick = () => {
           if (searchPerformed.value && cellValueUpdate() === 0) {
-            alert("개발자를 한명만 선택해주세요.");
+            alert("프로젝트를 한명만 선택해주세요.");
           } else if (searchPerformed.value && cellValueUpdate() === 2) {
-            alert("개발자를 선택하지 않았습니다. 개발자를 선택해주세요.");
+            alert("프로젝트를 선택하지 않았습니다. 프로젝트를 선택해주세요.");
           } else if (searchPerformed.value && cellValueUpdate() === 1) {
-            openModalUpdate();
+            pjOpenModalUpdate();
           }
         }
         pagingPanel.insertBefore(editRows, addRows.nextSibling);
@@ -254,12 +247,12 @@ export default defineComponent({
         deleteRows.style.cursor = "pointer";
         deleteRows.style.marginLeft = "10px";
         deleteRows.onclick = () => {
-          eventbus.SearchResultEvent.deleteRowBtnClick();
+          pjEventbus.SearchPjResultEvent.pjDeleteRowBtnClick();
         }
         pagingPanel.insertBefore(deleteRows, editRows.nextSibling);
       }
-      eventbus.SearchResultEvent.add('removeFilter', removeFilter);
-      eventbus.SearchResultEvent.add('deleteRow', deleteRowBtnClick);
+      pjEventbus.SearchPjResultEvent.add('pjRemoveFilter', pjRemoveFilter);
+      pjEventbus.SearchPjResultEvent.add('pjDeleteRow', pjDeleteRowBtnClick);
       params.api.addEventListener('filterChanged', onFilterChanged);
     };
 
@@ -267,7 +260,7 @@ export default defineComponent({
     const previousFilters = ref([]);
 
     const onFilterChanged = async () => {
-      const grf = eventbus.SearchResultEvent.getRegisteredFilters();
+      const grf = pjEventbus.SearchPjResultEvent.pjGetRegisteredFilters();
       const filterModels = gridApi.value.getFilterModel();
       const filterModelKeys = Object.keys(filterModels);
 
@@ -304,24 +297,24 @@ export default defineComponent({
 
           if (grfFiltersConditionCheck === false && duplicateConditionsFilters) {
             alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다.');
-            eventbus.SearchResultEvent.removeFilter(key, currentCondition.type, currentCondition.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, currentCondition.type, currentCondition.filter);
 
           }
           if (grfFiltersConditionCheck === true && duplicateConditionsFilters) {
             alert(currentCondition + ' 와 ' + currentCondition1 + ' 의 필터값이 같습니다2.');
-            eventbus.SearchResultEvent.removeFilter(key, currentCondition1.type, currentCondition1.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, currentCondition1.type, currentCondition1.filter);
           }
 
           if (grfFiltersCondition === true) {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+            pjEventbus.SearchPjResultEvent.pjFilterUpdate(key, currentCondition1.type, currentCondition1.filter);
           }
 
           if (!duplicateConditionsFilters && grfFiltersCondition === false) {
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition.type, currentCondition.filter);
-            eventbus.SearchResultEvent.filterUpdate(key, currentCondition1.type, currentCondition1.filter);
+            pjEventbus.SearchPjResultEvent.pjFilterUpdate(key, currentCondition.type, currentCondition.filter);
+            pjEventbus.SearchPjResultEvent.pjFilterUpdate(key, currentCondition1.type, currentCondition1.filter);
           }
         } else {
-          eventbus.SearchResultEvent.filterUpdate(key, filterModels[key].type, filterModels[key].filter);
+          pjEventbus.SearchPjResultEvent.pjFilterUpdate(key, filterModels[key].type, filterModels[key].filter);
         }
       });
 
@@ -333,28 +326,28 @@ export default defineComponent({
           if (previousFilter) {
             if (Array.isArray(previousFilter.conditions)) {
               previousFilter.conditions.forEach(condition => {
-                eventbus.SearchResultEvent.removeFilter(key, condition.type, condition.filter);
-                eventbus.SearchResultEvent.removeActiveFilter(key, condition.type, condition.filter);
-                eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, condition.type, condition.filter);
+                pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, condition.type, condition.filter);
+                pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(key, condition.type, condition.filter);
+                pjEventbus.SearchPjResultEvent.pjRemoveButton(previousFilter.KeyName, condition.type, condition.filter);
               });
             } else {
-              eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-              eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+              pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
+              pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(key, previousFilter.type, previousFilter.filter);
+              pjEventbus.SearchPjResultEvent.pjRemoveButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
             }
           }
         }
         if (currentFilterModel !== undefined) {
           if (!filterModelKeys.includes(key)) {
-            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(key, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
           }
 
           if (filterModelKeys.includes(key) && previousFilter.type !== currentFilterModel.type && previousFilter.filter === currentFilterModel.filter) {
-            eventbus.SearchResultEvent.removeFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeActiveFilter(key, previousFilter.type, previousFilter.filter);
-            eventbus.SearchResultEvent.removeButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveFilter(key, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(key, previousFilter.type, previousFilter.filter);
+            pjEventbus.SearchPjResultEvent.pjRemoveButton(previousFilter.KeyName, previousFilter.type, previousFilter.filter);
           }
         }
       });
@@ -364,7 +357,7 @@ export default defineComponent({
 
     const onCellValueChanged = async (event) => {
       try {
-        const response = await fetch('http://localhost:8080/api/updateDevData', {
+        const response = await fetch('http://localhost:8080/api/updatePjData', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -375,20 +368,20 @@ export default defineComponent({
           throw new Error('Failed to update data');
         }
       } catch (error) {
-        console.error('개발자 데이터 수정에러:', error);
+        console.error('프로젝트 데이터 수정에러:', error);
       }
     };
 
-    const resetKorButton = () =>{
+    const pjResetKorButton = () =>{
       gridApi.value.setFilterModel(null);
       console.log("리셋완료");
     };
 
-    eventbus.SearchResultEvent.add('resetKorButton',resetKorButton);
+    pjEventbus.SearchPjResultEvent.add('pjResetKorButton',pjResetKorButton);
 
     const resetFilter = () => {
       console.log("아예안나옴??:"); // 로그 추가
-      const registeredFilters = eventbus.SearchResultEvent.getRegisteredFilters();
+      const registeredFilters = pjEventbus.SearchPjResultEvent.pjGetRegisteredFilters();
       console.log("아예안나옴:"); // 로그 추가
       console.log("현재 등록된 필터:", registeredFilters); // 로그 추가
 
@@ -400,15 +393,15 @@ export default defineComponent({
       } else {
         // 필터가 있을 경우 초기화
         registeredFilters.forEach(filter => {
-          eventbus.SearchResultEvent.removeFilter(filter.KeyName, filter.type, filter.filter);
-          eventbus.SearchResultEvent.removeActiveFilter(filter.KeyName, filter.type, filter.filter);
+          pjEventbus.SearchPjResultEvent.pjRemoveFilter(filter.KeyName, filter.type, filter.filter);
+          pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(filter.KeyName, filter.type, filter.filter);
         });
-        eventbus.SearchResultEvent.resetKorButton(); // 초기화 이벤트 호출
+        pjEventbus.SearchPjResultEvent.pjResetKorButton(); // 초기화 이벤트 호출
         console.log("필터 초기화 완료");
       }
     };
 
-    const removeFilter = (KeyName, filterType, filterValue) => {
+    const pjRemoveFilter = (KeyName, filterType, filterValue) => {
       const filterModel = gridApi.value.getFilterModel();
 
       if (filterModel[KeyName]) {
@@ -434,12 +427,12 @@ export default defineComponent({
           });
 
           if (currentFilter.conditions.length === 0) {
-            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+            pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
           if (JSON.stringify(previousConditions) !== JSON.stringify(currentFilter.conditions)) {
             gridApi.value.setFilterModel(filterModel);
             if (previousConditions.length !== currentFilter.conditions.length) {
-              eventbus.SearchResultEvent.removeFilter(KeyName, adjustedFilterType, filterValue);
+              pjEventbus.SearchPjResultEvent.pjRemoveFilter(KeyName, adjustedFilterType, filterValue);
             }
           }
         } else {
@@ -449,13 +442,13 @@ export default defineComponent({
           if (currentFilterType === targetFilterType && currentFilter.filter === filterValue) {
             delete filterModel[KeyName];
             gridApi.value.setFilterModel(filterModel);
-            eventbus.SearchResultEvent.removeActiveFilter(KeyName, filterType, filterValue);
+            pjEventbus.SearchPjResultEvent.pjRemoveActiveFilter(KeyName, filterType, filterValue);
           }
         }
       }
     };
 
-    const deleteRowBtnClick = async () => {
+    const pjDeleteRowBtnClick = async () => {
       if (!gridApi.value) {
         alert("그리드가 아직 초기화되지 않았습니다.");
         return;
@@ -464,7 +457,7 @@ export default defineComponent({
       const selectedNodes = gridApi.value.getSelectedNodes();
 
       if (!selectedNodes || selectedNodes.length === 0) {
-        alert("삭제할 개발자를 선택해주세요.");
+        alert("삭제할 프로젝트를 선택해주세요.");
         return;
       }
 
@@ -475,66 +468,40 @@ export default defineComponent({
       }
 
       const selectedData = selectedNodes.map(node => node.data);
-      const devNoList = selectedData.map(row => row.DEV_NO);
+      const pjNoList = selectedData.map(row => row.PJ_NO);
 
-      // 삭제된 개발자의 이름을 저장할 배열
+      // 삭제된 프로젝트의 이름을 저장할 배열
       const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
       try {
-        const response = await fetch('http://localhost:8080/api/deleteDevData', {
+        const response = await fetch('http://localhost:8080/api/deletePjData', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({devNoList}),
+          body: JSON.stringify({pjNoList}),
         });
 
         if (!response.ok) {
           throw new Error('Failed to delete data');
         } // 선택된 행을 rowData에서 필터링하여 제거
-        rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
+        rowData.value = rowData.value.filter(row => !pjNoList.includes(row.PJ_NO));
 
         // 삭제 성공 알림
-        alert(`개발자 ${deletedNames}가 삭제되었습니다.`);
+        alert(`프로젝트 ${deletedNames}가 삭제되었습니다.`);
       } catch (error) {
-        alert("삭제할 개발자를 선택해주세요.");
+        alert("삭제할 프로젝트를 선택해주세요.");
       }
-    };
-    /* global downloadResume */
-
-    window.downloadResume = (resumeId) => {
-      if (!resumeId) {
-        console.error('이력서 ID가 없습니다.');
-        return;
-      } else {
-        console.log("resumeId:", resumeId);
-        const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', resumeId);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    };
-
-    window.previewResume = (resumeId) => {
-      if (!resumeId) {
-        console.error('이력서 ID가 없습니다.');
-        return;
-      }
-      console.log("미리보기 체크 resumeId:", resumeId);
-      eventbus.SearchResultEvent.openModalPreviewResume(resumeId); // resumeId 전달
     };
 
     onMounted(() => {
-      eventbus.SearchResultEvent.add('search', fetchData); // 기존 이벤트 등록
+      pjEventbus.SearchPjResultEvent.add('pjSearch', pjFetchData); // 기존 이벤트 등록
 
-      fetchData(); // 🔥 초기 전체 데이터 로드 (name 없이)
+      pjFetchData(); // 🔥 초기 전체 데이터 로드 (name 없이)
     });
 
     onBeforeUnmount(() => {
-      eventbus.SearchResultEvent.remove('search', fetchData);
+      pjEventbus.SearchPjResultEvent.remove('pjSearch', pjFetchData);
     });
 
     return {
@@ -546,15 +513,14 @@ export default defineComponent({
       gridOptions,
       onGridReady,
       onCellValueChanged,
-      deleteRowBtnClick,
+      pjDeleteRowBtnClick,
       resetFilter,
-      removeFilter,
+      pjRemoveFilter,
       textFilterParams,
-      downloadResume,
-      openModal,
-      openModalUpdate,
-      openModalPreviewResume,
-      cellValueUpdate
+      pjOpenModal,
+      pjOpenModalUpdate,
+      cellValueUpdate,
+      pjResetKorButton,
     };
   },
 })
