@@ -7,7 +7,6 @@ SearchBarArea.vue
 <template>
   <SearchBarComponent class="mgLR10"/>
   <SearchBtnComponent class="mgLR10"/>
-  <DevAddBtnComponent class="mgLR10"/>
 </template>
 ===========================================================================
 템플릿 종료
@@ -17,7 +16,6 @@ SearchBarArea.vue
 <script setup>
 import SearchBarComponent from "@/components/common/SearchBarComponent.vue";
 import SearchBtnComponent from "@/components/common/SearchBtnComponent.vue";
-import DevAddBtnComponent from "@/components/DevInq/DevAddBtnComponent.vue";
 </script>
 ===========================================================================
 스크립트 종료

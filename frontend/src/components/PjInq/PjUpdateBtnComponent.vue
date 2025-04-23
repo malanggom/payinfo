@@ -1245,6 +1245,8 @@ import {ref, onMounted, onUnmounted, computed, nextTick} from 'vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
 import pjEventbus from '@/eventbus/pjEventbus'
 
+defineEmits(['openModal']); // ✅ 이게 있어야 Vue가 이벤트를 인식함
+
 // 개인정보 초기 선택 값
 const indvInfoIsVisible = ref(true);
 const indvInfoPaymentInputStatus = ref('입력중'); // 초기 상태
