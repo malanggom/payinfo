@@ -59,8 +59,7 @@ export default defineComponent({
       editable: true,
       filter: true,
       flex: 1,
-      headerClass: "centered",
-      headerStyle: "headerColor"
+      headerClass: "centered"
     });
 
     const textFilterParams = {
@@ -618,10 +617,6 @@ export default defineComponent({
 <style>
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-quartz.css";
-
-.headerColor {
-  background-color: #e8e8e8 !important;
-}
 
 /* Aggrid의 선택 컬럼 행들의 체크박스를 가로 가운데 정렬*/
 .centered {

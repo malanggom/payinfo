@@ -41,8 +41,7 @@ export default defineComponent({
       editable: true,
       filter: true,
       flex: 1,
-      headerClass: "centered",
-      headerStyle: "headerColor"
+      headerClass: "centered"
     });
 
     const textFilterParams ={
@@ -128,6 +127,14 @@ export default defineComponent({
       console.log("🔍 devPjFetchData 실행됨 with", _type, _filter);
       try {
         const response = await fetch(`http://localhost:8080/api/getPjHistData?devNo=${_filter.devNo}`);
+        if (!response.ok) {
+          const errorMsg = await response.json();
+          console.warn("⚠️ 응답 실패:", response.status, errorMsg.message);
+          rowData.value = [];
+          searchPerformed.value = true;
+          return;
+        }
+
         const data = await response.json();
         console.log("📦 받아온 데이터:", data);
 
@@ -484,10 +491,6 @@ export default defineComponent({
   .ag-header-cell-label {
     justify-content: center !important;
   }
-}
-
-.headerColor{
-  background-color: #e8e8e8 !important;
 }
 
 .checkboxCentered {
