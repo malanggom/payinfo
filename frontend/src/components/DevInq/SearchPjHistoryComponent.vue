@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, shallowRef, onMounted, onBeforeUnmount } from "vue";
+import {defineComponent, ref, shallowRef, onMounted, onBeforeUnmount, nextTick} from "vue";
 import DevPjHistoryAddBtnComponent from './DevPjHistoryAddBtnComponent.vue';
 import { AgGridVue } from "ag-grid-vue3";
 import eventbus from '@/eventbus/eventbus'
@@ -162,12 +162,19 @@ export default defineComponent({
       }
     };
 
-    const devPjOpenModal = (devNo) => {
-      const devNoToUse = devNo || selectedDevNo.value;
-      devPjHistoryAddBtn.value.open(devNoToUse);
-    };
 
     const devPjHistoryAddBtn = ref(null);
+
+    const devPjOpenModal = (devNo) => {
+      const devNoToUse = devNo || selectedDevNo.value;
+
+      // 💡 이 부분이 중요합니다!
+      if (devPjHistoryAddBtn.value && typeof devPjHistoryAddBtn.value.open === 'function') {
+        devPjHistoryAddBtn.value.open(devNoToUse);
+      } else {
+        console.warn('devPjHistoryAddBtn 또는 open() 메서드가 준비되지 않음');
+      }
+    };
 
     const onGridReady = async (params) => {
       gridApi.value = params.api;
@@ -179,13 +186,15 @@ export default defineComponent({
           addRows.textContent = "프로젝트 히스토리 추가";
           addRows.style.cursor = "pointer";
           addRows.style.marginLeft = "10px";
-          addRows.onclick = () => {
+          addRows.onclick = async () => {
             if (!searchPerformed.value) {
               alert("먼저 개발자를 선택해주세요.");
               return;
             }
 
             console.log("현재 선택된 devNo:", selectedDevNo.value);
+
+            await nextTick();
             eventbus.SearchPjHistoryResultEvent.devPjOpenModal(selectedDevNo.value);
           };
           secondPanel.insertBefore(addRows, secondPanel.firstChild);
