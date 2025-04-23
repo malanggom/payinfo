@@ -1338,6 +1338,8 @@ import {ref, onMounted, onUnmounted, computed, nextTick} from 'vue';
 import axios from '../../axios';
 import eventbus from '@/eventbus/eventbus';
 
+defineEmits(['openModal']); // ✅ 이게 있어야 Vue가 이벤트를 인식함
+
 // 개인정보 토글 초기 값
 const indvInfoIsVisible = ref(true);
 const indvInfoInputStatus = ref('입력중'); // 초기 상태

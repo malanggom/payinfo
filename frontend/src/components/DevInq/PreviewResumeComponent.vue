@@ -40,6 +40,8 @@
 import { ref, onMounted, nextTick, watch } from 'vue';
 import eventbus from '@/eventbus/eventbus';
 
+defineEmits(['openModal']); // ✅ 이게 있어야 Vue가 이벤트를 인식함
+
 // docx-preview.js 라이브러리 불러오기
 import * as docx from 'docx-preview'; // docx-preview.js가 제대로 로드되었는지 확인
 
