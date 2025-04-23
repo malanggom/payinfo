@@ -292,7 +292,8 @@ nav a.router-link-exact-active {
   background-color: #f6f6f6 !important;
 }
 
-.nav__submenu--active .nav-link {
+nav .nav-link.active,
+nav .nav__submenu--active .nav-link {
   color: #2c3e50;
   opacity: 1;
 }
@@ -325,13 +326,15 @@ nav a.router-link-exact-active {
   max-height: 300px; /* 최대 높이를 설정하여 애니메이션을 적용 */
 }
 
-.nav-link{
+nav .nav-link{
   padding: 0px;
   color: #ffffff;
+  opacity: 1;
 }
 
-.nav-link:hover {
+nav .nav-link:hover {
   color: #ffffff; /* 마우스 오버 시 텍스트 색상 */
+  opacity: 1;
 }
 
 .icon-img{
