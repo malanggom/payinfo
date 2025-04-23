@@ -139,7 +139,7 @@ app.get('/api/getPjHistData', async (req, res) => {
         // 🔥 devNo 파라미터가 있을 경우 필터 추가
         if (devNo) {
             query += ' WHERE DEV_NO = :devNo';
-            binds = [devNo];
+            binds = [Number(devNo)]; // NUMBER 타입인데, 문자열로 넘기는 것을 방지하여 숫자타입으로 변환
         }
 
         const result = await connection.execute(query, binds);
