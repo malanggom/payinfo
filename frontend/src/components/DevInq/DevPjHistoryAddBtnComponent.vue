@@ -11,447 +11,460 @@
         </div>
         <div class="modal-body d-flex flex-column" :class="{ 'padding-right': hasPadding }" ref="modalBody">
           <form @submit.prevent="submitForm" class="form d-flex flex-column flex-grow-1" autocomplete='off'>
-            <div class="b-line pt-4 pb-4 flex-column d-flex justify-content-center">
-              <div class="d-flex justify-content-center">
-                <div class="col-10 d-flex align-items-center form-status-bg">
-                  <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="pjInfoHandleClick">
-                    <div class="d-flex toggleTextEmptySpace"></div>
-                    <div class="d-flex text-center">프로젝트정보</div>
-                    <div class="d-flex align-items-center">
-                      <div class="form-status-button" :class="{ completed: pjInfoInputStatus === '입력완료', default: pjInfoInputStatus !== '입력완료' }">
-                        {{ pjInfoInputStatus }}
+            <div class="d-flex flex-row">
+              <div class="w-50" style="height: auto">
+                <pj-selector-search-result-component ref="pjSelectorSearchResult" />
+              </div>
+              <!-- 오른쪽 영역: 묶어서 하나의 w-50로 감싸기 -->
+              <div class="w-50 d-flex flex-column">
+                <!-- 오른쪽 내부 form 전체 묶기 -->
+                <div class="d-flex flex-column p-3">
+                  <!-- 여기에 오른쪽 내용들 전부 -->
+                  <div class="b-line pb-4 d-flex flex-column justify-content-center">
+                    <div class="d-flex justify-content-center">
+                      <div class="col-10 d-flex align-items-center form-status-bg">
+                        <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="pjInfoHandleClick">
+                          <div class="d-flex toggleTextEmptySpace"></div>
+                          <div class="d-flex text-center">프로젝트정보</div>
+                          <div class="d-flex align-items-center">
+                            <div class="form-status-button" :class="{ completed: pjInfoInputStatus === '입력완료', default: pjInfoInputStatus !== '입력완료' }">
+                              {{ pjInfoInputStatus }}
+                            </div>
+                            <div class="form-status-toggle-button" :class="{ visible: pjInfoIsVisible, hidden: !pjInfoIsVisible }" @click.stop="pjInfoToggleState">
+                              &#9660;
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="form-status-toggle-button" :class="{ visible: pjInfoIsVisible, hidden: !pjInfoIsVisible }" @click.stop="pjInfoToggleState">
-                        &#9660;
+                    </div>
+
+                    <!-- 프로젝트 정보 내용 -->
+                    <div v-if="pjInfoIsVisible" class="d-flex row justify-content-center mt20">
+                      <!-- 프로젝트지원상태 레이블 -->
+                      <div class="label-wrap col-10 mt-2">
+                        <div class="label">
+                          <label for="devPjPrgrsStts" class="col-form-label">프로젝트지원상태</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트지원상태 드롭다운 -->
+                      <div class="dropdown-wrap">
+                        <div class="col-10">
+                          <div class="dropdown">
+                            <button id="devPjPrgrsStts" class="btn btn-outline-primary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                              <span class="dropdown-default text-center">{{ selectedDevPjPrgrsStts || 'N/A' }}</span>
+                              <!-- 기본값 설정 -->
+                              <span class="caret"></span> <!-- 화살표 -->
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('서류접수')">서류접수</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('서류합격')">서류합격</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰대기')">인터뷰대기</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰중')">인터뷰중</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰합격')">인터뷰합격</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('프로젝트투입중')">프로젝트투입중</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('프로젝트만료1달전')">프로젝트만료1달전</button></li>
+                              <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('타사프로젝트중')">타사프로젝트중</button></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트지원날짜 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="devPjPrgrsDt" class="col-form-label">프로젝트지원날짜</label>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트지원날짜 입력란 -->
+                      <div class="col-12 date-wrap">
+                        <div class="col-10 date">
+                          <div class="form-group col-12 mb-0 position-relative">
+                            <input type="date"
+                                   id="devPjPrgrsDt"
+                                   class="date-default input form-control text-center pl28 pr8"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formattedPossibilityDate"
+                                   @blur="pjInfoCheckCompletion">
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트시작일자 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="devPjBgngDt" class="col-form-label">프로젝트시작일자</label>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트시작일자 입력란 -->
+                      <div class="col-12 date-wrap">
+                        <div class="col-10 date">
+                          <div class="form-group col-12 mb-0 position-relative">
+                            <input type="date"
+                                 id="devPjBgngDt"
+                                 class="date-default input form-control text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formattedStartDate"
+                                 @blur="pjInfoCheckCompletion">
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트종료일자 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="devPjEndDt" class="col-form-label">프로젝트종료일자</label>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트종료일자 입력란 -->
+                      <div class="col-12 date-wrap">
+                        <div class="col-10 date">
+                          <div class="form-group col-12 mb-0 position-relative">
+                            <input type="date"
+                                 id="devPjEndDt"
+                                   class="date-default input form-control text-center"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formattedEndDate"
+                                   @blur="pjInfoCheckCompletion">
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 고객사명 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="custNm" class="col-form-label">고객사명</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 고객사명 입력란 -->
+                      <div class="input-wrap">
+                        <div class="col-10">
+                          <input type="text"
+                                 id="custNm"
+                                 class="form-control flex-all-center w-100 input text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formData.CUST_NM"
+                                 @blur="pjInfoCheckCompletion">
+                        </div>
+                      </div>
+
+                      <!-- 수행사명 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="subgcNm" class="col-form-label">수행사명</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 수행사명 입력란 -->
+                      <div class="input-wrap">
+                        <div class="col-10">
+                          <input type="text"
+                                 id="subgcNm"
+                                 class="form-control flex-all-center w-100 input text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formData.SUBGC_NM"
+                                 @blur="pjInfoCheckCompletion">
+                        </div>
+                      </div>
+
+                      <!-- 계약회사명 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="ctrtCoNm" class="col-form-label">계약회사명</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 계약회사명 입력란 -->
+                      <div class="input-wrap">
+                        <div class="col-10">
+                          <input type="text"
+                                 id="ctrtCoNm"
+                                 class="form-control flex-all-center w-100 input text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formData.CTRT_CO_NM"
+                                 @blur="pjInfoCheckCompletion">
+                        </div>
+                      </div>
+
+                      <!-- 하청업체명 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="sbcnNm" class="col-form-label">하청업체명</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 하청업체명 입력란 -->
+                      <div class="input-wrap">
+                        <div class="col-10">
+                          <input type="text"
+                                 id="sbcnNm"
+                                 class="form-control flex-all-center w-100 input text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formData.SBCN_NM"
+                                 @blur="pjInfoCheckCompletion">
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트장소 레이블 -->
+                      <div class="label-wrap col-10">
+                        <div class="label">
+                          <label for="pjPlc" class="col-form-label">프로젝트장소</label> <!-- 레이블 -->
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트장소 입력란 -->
+                      <div class="input-wrap">
+                        <div class="col-10">
+                          <input type="text"
+                                 id="pjPlc"
+                                 class="form-control flex-all-center w-100 input text-center"
+                                 aria-describedby="passwordHelpInline"
+                                 v-model="formData.PJ_PLC"
+                                 @blur="pjInfoCheckCompletion">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 프로젝트정보 종료구간 -->
+                  <!-- 프로젝트투입정보 시작구간 -->
+                  <div class="d-flex flex-column justify-content-center">
+                    <div class="pt-4 pb-4 flex-column d-flex justify-content-center">
+                      <div class="d-flex justify-content-center">
+                        <div class="col-10 d-flex align-items-center form-status-bg">
+                          <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="pjInputInfoHandleClick">
+                            <div class="d-flex toggleTextEmptySpace"></div>
+                            <div class="d-flex text-center">프로젝트투입정보</div>
+                            <div class="d-flex align-items-center">
+                              <div class="form-status-button" :class="{ completed: pjInputInfoInputStatus === '입력완료', default: pjInputInfoInputStatus !== '입력완료' }">
+                                {{ pjInputInfoInputStatus }}
+                              </div>
+                              <div class="form-status-toggle-button" :class="{ visible: pjInputInfoIsVisible, hidden: !pjInputInfoIsVisible }" @click.stop="pjInputInfoToggleState">
+                                &#9660;
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 프로젝트투입등급 -->
+                      <div v-if="pjInputInfoIsVisible" class="d-flex row justify-content-center mt20">
+                        <!-- 프로젝트투입등급 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="devPjInpGrd" class="col-form-label">프로젝트투입등급</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+                        <!-- 프로젝트투입등급 드롭다운 -->
+                        <div class="dropdown-wrap">
+                          <div class="col-10">
+                            <div class="dropdown">
+                              <button id="devPjInpGrd" class="btn btn-outline-primary dropdown-toggle" type="button"
+                                      data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="dropdown-default text-center">{{ selectedDevPjInpGrd || 'N/A' }}</span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('N/A')">N/A</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('초급')">초급</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('초상급')">초상급</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('중급')">중급</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('중상급')">중상급</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('고급')">고급</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('특급')">특급</button></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 직책 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="jbttl" class="col-form-label">직책</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 직책 드롭다운 -->
+                        <div class="dropdown-wrap">
+                          <div class="col-10">
+                            <div class="dropdown">
+                              <button id="jbttl" class="btn btn-outline-primary dropdown-toggle" type="button"
+                                      data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="dropdown-default text-center">{{ selectedJbttl || 'N/A' }}</span>
+                                <!-- 기본값 설정 -->
+                                <span class="caret"></span> <!-- 화살표 -->
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectJbttl('PL')">PL</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectJbttl('PMO')">PMO</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectJbttl('PM')">PM</button></li>
+                                <li><button class="dropdown-item" type="button" @click="selectJbttl('DBA')">DBA</button></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 체제비 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="systFee" class="col-form-label">체제비</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 체제비 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                              <input type="text"
+                                     id="systFee"
+                                     class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                     aria-describedby="passwordHelpInline"
+                                     v-model="formData.SYST_FEE"
+                                     maxlength="3"
+                                     @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 계약회사정규직원금 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="ctrtCoEmpPrnc" class="col-form-label">계약회사정규직원금</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 계약회사정규직원금 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                            <input type="text"
+                                   id="ctrtCoEmpPrnc"
+                                   class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formData.CTRT_CO_EMP_PRNC"
+                                   maxlength="3"
+                                   @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 3.3%원금 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="whtaxPrnc" class="col-form-label">3.3%원금</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 3.3%원금 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                            <input type="text"
+                                   id="whtaxPrnc"
+                                   class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formData.WHTAX_PRNC"
+                                   maxlength="3"
+                                   @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 부가세원금 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="vatPrnc" class="col-form-label">부가세원금</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 부가세원금 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                            <input type="text"
+                                   id="vatPrnc"
+                                   class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formData.VAT_PRNC"
+                                   maxlength="3"
+                                   @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 자사정규직원금 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="kdsEmpPrnc" class="col-form-label">자사정규직원금</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 자사정규직원금 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                            <input type="text"
+                                   id="kdsEmpPrnc"
+                                   class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formData.KDS_EMP_PRNC"
+                                   maxlength="3"
+                                   @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 월요청단가 레이블 -->
+                        <div class="label-wrap col-10">
+                          <div class="label">
+                            <label for="mmDmndUntprc" class="col-form-label">월요청단가</label> <!-- 레이블 -->
+                          </div>
+                        </div>
+
+                        <!-- 월요청단가 입력란 -->
+                        <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
+                          <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
+                            <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
+                            <input type="text"
+                                   id="mmDmndUntprc"
+                                   class="form-control flex-all-center w-100 input text-center pl40 pr40"
+                                   aria-describedby="passwordHelpInline"
+                                   v-model="formData.PJ_MM_DMND_UNTPRC"
+                                   maxlength="4"
+                                   @blur="pjInputInfoCheckCompletion">
+                              <span class="position-absolute"
+                                    style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- 프로젝트 정보 내용 -->
-              <div v-if="pjInfoIsVisible" class="d-flex row justify-content-center mt20">
-                <!-- 프로젝트지원상태 레이블 -->
-                <div class="label-wrap col-10 mt-2">
-                  <div class="label">
-                    <label for="devPjPrgrsStts" class="col-form-label">프로젝트지원상태</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 프로젝트지원상태 드롭다운 -->
-                <div class="dropdown-wrap">
-                  <div class="col-10">
-                    <div class="dropdown">
-                      <button id="devPjPrgrsStts" class="btn btn-outline-primary dropdown-toggle" type="button"
-                              data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="dropdown-default text-center">{{ selectedDevPjPrgrsStts || 'N/A' }}</span>
-                        <!-- 기본값 설정 -->
-                        <span class="caret"></span> <!-- 화살표 -->
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('서류접수')">서류접수</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('서류합격')">서류합격</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰대기')">인터뷰대기</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰중')">인터뷰중</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('인터뷰합격')">인터뷰합격</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('프로젝트투입중')">프로젝트투입중</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('프로젝트만료1달전')">프로젝트만료1달전</button></li>
-                        <li><button class="dropdown-item" type="button" @click="selectDevPjPrgrsStts('타사프로젝트중')">타사프로젝트중</button></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 프로젝트지원날짜 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="devPjPrgrsDt" class="col-form-label">프로젝트지원날짜</label>
-                  </div>
-                </div>
-
-                <!-- 프로젝트지원날짜 입력란 -->
-                <div class="col-12 date-wrap">
-                  <div class="col-10 date">
-                    <div class="form-group col-12 mb-0 position-relative">
-                      <input type="date"
-                             id="devPjPrgrsDt"
-                             class="date-default input form-control text-center pl28 pr8"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formattedPossibilityDate"
-                             @blur="pjInfoCheckCompletion">
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 프로젝트시작일자 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="devPjBgngDt" class="col-form-label">프로젝트시작일자</label>
-                  </div>
-                </div>
-
-                <!-- 프로젝트시작일자 입력란 -->
-                <div class="col-12 date-wrap">
-                  <div class="col-10 date">
-                    <div class="form-group col-12 mb-0 position-relative">
-                      <input type="date"
-                           id="devPjBgngDt"
-                           class="date-default input form-control text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formattedStartDate"
-                           @blur="pjInfoCheckCompletion">
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 프로젝트종료일자 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="devPjEndDt" class="col-form-label">프로젝트종료일자</label>
-                  </div>
-                </div>
-
-                <!-- 프로젝트종료일자 입력란 -->
-                <div class="col-12 date-wrap">
-                  <div class="col-10 date">
-                    <div class="form-group col-12 mb-0 position-relative">
-                      <input type="date"
-                           id="devPjEndDt"
-                             class="date-default input form-control text-center"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formattedEndDate"
-                             @blur="pjInfoCheckCompletion">
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 고객사명 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="custNm" class="col-form-label">고객사명</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 고객사명 입력란 -->
-                <div class="input-wrap">
-                  <div class="col-10">
-                    <input type="text"
-                           id="custNm"
-                           class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formData.CUST_NM"
-                           @blur="pjInfoCheckCompletion">
-                  </div>
-                </div>
-
-                <!-- 수행사명 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="subgcNm" class="col-form-label">수행사명</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 수행사명 입력란 -->
-                <div class="input-wrap">
-                  <div class="col-10">
-                    <input type="text"
-                           id="subgcNm"
-                           class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formData.SUBGC_NM"
-                           @blur="pjInfoCheckCompletion">
-                  </div>
-                </div>
-
-                <!-- 계약회사명 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="ctrtCoNm" class="col-form-label">계약회사명</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 계약회사명 입력란 -->
-                <div class="input-wrap">
-                  <div class="col-10">
-                    <input type="text"
-                           id="ctrtCoNm"
-                           class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formData.CTRT_CO_NM"
-                           @blur="pjInfoCheckCompletion">
-                  </div>
-                </div>
-
-                <!-- 하청업체명 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="sbcnNm" class="col-form-label">하청업체명</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 하청업체명 입력란 -->
-                <div class="input-wrap">
-                  <div class="col-10">
-                    <input type="text"
-                           id="sbcnNm"
-                           class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formData.SBCN_NM"
-                           @blur="pjInfoCheckCompletion">
-                  </div>
-                </div>
-
-                <!-- 프로젝트장소 레이블 -->
-                <div class="label-wrap col-10">
-                  <div class="label">
-                    <label for="pjPlc" class="col-form-label">프로젝트장소</label> <!-- 레이블 -->
-                  </div>
-                </div>
-
-                <!-- 프로젝트장소 입력란 -->
-                <div class="input-wrap">
-                  <div class="col-10">
-                    <input type="text"
-                           id="pjPlc"
-                           class="form-control flex-all-center w-100 input text-center"
-                           aria-describedby="passwordHelpInline"
-                           v-model="formData.PJ_PLC"
-                           @blur="pjInfoCheckCompletion">
-                  </div>
-                </div>
-              </div>
-              <!-- 프로젝트정보 종료구간 -->
             </div>
-            <div>
-              <!-- 프로젝트투입정보 시작구간 -->
-              <div class="pt-4 pb-4 flex-column d-flex justify-content-center">
-                <div class="d-flex justify-content-center">
-                  <div class="col-10 d-flex align-items-center form-status-bg">
-                    <div class="d-flex justify-content-between form-control form-status toggleTextWrap" @click="pjInputInfoHandleClick">
-                      <div class="d-flex toggleTextEmptySpace"></div>
-                      <div class="d-flex text-center">프로젝트투입정보</div>
-                      <div class="d-flex align-items-center">
-                        <div class="form-status-button" :class="{ completed: pjInputInfoInputStatus === '입력완료', default: pjInputInfoInputStatus !== '입력완료' }">
-                          {{ pjInputInfoInputStatus }}
-                        </div>
-                        <div class="form-status-toggle-button" :class="{ visible: pjInputInfoIsVisible, hidden: !pjInputInfoIsVisible }" @click.stop="pjInputInfoToggleState">
-                          &#9660;
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- 프로젝트투입등급 -->
-                <div v-if="pjInputInfoIsVisible" class="d-flex row justify-content-center mt20">
-                  <!-- 프로젝트투입등급 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="devPjInpGrd" class="col-form-label">프로젝트투입등급</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-                  <!-- 프로젝트투입등급 드롭다운 -->
-                  <div class="dropdown-wrap">
-                    <div class="col-10">
-                      <div class="dropdown">
-                        <button id="devPjInpGrd" class="btn btn-outline-primary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="dropdown-default text-center">{{ selectedDevPjInpGrd || 'N/A' }}</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('N/A')">N/A</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('초급')">초급</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('초상급')">초상급</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('중급')">중급</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('중상급')">중상급</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('고급')">고급</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectDevPjInpGrd('특급')">특급</button></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 직책 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="jbttl" class="col-form-label">직책</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 직책 드롭다운 -->
-                  <div class="dropdown-wrap">
-                    <div class="col-10">
-                      <div class="dropdown">
-                        <button id="jbttl" class="btn btn-outline-primary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="dropdown-default text-center">{{ selectedJbttl || 'N/A' }}</span>
-                          <!-- 기본값 설정 -->
-                          <span class="caret"></span> <!-- 화살표 -->
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><button class="dropdown-item" type="button" @click="selectJbttl('N/A')">N/A</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectJbttl('PL')">PL</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectJbttl('PMO')">PMO</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectJbttl('PM')">PM</button></li>
-                          <li><button class="dropdown-item" type="button" @click="selectJbttl('DBA')">DBA</button></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 체제비 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="systFee" class="col-form-label">체제비</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 체제비 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                        <input type="text"
-                               id="systFee"
-                               class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                               aria-describedby="passwordHelpInline"
-                               v-model="formData.SYST_FEE"
-                               maxlength="3"
-                               @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 계약회사정규직원금 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="ctrtCoEmpPrnc" class="col-form-label">계약회사정규직원금</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 계약회사정규직원금 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text"
-                             id="ctrtCoEmpPrnc"
-                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formData.CTRT_CO_EMP_PRNC"
-                             maxlength="3"
-                             @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 3.3%원금 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="whtaxPrnc" class="col-form-label">3.3%원금</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 3.3%원금 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text"
-                             id="whtaxPrnc"
-                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formData.WHTAX_PRNC"
-                             maxlength="3"
-                             @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 부가세원금 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="vatPrnc" class="col-form-label">부가세원금</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 부가세원금 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text"
-                             id="vatPrnc"
-                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formData.VAT_PRNC"
-                             maxlength="3"
-                             @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 자사정규직원금 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="kdsEmpPrnc" class="col-form-label">자사정규직원금</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 자사정규직원금 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text"
-                             id="kdsEmpPrnc"
-                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formData.KDS_EMP_PRNC"
-                             maxlength="3"
-                             @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 월요청단가 레이블 -->
-                  <div class="label-wrap col-10">
-                    <div class="label">
-                      <label for="mmDmndUntprc" class="col-form-label">월요청단가</label> <!-- 레이블 -->
-                    </div>
-                  </div>
-
-                  <!-- 월요청단가 입력란 -->
-                  <div class="input-wrap"> <!-- 입력란을 가운데 정렬 -->
-                    <div class="col-10 d-flex align-items-center"> <!-- 너비를 col-10으로 설정하고 flex 사용 -->
-                      <div class="form-group col-12 mb-0 position-relative"> <!-- 입력란 -->
-                      <input type="text"
-                             id="mmDmndUntprc"
-                             class="form-control flex-all-center w-100 input text-center pl40 pr40"
-                             aria-describedby="passwordHelpInline"
-                             v-model="formData.PJ_MM_DMND_UNTPRC"
-                             maxlength="4"
-                             @blur="pjInputInfoCheckCompletion">
-                        <span class="position-absolute"
-                              style="right: 12px; top: 50%; transform: translateY(-50%);">만원</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <!-- 제출 버튼 -->
+            <div class="modal-footer-wrap d-flex align-items-center justify-content-center t_line">
+              <div class="modal-footer d-flex">
+                <button type="submit" class="btn btn-primary">제출</button>
               </div>
             </div>
           </form>
-        </div>
-        <!-- 제출 버튼 -->
-        <div class="modal-footer-wrap d-flex align-items-center justify-content-center t_line">
-          <div class="modal-footer d-flex">
-            <button type="submit" class="btn btn-primary">제출</button>
-          </div>
         </div>
       </div>
     </div>
@@ -462,15 +475,20 @@
 </template>
 
 <script>
-import {ref, onMounted, onUnmounted, nextTick, computed, defineComponent, defineExpose} from 'vue';
+import {ref, onMounted, onUnmounted, nextTick, computed, defineComponent} from 'vue';
+import PjSelectorSearchResultComponent from './PjSelectorSearchResultComponent.vue';
 import axios from '../../axios'; // 생성한 axios 인스턴스 경로
-import eventbus from '@/eventbus/eventbus'; // eventbus 가져오기
+import eventbus from '@/eventbus/eventbus';
 
 export default defineComponent({
+  components: {
+    PjSelectorSearchResultComponent,
+  },
   props: {
     devNo: Number,
   },
-  setup(props) {
+  emits: ['open-modal'], // ✅ 여기에 추가해야 경고 없어짐
+  setup(props, { expose }) {
     // 프로젝트 정보 토글 초기 값
     const pjInfoIsVisible = ref(true);
     const pjInfoInputStatus = ref('입력중'); // 초기 상태
@@ -502,6 +520,11 @@ export default defineComponent({
       KDS_EMP_PRNC: "",
       PJ_MM_DMND_UNTPRC: "",
     });
+
+// PJ_NO를 eventbus를 통해 받기
+    const updatePjNo = (pjNo) => {
+      formData.value.PJ_NO = pjNo;  // PJ_NO 값 갱신
+    };
 
     const selectedDevPjPrgrsStts = ref('N/A'); // 초기값
     const selectedDevPjInpGrd = ref('N/A'); // 초기값
@@ -537,8 +560,8 @@ export default defineComponent({
     };
 
 // ✅ expose 하기!
-    defineExpose({
-      open
+    expose({
+      open,
     }); // 이걸 꼭 해야 부모가 호출 가능함!
 
     //프로젝트 정보 함수
@@ -734,6 +757,7 @@ export default defineComponent({
 
     // 컴포넌트가 마운트될 때 이벤트 핸들러 추가
     onMounted(async() => {
+      eventbus.SearchPjHistoryResultEvent.devPjSelectProject = updatePjNo;
       eventbus.SearchPjHistoryResultEvent.add('devPjOpenModal', (devNo) => openModalHandler(devNo));
       await nextTick(); // DOM 업데이트 후
       scrollChecks(); // 초기 상태 체크
@@ -742,6 +766,7 @@ export default defineComponent({
 
     // 컴포넌트가 언마운트될 때 핸들러 제거
     onUnmounted(() => {
+      eventbus.SearchPjHistoryResultEvent.devPjSelectProject = null;
       eventbus.SearchPjHistoryResultEvent.remove('devPjOpenModal', openModalHandler); // 모달 열기 이벤트 제거
     });
 
@@ -771,6 +796,7 @@ export default defineComponent({
       formattedStartDate,
       formattedEndDate,
       open,
+      updatePjNo,
     };
   },
 });
@@ -1084,7 +1110,7 @@ export default defineComponent({
 }
 
 .custom-modal {
-  max-width: 600px;
+  max-width: 1200px;
 }
 
 .input-radius {

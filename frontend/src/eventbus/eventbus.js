@@ -28,6 +28,7 @@ let devPjHandlers = {
     devPjRemoveButton: [],
     devPjActiveFilters: [],
     devPjSelectDeveloper: [],  // ✅ 여기에 추가
+    devPjSelectProject: [],
 };
 
 export { resultHandlers, devPjHandlers };  // 각각을 export
@@ -132,6 +133,9 @@ export default {
         },
         devPjSelectDeveloper(id) {
             devPjHandlers.devPjSelectDeveloper.forEach(handler => handler(id)); // ✅ 이 부분 추가
+        },
+        devPjSelectProject(id) {
+            devPjHandlers.devPjSelectProject.forEach(handler => handler(id)); // ✅ 이 부분 추가
         },
         devPjHistDeleteRowBtnClick() {
             devPjHandlers.devPjDeleteRow.forEach(handler => handler());

@@ -489,7 +489,7 @@ export default defineComponent({
         // 삭제 성공 알림
         alert(`프로젝트 ${deletedNames}가 삭제되었습니다.`);
       } catch (error) {
-        alert("삭제할 프로젝트를 선택해주세요.");
+        alert("프로젝트 삭제 error:", error);
       }
     };
 

@@ -360,7 +360,6 @@ export default defineComponent({
       }
 
       const selectedData = selectedNodes.map(node => node.data);
-
       const confirmDelete = confirm(`선택한 히스토리를 정말 삭제하시겠습니까?`);
 
       if (!confirmDelete) {
@@ -368,23 +367,31 @@ export default defineComponent({
       }
 
       const devNoList = selectedData.map(row => row.DEV_NO);
+      const pjNo = selectedData[0]?.PJ_NO; // 첫 번째 선택 항목의 PJ_NO를 사용
 
-      try {
-        const response = await fetch('http://localhost:8080/api/deletePjDevHistData', {
+      const params = new URLSearchParams();
+
+      devNoList.forEach(no => params.append('devNoList', no));
+
+      try{
+        const response = await fetch(`http://localhost:8080/api/deletePjDevHistData`, {
           method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ devNoList }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ devNoList, pjNo }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to delete data');
+          const errorText = await response.text();
+          throw new Error(`Failed to delete data: ${errorText}`);
         }
         rowData.value = rowData.value.filter(row => !devNoList.includes(row.DEV_NO));
 
         // 삭제 성공 알림
         alert(`선택한 히스토리가 삭제되었습니다.`);
       } catch (error) {
-        alert("삭제할 프로젝트를 선택해주세요.");
+        console.log(`프로젝트 히스토리 삭제 에러 : `, error);
       }
     };
 
