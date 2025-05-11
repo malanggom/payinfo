@@ -26,8 +26,8 @@ oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-wind
 // OracleDB 설정
 const dbConfig = {
     user: process.env.DB_USER || 'system', // 환경 변수 사용
-    password: process.env.DB_PASSWORD || 'ORACLE', // 환경 변수 사용
-    connectString: process.env.DB_CONNECT_STRING || '211.33.184.136:1521/xe', // 환경 변수 사용
+    password: process.env.DB_PASSWORD || 'oracle', // 환경 변수 사용
+    connectString: process.env.DB_CONNECT_STRING || '121.137.240.24:1521/xe', // 환경 변수 사용
 };
 
 // 루트 경로 추가
@@ -741,26 +741,33 @@ const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\front
 
 app.get('/api/downloadResume/:resumeId', (req, res) => {
     const resumeId = req.params.resumeId;
-    const docxFilePath = path.join(RESUME_DIR, `${resumeId}.docx`);
-    const docFilePath = path.join(RESUME_DIR, `${resumeId}.doc`);
 
-    if (fs.existsSync(docxFilePath)) {
-        return res.download(docxFilePath, (err) => {
-            if (err) {
-                console.error('File download error:', err);
-                res.status(500).send('파일 다운로드 중 오류가 발생했습니다.');
-            }
-        });
-    } else if (fs.existsSync(docFilePath)) {
-        return res.download(docFilePath, (err) => {
-            if (err) {
-                console.error('File download error:', err);
-                res.status(500).send('파일 다운로드 중 오류가 발생했습니다.');
-            }
-        });
-    } else {
-        return res.status(404).send('이력서를 찾을 수 없습니다.');
-    }
+    // 디렉터리 내 파일 리스트 조회
+    fs.readdir(RESUME_DIR, (err, files) => {
+        if (err) {
+            console.error('디렉터리 읽기 오류:', err);
+            return res.status(500).send('서버 오류로 이력서를 조회할 수 없습니다.');
+        }
+
+        // '기술경력서_'로 시작하고, resumeId가 포함된 .doc 또는 .docx 파일 필터링
+        const matchedFile = files.find(file =>
+            file.startsWith('기술경력서_') &&
+            file.includes(resumeId) &&
+            (file.endsWith('.doc') || file.endsWith('.docx'))
+        );
+
+        if (matchedFile) {
+            const filePath = path.join(RESUME_DIR, matchedFile);
+            return res.download(filePath, matchedFile, err => {
+                if (err) {
+                    console.error('파일 다운로드 오류:', err);
+                    res.status(500).send('파일 다운로드 중 오류가 발생했습니다.');
+                }
+            });
+        } else {
+            return res.status(404).send('이력서를 찾을 수 없습니다.');
+        }
+    });
 });
 
 app.get('/api/previewResume/:resumeId', (req, res) => {
