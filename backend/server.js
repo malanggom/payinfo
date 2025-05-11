@@ -1,13 +1,15 @@
 // ===========================================================================
 //                                 server.js
 // ===========================================================================
+require('dotenv').config(); // ← 꼭 최상단에 위치해야 함
 const express = require('express');
 const oracledb = require('oracledb');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path'); // 이 부분이 필요함
+const fs = require('fs');
+const dbConfig = require('./config/dbConfig'); // ← 추가
+
 const app = express();
-const port = 8080;
 
 
 // JSON 요청 본문을 파싱하기 위한 미들웨어
@@ -16,19 +18,29 @@ app.use(express.json());
 // CORS 설정
 app.use(cors());
 
+// 포트 설정
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-// Oracle Instant Client 경로 설정
-oracledb.initOracleClient({ libDir: 'C:\\Program Files\\instantclient-basic-windows.x64-23.4.0.24.05\\instantclient_23_4' });
+// DB 연결 확인 테스트 (서버 시작 후 1회 실행)
+async function testOracleConnection() {
+    try {
+        // Oracle Instant Client 로드
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_LIB_DIR });
 
-// OracleDB 설정
-const dbConfig = {
-    user: process.env.DB_USER || 'system', // 환경 변수 사용
-    password: process.env.DB_PASSWORD || 'oracle', // 환경 변수 사용
-    connectString: process.env.DB_CONNECT_STRING || '121.137.240.24:1521/xe', // 환경 변수 사용
-};
+        // DB 연결 시도
+        const connection = await oracledb.getConnection(dbConfig);
+        console.log("✅ Oracle DB 연결 성공");
+
+        await connection.close();
+    } catch (err) {
+        console.error("❌ Oracle DB 연결 실패:", err.message);
+    }
+}
+
+testOracleConnection();
 
 // 루트 경로 추가
 app.get('/', (req, res) => {
