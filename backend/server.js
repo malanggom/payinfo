@@ -57,7 +57,7 @@ app.get('/api/getDevData', async (req, res) => {
     try {
         connection = await oracledb.getConnection(dbConfig);
 
-        let baseQuery = 'SELECT * FROM C##SYSON.DEV';
+        let baseQuery = 'SELECT * FROM C##SYSON.VW_DEV_WITH_CRTFCT';
         let binds = [];
 
         if (searchName) {
@@ -120,6 +120,8 @@ app.get('/api/getDevData', async (req, res) => {
                 AGE: row[42],
                 ACBG: row[43],
                 RESUME: row[44],
+                FLFMT_TASK: row[46],
+                CRTFCT_LIST: row[45], // ✅ 자격증 목록 추가
             };
         });
         console.log('✅ 쿼리 결과 row 수:', result.rows.length);
@@ -503,7 +505,7 @@ app.post('/api/updateDevData', async (req, res) => {
         INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
         CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
         MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, DEV_NO
+        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, FLFMT_TASK, DEV_NO
     } = req.body; // 클라이언트로부터 수정할 데이터를 받음
 
     let connection;
@@ -554,15 +556,16 @@ app.post('/api/updateDevData', async (req, res) => {
                 CMNCT = :CMNCT,
                 ETC = :ETC,
                 AGE = :AGE,
-                ACBG = :ACBG
-            WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
+                ACBG = :ACBG,
+                FLFMT_TASK = :FLFMT_TASK
+             WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
             {
                 NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
                 T_CR_PER, RGN, MBL_TELNO, EML, CONTT_MTHD, NTRV_DMND_DT,
                 INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
                 CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
                 MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG,
+                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, FLFMT_TASK,
                 DEV_NO // WHERE 절에 사용할 DEV_NO
             },
             { autoCommit: true } // 자동 커밋
@@ -752,20 +755,19 @@ app.post('/api/updatePjData', async (req, res) => {
 const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\frontend\\public\\downloads\\resumes');
 
 app.get('/api/downloadResume/:resumeId', (req, res) => {
-    const resumeId = req.params.resumeId;
+    const resumeId = decodeURIComponent(req.params.resumeId); // 예: "이권도"
 
-    // 디렉터리 내 파일 리스트 조회
     fs.readdir(RESUME_DIR, (err, files) => {
         if (err) {
             console.error('디렉터리 읽기 오류:', err);
-            return res.status(500).send('서버 오류로 이력서를 조회할 수 없습니다.');
+            return res.status(500).send('서버 오류');
         }
 
-        // '기술경력서_'로 시작하고, resumeId가 포함된 .doc 또는 .docx 파일 필터링
+        // 이름이 정확히 포함된 첫 번째 파일 찾기
         const matchedFile = files.find(file =>
             file.startsWith('기술경력서_') &&
-            file.includes(resumeId) &&
-            (file.endsWith('.doc') || file.endsWith('.docx'))
+            file.includes(`_${resumeId}_`) &&
+            (file.toLowerCase().endsWith('.doc') || file.toLowerCase().endsWith('.docx'))
         );
 
         if (matchedFile) {
@@ -773,38 +775,50 @@ app.get('/api/downloadResume/:resumeId', (req, res) => {
             return res.download(filePath, matchedFile, err => {
                 if (err) {
                     console.error('파일 다운로드 오류:', err);
-                    res.status(500).send('파일 다운로드 중 오류가 발생했습니다.');
+                    res.status(500).send('다운로드 실패');
                 }
             });
         } else {
+            console.warn(`이름 ${resumeId} 에 해당하는 이력서 파일이 없습니다.`);
             return res.status(404).send('이력서를 찾을 수 없습니다.');
         }
     });
 });
-
 app.get('/api/previewResume/:resumeId', (req, res) => {
-    const encodedResumeId = req.params.resumeId;
-    const resumeId = decodeURIComponent(encodedResumeId);  // 🔹 디코딩 추가
-    const docxFilePath = path.join(RESUME_DIR, `${resumeId}.docx`);
-    const docFilePath = path.join(RESUME_DIR, `${resumeId}.doc`);
-    let filePath = null;
+    const resumeId = decodeURIComponent(req.params.resumeId); // 예: "이권도"
 
-    if (fs.existsSync(docxFilePath)) {
-        filePath = docxFilePath;
-    } else if (fs.existsSync(docFilePath)) {
-        filePath = docFilePath;
-    } else {
-        return res.status(404).send('이력서를 찾을 수 없습니다.');
-    }
-
-    // 파일 읽어서 클라이언트에 전송
-    fs.readFile(filePath, (err, data) => {
+    fs.readdir(RESUME_DIR, (err, files) => {
         if (err) {
-            console.error('파일 읽기 오류:', err);
-            return res.status(500).send('파일을 읽을 수 없습니다.');
+            console.error('디렉터리 읽기 오류:', err);
+            return res.status(500).send('서버 오류');
         }
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        res.send(data);
+
+        // '기술경력서_이름_...' 형식의 파일을 찾음
+        const matchedFile = files.find(file =>
+            file.startsWith('기술경력서_') &&
+            file.includes(`_${resumeId}_`) &&
+            (file.toLowerCase().endsWith('.doc') || file.toLowerCase().endsWith('.docx'))
+        );
+
+        if (!matchedFile) {
+            return res.status(404).send('이력서를 찾을 수 없습니다.');
+        }
+
+        const filePath = path.join(RESUME_DIR, matchedFile);
+
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                console.error('파일 읽기 오류:', err);
+                return res.status(500).send('파일을 읽을 수 없습니다.');
+            }
+
+            const contentType = matchedFile.endsWith('.docx')
+                ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                : 'application/msword';
+
+            res.setHeader('Content-Type', contentType);
+            res.send(data);
+        });
     });
 });
 

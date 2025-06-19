@@ -123,17 +123,27 @@ export default defineComponent({
       {
         headerName: '이력서', field: 'resumeIcon', minWidth: 80, filter: false, sortable: false,
         cellRenderer: (params) => {
-          const resumeId = params.data.RESUME; // resumeId 확인
-          return `<img src="${params.data.resumeImage}" style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;" onclick="downloadResume('${resumeId}')"/>
-            <img src="${params.data.resumePreviewImage}"
-             style="cursor: pointer; margin-left: 5px; margin-bottom: 5px; width: 18.4px; height: 18.4px;"
-             onclick="previewResume('${resumeId}')"/>`;
+          const resumeId = params.data.NM; // ✅ 이름만 넘김 → "이권도", "김현재" 등
+
+          // resumeId가 없으면 버튼 안 나옴
+          if (!resumeId) return '';
+
+          return `
+    <img src="${params.data.resumeImage}"
+         style="cursor: pointer; margin-bottom: 5px; width: 18.4px; height: 18.4px;"
+         onclick="downloadResume('${resumeId}')"/>
+    <img src="${params.data.resumePreviewImage}"
+         style="cursor: pointer; margin-left: 5px; margin-bottom: 5px; width: 18.4px; height: 18.4px;"
+         onclick="previewResume('${resumeId}')"/>
+  `;
         },
       },
       {headerName: '휴대전화번호', field: "MBL_TELNO", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '생년월일', field: "BRDT", minWidth: 130, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '자격증', field: "CRTFCT_LIST", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '수행업무', field: "FLFMT_TASK", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '데이터베이스', field: "DB", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '툴', field: "TOOL", minWidth: 90, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -232,6 +242,8 @@ export default defineComponent({
           AGE: item.AGE,
           ACBG: item.ACBG,
           RESUME: item.RESUME,
+          CRTFCT_LIST: item.CRTFCT_LIST,
+          FLFMT_TASK: item.FLFMT_TASK,
         }));
 
         rowData.value = translatedData;
