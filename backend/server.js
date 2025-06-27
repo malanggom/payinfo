@@ -120,8 +120,9 @@ app.get('/api/getDevData', async (req, res) => {
                 AGE: row[42],
                 ACBG: row[43],
                 RESUME: row[44],
-                FLFMT_TASK: row[46],
-                CRTFCT_LIST: row[45], // ✅ 자격증 목록 추가
+                TASK_LIST: row[46],
+                MEMO: row[45],
+                CRTFCT_LIST: row[47], // ✅ 자격증 목록 추가
             };
         });
         console.log('✅ 쿼리 결과 row 수:', result.rows.length);
@@ -505,7 +506,7 @@ app.post('/api/updateDevData', async (req, res) => {
         INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
         CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
         MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, FLFMT_TASK, DEV_NO
+        LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, TASK_LIST, MEMO, DEV_NO
     } = req.body; // 클라이언트로부터 수정할 데이터를 받음
 
     let connection;
@@ -557,7 +558,8 @@ app.post('/api/updateDevData', async (req, res) => {
                 ETC = :ETC,
                 AGE = :AGE,
                 ACBG = :ACBG,
-                FLFMT_TASK = :FLFMT_TASK
+                FLFMT_TASK = :TASK_LIST,
+                MEMO = :MEMO
              WHERE DEV_NO = :DEV_NO`, // 수정할 데이터의 기준이 되는 DEV_NO
             {
                 NM, PJ_INP_STTS, CTRT_NMTM, BRDT, GNDR, JBPS, GRD,
@@ -565,7 +567,7 @@ app.post('/api/updateDevData', async (req, res) => {
                 INP_PSBLTY_DT, OGDP_CO, SN, WHTAX_YN, BZMN_YN, KDS_EMP_YN,
                 CTRT_CO_EMP_YN, CLCT_PICKUP_DT, GIVE_DT, BANK, ACTNO, DEPT,
                 MM_DMND_UNTPRC, ADDR, JBTTL, BRKR, KAKAO_NICK, CTRT_HSTRY_YN, MS, MDL, OS,
-                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, FLFMT_TASK,
+                LANG, DB, TOOL, FRMW, LBRR, CMNCT, ETC, AGE, ACBG, TASK_LIST, MEMO,
                 DEV_NO // WHERE 절에 사용할 DEV_NO
             },
             { autoCommit: true } // 자동 커밋

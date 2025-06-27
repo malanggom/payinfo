@@ -120,6 +120,24 @@ export default defineComponent({
     const columnDefs = ref([
       {headerName: '선택', checkboxSelection: true, minWidth: 60, filter: false, sortable: false, cellClass: 'checkboxCentered'},
       {headerName: '이름', field: "NM", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '메모', field: "MEMO", minWidth: 100, filter: false, sortable: false,
+        editable: true, // 컬럼을 편집 가능하도록 설정
+        cellEditor: 'agLargeTextCellEditor', // 여러 줄 입력 가능한 텍스트 에디터 사용
+        cellEditorPopup: true, // 에디터를 팝업으로 표시
+        cellEditorParams: {
+          rows: 5, // 팝업 메모장의 초기 높이 (줄 수)
+          cols: 30 // 팝업 메모장의 초기 너비 (문자 수)
+        },
+        // 선택 사항: 셀에 메모 아이콘을 추가하여 메모 존재를 시각적으로 표시하고 싶을 경우
+        // cellRenderer: (params) => {
+        //     const name = params.value;
+        //     const memo = params.data.memoField; // 'memoField'는 메모 내용이 저장될 데이터 필드명
+        //     if (memo && memo.trim() !== '') {
+        //         return `<span>${name}</span> <span style="font-size: 0.8em; color: blue;">📝</span>`; // 작은 메모 아이콘 추가
+        //     }
+        //     return name;
+        // }
+      },
       {
         headerName: '이력서', field: 'resumeIcon', minWidth: 80, filter: false, sortable: false,
         cellRenderer: (params) => {
@@ -143,7 +161,7 @@ export default defineComponent({
       {headerName: '나이', field: "AGE", minWidth: 100, filter: "agNumberColumnFilter", filterParams: numberFilterParams},
       {headerName: '등급', field: "GRD", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '자격증', field: "CRTFCT_LIST", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
-      {headerName: '수행업무', field: "FLFMT_TASK", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
+      {headerName: '수행업무', field: "TASK_LIST", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '언어', field: "LANG", minWidth: 100, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '데이터베이스', field: "DB", minWidth: 160, filter: "agTextColumnFilter", filterParams: textFilterParams},
       {headerName: '툴', field: "TOOL", minWidth: 90, filter: "agTextColumnFilter", filterParams: textFilterParams},
@@ -243,7 +261,8 @@ export default defineComponent({
           ACBG: item.ACBG,
           RESUME: item.RESUME,
           CRTFCT_LIST: item.CRTFCT_LIST,
-          FLFMT_TASK: item.FLFMT_TASK,
+          TASK_LIST: item.TASK_LIST,
+          MEMO: item.MEMO,
         }));
 
         rowData.value = translatedData;
