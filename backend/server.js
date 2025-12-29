@@ -8,15 +8,17 @@ const cors = require('cors');
 const path = require('path'); // 이 부분이 필요함
 const fs = require('fs');
 const dbConfig = require('./config/dbConfig'); // ← 추가
+const routes = require('./routes');
 
 const app = express();
-
 
 // JSON 요청 본문을 파싱하기 위한 미들웨어
 app.use(express.json());
 
 // CORS 설정
 app.use(cors());
+
+app.use('/api', routes);
 
 // 포트 설정
 const port = process.env.PORT || 3000;

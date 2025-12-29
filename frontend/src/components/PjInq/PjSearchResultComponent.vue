@@ -473,7 +473,7 @@ export default defineComponent({
       const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
       try {
-        const response = await fetch('8080/api/deletePjData', {
+        const response = await fetch('/api/deletePjData', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
