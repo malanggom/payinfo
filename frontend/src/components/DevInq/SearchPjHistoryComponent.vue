@@ -126,7 +126,7 @@ export default defineComponent({
     const devPjFetchData = async (_type, _filter) => {
       console.log("🔍 devPjFetchData 실행됨 with", _type, _filter);
       try {
-        const response = await fetch(`http://localhost:8080/api/getPjHistData?devNo=${_filter.devNo}`);
+        const response = await fetch(`/api/getPjHistData?devNo=${_filter.devNo}`);
         if (!response.ok) {
           const errorMsg = await response.json();
           console.warn("⚠️ 응답 실패:", response.status, errorMsg.message);
@@ -295,7 +295,7 @@ export default defineComponent({
 
     const onCellValueChanged = async (event) => {
       try {
-        const response = await fetch('http://localhost:8080/api/update/PjDevHistoryData', {
+        const response = await fetch('/api/update/PjDevHistoryData', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(event.data),
@@ -374,7 +374,7 @@ export default defineComponent({
       devNoList.forEach(no => params.append('devNoList', no));
 
       try{
-        const response = await fetch(`http://localhost:8080/api/deletePjDevHistData`, {
+        const response = await fetch(`/api/deletePjDevHistData`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -400,7 +400,7 @@ export default defineComponent({
     const fetchProjectHistoryFromServer = async (filter) => {
       try {
         const query = filter?.devNo ? `?devNo=${filter.devNo}` : '';
-        const response = await fetch(`http://localhost:8080/api/getPjHistData${query}`);
+        const response = await fetch(`/api/getPjHistData${query}`);
         const data = await response.json();
 
         console.log("📦 받아온 데이터:", data);

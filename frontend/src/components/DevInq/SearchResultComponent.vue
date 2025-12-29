@@ -209,7 +209,7 @@ export default defineComponent({
       const name = filter || '';
 
       try {
-        const response = await fetch(`http://localhost:8080/api/getDevData?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`/api/getDevData?name=${encodeURIComponent(name)}`);
         const data = await response.json();
 
         const translatedData = data.result.row.map(item => ({
@@ -447,7 +447,7 @@ export default defineComponent({
 
     const onCellValueChanged = async (event) => {
       try {
-        const response = await fetch('http://localhost:8080/api/updateDevData', {
+        const response = await fetch('/api/updateDevData', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -565,7 +565,7 @@ export default defineComponent({
       const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
       try {
-        const response = await fetch('http://localhost:8080/api/deleteDevData', {
+        const response = await fetch('/api/deleteDevData', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -592,7 +592,7 @@ export default defineComponent({
         return;
       } else {
         console.log("resumeId:", resumeId);
-        const url = `http://localhost:8080/api/downloadResume/${resumeId}`;
+        const url = `/api/downloadResume/${resumeId}`;
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', resumeId);

@@ -66,7 +66,7 @@ const openModalPreviewResume = async (resumeId) => {
 
   try {
     console.log("📤 요청 보냄: ", `/api/previewResume/${encodedResumeId}`);
-    const response = await fetch(`http://localhost:8080/api/previewResume/${encodedResumeId}`);
+    const response = await fetch(`/api/previewResume/${encodedResumeId}`);
 
     if (!response.ok) {
       throw new Error(`이력서를 불러올 수 없습니다. 상태 코드: ${response.status}`);

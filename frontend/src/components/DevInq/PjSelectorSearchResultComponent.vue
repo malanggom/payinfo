@@ -83,7 +83,7 @@ export default defineComponent({
       const name = filter || '';
 
       try {
-        const response = await fetch(`http://localhost:8080/api/getPJData?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`/api/getPJData?name=${encodeURIComponent(name)}`);
         const data = await response.json();
 
         const translatedData = data.result.row.map(item => ({
