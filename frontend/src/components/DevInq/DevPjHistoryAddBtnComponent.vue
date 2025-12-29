@@ -477,7 +477,7 @@
 <script>
 import {ref, onMounted, onUnmounted, nextTick, computed, defineComponent} from 'vue';
 import PjSelectorSearchResultComponent from './PjSelectorSearchResultComponent.vue';
-import axios from '../../axios'; // 생성한 axios 인스턴스 경로
+import api from '../../axios';
 import eventbus from '@/eventbus/eventbus';
 
 export default defineComponent({
@@ -675,7 +675,7 @@ export default defineComponent({
       }
       console.log('제출할 프로젝트 formData:', formData.value); // 제출할 때 formData 상태 출력
       try {
-        const response = await axios.post('http://localhost:8080/api/addDevPjHistory', formData.value);
+        const response = await api.post('/addDevPjHistory', formData.value);
         alert(response.data.message); // 성공 메시지 표시
 
         // 데이터 새로 고침 이벤트 발생

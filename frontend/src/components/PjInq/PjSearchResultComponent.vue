@@ -149,7 +149,7 @@ export default defineComponent({
       const name = filter || '';
 
       try {
-        const response = await fetch(`http://localhost:8080/api/getPJData?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`/api/getPJData?name=${encodeURIComponent(name)}`);
         const data = await response.json();
 
         const translatedData = data.result.row.map(item => ({
@@ -356,7 +356,7 @@ export default defineComponent({
 
     const onCellValueChanged = async (event) => {
       try {
-        const response = await fetch('http://localhost:8080/api/updatePjData', {
+        const response = await fetch('/api/updatePjData', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -473,7 +473,7 @@ export default defineComponent({
       const deletedNames = selectedData.map(row => row.NM).join(", "); // 예: "개발자 A, 개발자 B"
 
       try {
-        const response = await fetch('http://localhost:8080/api/deletePjData', {
+        const response = await fetch('8080/api/deletePjData', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

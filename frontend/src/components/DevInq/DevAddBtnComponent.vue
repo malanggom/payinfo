@@ -1335,7 +1335,7 @@
 
 <script setup>
 import {ref, onMounted, onUnmounted, computed, nextTick} from 'vue';
-import axios from '../../axios';
+import api from '../../axios';
 import eventbus from '@/eventbus/eventbus';
 
 defineEmits(['openModal']); // ✅ 이게 있어야 Vue가 이벤트를 인식함
@@ -1962,7 +1962,7 @@ const submitForm = async (event) => {
 
   console.log('제출할 formData:', formData.value); // 제출할 때 formData 상태 출력
   try {
-    const response = await axios.post('http://localhost:8080/api/addDeveloper', formData.value);
+    const response = await api.post('/addDeveloper', formData.value);
     alert(response.data.message); // 성공 메시지 표시
 
     // 데이터 새로 고침 이벤트 발생

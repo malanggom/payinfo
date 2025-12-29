@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 // 포트 설정
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
@@ -757,7 +757,9 @@ app.post('/api/updatePjData', async (req, res) => {
 const RESUME_DIR = path.join('C:\\Users\\손승연\\IdeaProjects\\payinfo\\frontend\\public\\downloads\\resumes');
 
 app.get('/api/downloadResume/:resumeId', (req, res) => {
-    const resumeId = decodeURIComponent(req.params.resumeId); // 예: "이권도"
+    // 클라이언트에선 encodeURIComponent(이름)으로 보내는 걸 권장
+    const resumeIdRaw = req.params.resumeId || '';
+    const resumeId = decodeURIComponent(resumeIdRaw).trim();
 
     fs.readdir(RESUME_DIR, (err, files) => {
         if (err) {
@@ -765,25 +767,37 @@ app.get('/api/downloadResume/:resumeId', (req, res) => {
             return res.status(500).send('서버 오류');
         }
 
-        // 이름이 정확히 포함된 첫 번째 파일 찾기
-        const matchedFile = files.find(file =>
-            file.startsWith('기술경력서_') &&
-            file.includes(`_${resumeId}_`) &&
-            (file.toLowerCase().endsWith('.doc') || file.toLowerCase().endsWith('.docx'))
-        );
+        const isDoc = (name) => /\.(doc|docx)$/i.test(name);
 
-        if (matchedFile) {
-            const filePath = path.join(RESUME_DIR, matchedFile);
-            return res.download(filePath, matchedFile, err => {
-                if (err) {
-                    console.error('파일 다운로드 오류:', err);
-                    res.status(500).send('다운로드 실패');
-                }
-            });
-        } else {
-            console.warn(`이름 ${resumeId} 에 해당하는 이력서 파일이 없습니다.`);
+        const matchedFile = files.find((file) => {
+            const lower = file.toLowerCase();
+            const exactDoc  = `기술경력서_${resumeId}.doc`.toLowerCase();
+            const exactDocx = `기술경력서_${resumeId}.docx`.toLowerCase();
+
+            // Case A: 기존 조건 (부분 매칭)
+            const caseA =
+                file.startsWith('기술경력서_') &&
+                file.includes(`_${resumeId}_`) &&
+                isDoc(file);
+
+            // Case B: 정확한 파일명 (정확 매칭)
+            const caseB = (lower === exactDoc || lower === exactDocx);
+
+            return caseA || caseB;
+        });
+
+        if (!matchedFile) {
+            console.warn(`이름 ${resumeIdRaw} 에 해당하는 이력서 파일이 없습니다.`);
             return res.status(404).send('이력서를 찾을 수 없습니다.');
         }
+
+        const filePath = path.join(RESUME_DIR, matchedFile);
+        return res.download(filePath, matchedFile, (err) => {
+            if (err) {
+                console.error('파일 다운로드 오류:', err);
+                res.status(500).send('다운로드 실패');
+            }
+        });
     });
 });
 app.get('/api/previewResume/:resumeId', (req, res) => {
